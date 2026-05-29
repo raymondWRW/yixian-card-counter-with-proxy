@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YiXian Counter</title>
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <!-- Drag handle: the only region marked as the OS window-drag area. -->
+  <header id="titlebar">
+    <span class="title">YiXian Counter</span>
+    <span id="status-dot" class="dot" title="proxy status"></span>
+    <span class="spacer"></span>
+    <button id="btn-mode" class="tbtn" title="Damage mode">matchup</button>
+    <button id="btn-pin" class="tbtn" title="Always on top">📌</button>
+    <button id="btn-min" class="tbtn" title="Minimize (Ctrl+H)">−</button>
+    <button id="btn-quit" class="tbtn" title="Quit">✕</button>
+  </header>
+
+  <main id="content">
+    <!-- Round / phase -->
+    <section id="round-bar">
+      <span id="round-label">Round —</span>
+      <span id="phase-label" class="phase">waiting for game…</span>
+    </section>
+
+    <!-- Damage summary -->
+    <section class="card" id="damage-card">
+      <h2>Damage <small id="damage-mode-note"></small></h2>
+      <div class="dmg-row">
+        <div class="dmg-col">
+          <div class="dmg-label">you deal (T1–8)</div>
+          <div class="dmg-headline">
+            <span id="result-pill" class="result-pill" style="display:none"></span>
+          </div>
+        </div>
+      </div>
+      <div id="damage-turns" class="turns"></div>
+    </section>
+
+    <!-- Your board + stats -->
+    <section class="card" id="me-card">
+      <h2>You <small id="me-stats"></small></h2>
+      <div id="me-fates" class="fates"></div>
+      <div id="me-board" class="board"></div>
+    </section>
+
+    <!-- Opponent board -->
+    <section class="card" id="opp-card">
+      <h2>Opponent <small id="opp-stats"></small></h2>
+      <div id="opp-fates" class="fates"></div>
+      <div id="opp-board" class="board"></div>
+    </section>
+
+    <!-- Card counter -->
+    <section class="card" id="counter-card">
+      <h2>Cards left in deck</h2>
+      <div id="counter-list" class="counter"></div>
+    </section>
+
+    <!-- Your hand -->
+    <section class="card" id="hand-card">
+      <h2>Hand</h2>
+      <div id="hand-list" class="hand"></div>
+    </section>
+  </main>
+
+  <script src="yisim.bundle.js"></script>
+  <script src="ui.js"></script>
+</body>
+</html>

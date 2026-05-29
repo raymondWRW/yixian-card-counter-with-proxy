@@ -1,0 +1,225 @@
+"""
+app.py
+──────
+Entry point for the proxy-driven YiXianPai card counter + damage calculator.
+
+A single Python process that:
+  1. (M2) starts mitmproxy's DumpMaster on a background thread to decode the
+     game's WebSocket traffic into GameState objects (pushed onto state_queue),
+  2. (M3) drains state_queue on a consumer thread, builds a JSON view-model,
+     and pushes it to the UI via window.evaluate_js,
+  3. opens a frameless, always-on-top pywebview window that renders the
+     counter / board / damage (the damage sim — yisim — runs as JS in the page).
+
+Run:  .venv/Scripts/python.exe app.py
+"""
+import json
+import os
+import threading
+from pathlib import Path
+
+import webview
+
+BASE_DIR = Path(__file__).resolve().parent
+WEB_DIR = BASE_DIR / "web"
+INDEX_HTML = WEB_DIR / "index.html"
+
+# Window handle, set in main(); used by the consumer thread to push state.
+_window = None
+
+# Height of the titlebar in px (must match #titlebar height in app.css). When the
+# user minimizes the window, we resize to this height to leave only the titlebar
+# visible; on restore we go back to _saved_size.
+TITLEBAR_HEIGHT = 34
+_saved_size = None  # (width, height) before minimizing
+
+
+class Api:
+    """Methods callable from JS via window.pywebview.api.*.
+
+    Kept tiny on purpose: the heavy data flow is Python → JS (push); this is
+    only for UI-initiated actions (toggle damage mode, pin/unpin, quit).
+    """
+
+    def __init__(self):
+        self.settings = _load_settings()
+
+    def get_settings(self):
+        return self.settings
+
+    def set_setting(self, key, value):
+        self.settings[key] = value
+        _save_settings(self.settings)
+        return self.settings
+
+    def set_on_top(self, on_top):
+        if _window is not None:
+            _window.on_top = bool(on_top)
+        return bool(on_top)
+
+    def move(self, x, y):
+        """Move the window's top-left to (x, y) in screen pixels.
+
+        Called from the JS title-bar drag handler. WebView2 doesn't honor
+        the -webkit-app-region CSS, so dragging is implemented manually.
+        """
+        if _window is not None:
+            try:
+                _window.move(int(x), int(y))
+            except Exception:
+                pass
+
+    def set_collapsed(self, collapsed):
+        """Shrink the window to titlebar height (collapsed=True) or restore
+        the previous size. The CSS handles hiding the body content; we just
+        resize the OS window so it doesn't leave empty space behind.
+        """
+        global _saved_size
+        if _window is None:
+            return
+        try:
+            if collapsed:
+                _saved_size = (int(_window.width), int(_window.height))
+                _window.resize(_saved_size[0], TITLEBAR_HEIGHT)
+            else:
+                w, h = _saved_size or (360, 720)
+                _window.resize(int(w), int(h))
+                _saved_size = None
+        except Exception:
+            pass
+        return bool(collapsed)
+
+    def quit(self):
+        if _window is not None:
+            _window.destroy()
+
+
+# ─── Settings persistence (AppData) ───────────────────────────────────────────
+def _settings_path() -> Path:
+    base = os.environ.get("APPDATA") or str(BASE_DIR)
+    d = Path(base) / "yixian-proxy-counter"
+    d.mkdir(parents=True, exist_ok=True)
+    return d / "settings.json"
+
+
+_DEFAULT_SETTINGS = {
+    "damageMode": "matchup",   # "matchup" | "solo"
+    "rollMode": "average",     # "average" | "high" | "low"
+    "onTop": True,
+}
+
+
+def _load_settings() -> dict:
+    p = _settings_path()
+    if p.exists():
+        try:
+            return {**_DEFAULT_SETTINGS, **json.loads(p.read_text(encoding="utf-8"))}
+        except Exception:
+            pass
+    return dict(_DEFAULT_SETTINGS)
+
+
+def _save_settings(settings: dict):
+    try:
+        _settings_path().write_text(
+            json.dumps(settings, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+    except Exception:
+        pass
+
+
+# ─── Pushing state to the UI ──────────────────────────────────────────────────
+def push_state(view_model: dict):
+    """Push a view-model dict to the JS side. Safe to call from any thread."""
+    if _window is None:
+        return
+    payload = json.dumps(view_model, ensure_ascii=False)
+    # window.onState is defined in ui.js; JSON is embedded as a literal arg.
+    js = f"window.onState && window.onState({payload})"
+    try:
+        _window.evaluate_js(js)
+    except Exception:
+        pass
+
+
+# ─── Background workers (wired up in M2/M3) ───────────────────────────────────
+def _push_demo_state():
+    """M1 visual check: push a fake view-model so the window isn't blank."""
+    import time
+    time.sleep(1.0)
+    push_state({
+        "round": 5, "phase": "prep (demo)",
+        "me": {
+            "destiny": 100, "hp": 75, "xiuwei": 12, "tipo": 3,
+            "realm_tier": 2, "unlocked": 7,
+            "hand": [
+                {"name": "劈山掌", "level": 2}, {"name": "云剑·探云", "level": 1},
+                {"name": "研墨", "level": 2}, {"name": "轻剑", "level": 1},
+            ],
+            "board": [
+                {"name": "劈山掌", "level": 2}, None, {"name": "研墨", "level": 1},
+                {"name": "云剑·探云", "level": 1}, None, None, None, None,
+            ],
+        },
+        "opponent": {
+            "character": "Blue Phoenix", "destiny": 95, "hp": 80, "unlocked": 7,
+            "board": [{"name": "烈焰", "level": 3}, {"name": "护盾", "level": 2}, None, None,
+                      None, None, None, None],
+        },
+        "counter": {"remaining": {"云剑·闪风": 1, "云剑·飞刺": 3, "劈山掌": 2, "研墨": 4}},
+        "damage": {"first8Turns": 184, "cumulativeDamage": [12, 31, 58, 84, 110, 139, 165, 184]},
+    })
+
+
+def _start_workers():
+    """Start the data source feeding the UI.
+
+    YX_DEMO   — push one static demo view-model (no proxy).
+    YX_REPLAY — play back a captured traffic.jsonl into the UI (no admin).
+    default   — live mitmproxy capture + consumer (needs admin / WinDivert).
+    """
+    if os.environ.get("YX_DEMO"):
+        threading.Thread(target=_push_demo_state, daemon=True).start()
+        return
+
+    import runtime
+
+    if os.environ.get("YX_REPLAY"):
+        path = os.environ.get("YX_REPLAY_PATH") or None
+        threading.Thread(
+            target=runtime.start_replay_ui, args=(push_state,),
+            kwargs={"path": path}, daemon=True, name="replay-ui",
+        ).start()
+        return
+
+    threading.Thread(target=runtime.start_proxy, daemon=True, name="proxy").start()
+    threading.Thread(
+        target=runtime.start_consumer, args=(push_state,), daemon=True, name="consumer"
+    ).start()
+
+
+def main():
+    global _window
+    api = Api()
+    _window = webview.create_window(
+        title="YiXian Counter",
+        url=INDEX_HTML.as_uri(),
+        js_api=api,
+        width=360,
+        height=720,
+        frameless=True,
+        easy_drag=False,        # we drag via a dedicated header (-webkit-app-region)
+        on_top=api.settings.get("onTop", True),
+        background_color="#11141a",
+        # R23: min-height lowered to TITLEBAR_HEIGHT so the minimize button
+        # can actually shrink the window to a titlebar-only strip. The old
+        # (300, 400) min was clamping `_window.resize(width, 34)` and leaving
+        # a ~366px black widget below the titlebar. Frameless=True means
+        # the user can't drag-resize edges, so a small min is safe.
+        min_size=(300, TITLEBAR_HEIGHT),
+    )
+    webview.start(_start_workers, debug=bool(os.environ.get("YX_DEBUG")))
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,13 @@
+{
+  "name": "yixian-proxy-counter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Build tooling for the yi-sim damage engine browser bundle (build-time only).",
+  "scripts": {
+    "build:yisim": "node build_yisim.mjs"
+  },
+  "devDependencies": {
+    "@leeoniya/ufuzzy": "^1.0.14",
+    "esbuild": "^0.24.0"
+  }
+}
