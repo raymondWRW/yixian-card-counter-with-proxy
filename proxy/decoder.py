@@ -73,6 +73,16 @@ def decode_frame(raw: bytes) -> dict:
     type_byte = raw[0]
     result["colyseus_type"] = _COLYSEUS_TYPES.get(type_byte, f"0x{type_byte:02x}")
 
+    # Schema-encoded frames (ROOM_STATE / ROOM_STATE_PATCH) use the
+    # @colyseus/schema binary format, NOT msgpack. Don't attempt msgpack on
+    # these — let the caller capture them as ws_undecoded with full raw bytes
+    # for later schema-aware decoding. NOTE: only 0x0e (and likely 0x0f for
+    # patches) are confirmed schema; 0x0b is custom msgpack room-data in
+    # current Colyseus, so we explicitly do NOT include it.
+    _SCHEMA_OPCODES = {0x0e, 0x0f}
+    if type_byte in _SCHEMA_OPCODES:
+        return result
+
     if len(raw) > 1:
         mp = decode_msgpack_stream(raw[1:])
         if mp is not None:

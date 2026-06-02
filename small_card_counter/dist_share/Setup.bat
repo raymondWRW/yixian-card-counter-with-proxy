@@ -18,6 +18,38 @@ echo   YiXian Counter (Lite) - First-time Setup
 echo ============================================================
 echo.
 
+REM --- Step 0: WebView2 Runtime check --------------------------------------
+REM Win11 ships WebView2; Win10 does not. Without it the app window opens
+REM blank. Check the registry under HKLM (machine-wide install) and HKCU
+REM (per-user install). The WebView2 product guid is fixed.
+echo [0/3] Checking for Microsoft Edge WebView2 Runtime...
+set "WV2_GUID={F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+powershell -NoProfile -Command "$keys = @('HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\%WV2_GUID%', 'HKLM:\SOFTWARE\Microsoft\EdgeUpdate\Clients\%WV2_GUID%', 'HKCU:\SOFTWARE\Microsoft\EdgeUpdate\Clients\%WV2_GUID%'); $found = $false; foreach ($k in $keys) { if (Test-Path $k) { $v = (Get-ItemProperty -Path $k -Name pv -ErrorAction SilentlyContinue).pv; if ($v -and $v -ne '0.0.0.0') { Write-Host \"      OK - WebView2 version $v found.\"; $found = $true; break } } }; if (-not $found) { exit 1 }"
+if %errorlevel% NEQ 0 (
+    echo.
+    echo ============================================================
+    echo   ERROR: Microsoft Edge WebView2 Runtime not installed.
+    echo ============================================================
+    echo.
+    echo   The counter window needs WebView2 to render. Without it
+    echo   the window opens blank.
+    echo.
+    echo   1. Download the small ^(~2 MB^) installer from:
+    echo      https://developer.microsoft.com/microsoft-edge/webview2/
+    echo      ^(click "Download" under "Evergreen Bootstrapper"^)
+    echo.
+    echo   2. Run the installer ^(takes ~30 seconds, no reboot needed^).
+    echo.
+    echo   3. Re-run this Setup.bat afterwards.
+    echo.
+    echo   Windows 11 has WebView2 pre-installed; this is typically only
+    echo   needed on Windows 10.
+    echo.
+    pause
+    exit /b 1
+)
+echo.
+
 REM --- Step 1: Defender exclusion ------------------------------------------
 echo [1/3] Adding Windows Defender exclusion for this folder...
 powershell -NoProfile -Command "try { Add-MpPreference -ExclusionPath '%~dp0' -ErrorAction Stop; Write-Host '      OK - exclusion added.' } catch { Write-Host ('      Skipped - ' + $_.Exception.Message) }"

@@ -9,10 +9,10 @@
       __defProp(target, name, { get: all[name], enumerable: true });
   };
 
-  // vendor/yisim/swogi.json
+  // vendor/yisim-master/swogi.json
   var swogi_default;
   var init_swogi = __esm({
-    "vendor/yisim/swogi.json"() {
+    "vendor/yisim-master/swogi.json"() {
       swogi_default = {
         "111011": {
           name: "Cloud Sword - Touch Sky",
@@ -464,6 +464,28 @@
             ["atk", 10]
           ]
         },
+        "112121": {
+          name: "Spirit Command Citta-Dharma",
+          actions: [
+            ["continuous"],
+            ["add_c_of_x", 2, "spirit_command_citta_dharma_qi_gain_def_stacks"],
+            ["add_c_of_x", 1, "spirit_command_citta_dharma_qi_loss_def_stacks"]
+          ]
+        },
+        "112122": {
+          actions: [
+            ["continuous"],
+            ["add_c_of_x", 2, "spirit_command_citta_dharma_qi_gain_def_stacks"],
+            ["add_c_of_x", 2, "spirit_command_citta_dharma_qi_loss_def_stacks"]
+          ]
+        },
+        "112123": {
+          actions: [
+            ["continuous"],
+            ["add_c_of_x", 3, "spirit_command_citta_dharma_qi_gain_def_stacks"],
+            ["add_c_of_x", 2, "spirit_command_citta_dharma_qi_loss_def_stacks"]
+          ]
+        },
         "113011": {
           name: "Cloud Sword - Softheart",
           actions: [
@@ -692,6 +714,25 @@
             ["rep", 3, ["atk", 5]]
           ]
         },
+        "113121": {
+          name: "Vermilion Sparrow Spirit Sword",
+          qi_cost: 1,
+          actions: [
+            ["rep", 2, ["atk", 6]]
+          ]
+        },
+        "113122": {
+          qi_cost: 1,
+          actions: [
+            ["rep", 2, ["atk", 8]]
+          ]
+        },
+        "113123": {
+          qi_cost: 1,
+          actions: [
+            ["rep", 2, ["atk", 10]]
+          ]
+        },
         "114011": {
           name: "Cloud Sword - Flash Wind",
           actions: [
@@ -903,6 +944,29 @@
             ["rep", 1, ["atk", 9]]
           ]
         },
+        "114111": {
+          name: "Flying Leopard Spirit Sword",
+          qi_cost: 1,
+          actions: []
+        },
+        "114112": {
+          qi_cost: 1,
+          actions: []
+        },
+        "114113": {
+          qi_cost: 1,
+          actions: []
+        },
+        "114121": {
+          name: "Cloud Sword - Rend Sky",
+          actions: []
+        },
+        "114122": {
+          actions: []
+        },
+        "114123": {
+          actions: []
+        },
         "115011": {
           name: "Cloud Sword - Dragon Roam",
           actions: [
@@ -1071,6 +1135,73 @@
           actions: [
             ["continuous"],
             ["add_c_of_x", 70, "unrestrained_sword_zero_stacks"]
+          ]
+        },
+        "115091": {
+          name: "Spirit Pivot Sword Formation",
+          actions: [
+            ["qi", 1],
+            ["def", 1]
+          ]
+        },
+        "115092": {
+          actions: [
+            ["qi", 2],
+            ["def", 2]
+          ]
+        },
+        "115093": {
+          actions: [
+            ["qi", 3],
+            ["def", 3]
+          ]
+        },
+        "115101": {
+          name: "Swift Shadow Flying Sword",
+          actions: []
+        },
+        "115102": {
+          actions: []
+        },
+        "115103": {
+          actions: []
+        },
+        "115111": {
+          name: "Sword Shadow Barrier",
+          actions: []
+        },
+        "115112": {
+          actions: []
+        },
+        "115113": {
+          actions: []
+        },
+        "115121": {
+          name: "Cloud Sword - Chase Wind",
+          qi_cost: 1,
+          cloud_hit_cost_0_qi: true,
+          actions: [
+            ["def", 4],
+            ["add_c_of_x", 2, "cloud_sea"],
+            ["chase"]
+          ]
+        },
+        "115122": {
+          qi_cost: 1,
+          cloud_hit_cost_0_qi: true,
+          actions: [
+            ["def", 8],
+            ["add_c_of_x", 2, "cloud_sea"],
+            ["chase"]
+          ]
+        },
+        "115123": {
+          qi_cost: 1,
+          cloud_hit_cost_0_qi: true,
+          actions: [
+            ["def", 12],
+            ["add_c_of_x", 2, "cloud_sea"],
+            ["chase"]
           ]
         },
         "121011": {
@@ -1519,6 +1650,28 @@
             ["post_action", ["heal", 12]]
           ]
         },
+        "122121": {
+          name: "Star Gazing Rhythm",
+          actions: [
+            ["qi", 2],
+            ["def", 2],
+            ["become_star_point", 2]
+          ]
+        },
+        "122122": {
+          actions: [
+            ["qi", 2],
+            ["def", 4],
+            ["become_star_point", 3]
+          ]
+        },
+        "122123": {
+          actions: [
+            ["qi", 2],
+            ["def", 6],
+            ["become_star_point", 4]
+          ]
+        },
         "123011": {
           name: "Starry Moon",
           actions: [
@@ -1741,6 +1894,22 @@
             ["chase"]
           ]]
         },
+        "123121": {
+          name: "Rhinoceros Gazing at the Moon",
+          actions: [
+            ["atk_rand_range", 1, 7]
+          ]
+        },
+        "123122": {
+          actions: [
+            ["atk_rand_range", 1, 9]
+          ]
+        },
+        "123123": {
+          actions: [
+            ["atk_rand_range", 1, 11]
+          ]
+        },
         "124011": {
           name: "Astral Move - Fly",
           qi_cost: 1,
@@ -1938,6 +2107,50 @@
             ["do_internal_injury", 1]
           ]
         },
+        "124111": {
+          name: "Soul Wound Curse Formation",
+          actions: [
+            ["qi", 2],
+            ["continuous"],
+            ["add_c_of_x", 3, "soul_wound_curse_formation_stacks"]
+          ]
+        },
+        "124112": {
+          actions: [
+            ["qi", 2],
+            ["continuous"],
+            ["add_c_of_x", 5, "soul_wound_curse_formation_stacks"]
+          ]
+        },
+        "124113": {
+          actions: [
+            ["qi", 2],
+            ["continuous"],
+            ["add_c_of_x", 7, "soul_wound_curse_formation_stacks"]
+          ]
+        },
+        "124121": {
+          name: "Astral Move - Extend",
+          actions: [
+            ["atk", 2],
+            ["star_power", 1],
+            ["heal", 4]
+          ]
+        },
+        "124122": {
+          actions: [
+            ["atk", 2],
+            ["star_power", 1],
+            ["heal", 6]
+          ]
+        },
+        "124123": {
+          actions: [
+            ["atk", 2],
+            ["star_power", 1],
+            ["heal", 8]
+          ]
+        },
         "125011": {
           name: "Polaris Citta-Dharma",
           actions: [
@@ -2098,6 +2311,91 @@
           actions: [
             ["qi", 2],
             ["do_propitious_omen", 7]
+          ]
+        },
+        "125091": {
+          name: "Astral Move - Ko Fight",
+          actions: [
+            ["atk", 1],
+            ["qi", 1],
+            ["if_x_greater_than_enemy_x_do", "qi", ["add_enemy_c_of_x", 1, "flaw"]],
+            ["star_point", ["chase"]]
+          ]
+        },
+        "125092": {
+          actions: [
+            ["atk", 3],
+            ["qi", 2],
+            ["if_x_greater_than_enemy_x_do", "qi", ["add_enemy_c_of_x", 1, "flaw"]],
+            ["star_point", ["chase"]]
+          ]
+        },
+        "125093": {
+          actions: [
+            ["atk", 5],
+            ["qi", 3],
+            ["if_x_greater_than_enemy_x_do", "qi", ["add_enemy_c_of_x", 1, "flaw"]],
+            ["star_point", ["chase"]]
+          ]
+        },
+        "125101": {
+          name: "Spirit Snake Coiling Pillar",
+          actions: [
+            ["injure", 1],
+            ["def", 1]
+          ]
+        },
+        "125102": {
+          actions: [
+            ["injure", 2],
+            ["def", 2]
+          ]
+        },
+        "125103": {
+          actions: [
+            ["injure", 3],
+            ["def", 3]
+          ]
+        },
+        "125111": {
+          name: "Branch Break Acupressure",
+          actions: []
+        },
+        "125112": {
+          actions: []
+        },
+        "125113": {
+          actions: []
+        },
+        "125121": {
+          name: "Drawing the Bow at the Tiger",
+          qi_cost: 1,
+          actions: [
+            ["add_c_of_x", 16, "max_hp"],
+            ["heal", 16],
+            ["post_action", ["for_each_x_add_c_pct_y", "hp_gained", 25, "bonus_atk_amt"]],
+            ["post_action", ["atk", 8]],
+            ["if_c_pct_do", 10, ["chase"]]
+          ]
+        },
+        "125122": {
+          qi_cost: 1,
+          actions: [
+            ["add_c_of_x", 24, "max_hp"],
+            ["heal", 24],
+            ["post_action", ["for_each_x_add_c_pct_y", "hp_gained", 25, "bonus_atk_amt"]],
+            ["post_action", ["atk", 8]],
+            ["if_c_pct_do", 10, ["chase"]]
+          ]
+        },
+        "125123": {
+          qi_cost: 1,
+          actions: [
+            ["add_c_of_x", 32, "max_hp"],
+            ["heal", 32],
+            ["post_action", ["for_each_x_add_c_pct_y", "hp_gained", 25, "bonus_atk_amt"]],
+            ["post_action", ["atk", 8]],
+            ["if_c_pct_do", 10, ["chase"]]
           ]
         },
         "131011": {
@@ -2583,6 +2881,25 @@
             ["add_c_of_x", 1, "cosmos_seal_stacks"]
           ]
         },
+        "132121": {
+          name: "Seal Suppression Citta-Dharma",
+          actions: [
+            ["damage", 3],
+            ["continuous"]
+          ]
+        },
+        "132122": {
+          actions: [
+            ["damage", 4],
+            ["continuous"]
+          ]
+        },
+        "132123": {
+          actions: [
+            ["damage", 5],
+            ["continuous"]
+          ]
+        },
         "133011": {
           name: "Wood Spirit Formation",
           actions: [
@@ -2834,6 +3151,28 @@
         "133113": {
           actions: [
             ["do_five_elements_circulation", 3]
+          ]
+        },
+        "133121": {
+          name: "Five Elements Spirit Strike",
+          qi_cost: 5,
+          decrease_qi_cost_by_x: "different_five_elements",
+          actions: [
+            ["atk", 15]
+          ]
+        },
+        "133122": {
+          qi_cost: 5,
+          decrease_qi_cost_by_x: "different_five_elements",
+          actions: [
+            ["atk", 19]
+          ]
+        },
+        "133123": {
+          qi_cost: 5,
+          decrease_qi_cost_by_x: "different_five_elements",
+          actions: [
+            ["atk", 23]
           ]
         },
         "134011": {
@@ -3105,6 +3444,25 @@
             ["atk", 10]
           ]
         },
+        "134121": {
+          name: "Earth Spirit - Burrow",
+          actions: [
+            ["def", 4],
+            ["earth_spirit", ["chase"]]
+          ]
+        },
+        "134122": {
+          actions: [
+            ["def", 8],
+            ["earth_spirit", ["chase"]]
+          ]
+        },
+        "134123": {
+          actions: [
+            ["def", 12],
+            ["earth_spirit", ["chase"]]
+          ]
+        },
         "135011": {
           name: "Wood Spirit - Willow Leaf",
           qi_cost: 1,
@@ -3283,6 +3641,131 @@
               1,
               ["add_c_of_x", 3, "five_elements_heavenly_marrow_rhythm_stacks"]
             ]
+          ]
+        },
+        "135081": {
+          name: "Wood Spirit - Spring Breeze",
+          actions: [
+            ["rep", 2, ["atk", 1]],
+            ["qi", 2]
+          ]
+        },
+        "135082": {
+          actions: [
+            ["rep", 3, ["atk", 1]],
+            ["qi", 3]
+          ]
+        },
+        "135083": {
+          actions: [
+            ["rep", 4, ["atk", 1]],
+            ["qi", 4]
+          ]
+        },
+        "135091": {
+          name: "Fire Spirit - Vein Burn Rhythm",
+          actions: [
+            ["qi", 3],
+            ["set_c_up_to_x", 2, "increase_atk"],
+            ["fire_spirit", [
+              ["for_each_x_reduce_enemy_c_y", "increase_atk", 2, "hp"],
+              ["for_each_x_reduce_enemy_c_y", "increase_atk", 2, "max_hp"]
+            ]]
+          ]
+        },
+        "135092": {
+          actions: [
+            ["qi", 3],
+            ["set_c_up_to_x", 3, "increase_atk"],
+            ["fire_spirit", [
+              ["for_each_x_reduce_enemy_c_y", "increase_atk", 2, "hp"],
+              ["for_each_x_reduce_enemy_c_y", "increase_atk", 2, "max_hp"]
+            ]]
+          ]
+        },
+        "135093": {
+          actions: [
+            ["qi", 3],
+            ["set_c_up_to_x", 4, "increase_atk"],
+            ["fire_spirit", [
+              ["for_each_x_reduce_enemy_c_y", "increase_atk", 2, "hp"],
+              ["for_each_x_reduce_enemy_c_y", "increase_atk", 2, "max_hp"]
+            ]]
+          ]
+        },
+        "135101": {
+          name: "Metal Spirit - Returning Edge",
+          actions: [
+            ["atk", 6],
+            ["atk", 6]
+          ]
+        },
+        "135102": {
+          actions: [
+            ["atk", 5],
+            ["atk", 5],
+            ["atk", 5]
+          ]
+        },
+        "135103": {
+          actions: [
+            ["atk", 4],
+            ["atk", 4],
+            ["atk", 4],
+            ["atk", 4]
+          ]
+        },
+        "135111": {
+          name: "Water Spirit - Ride the Waves",
+          actions: [
+            ["add_c_of_x", 1, "force_of_water"],
+            ["add_c_of_x", 2, "max_hp"],
+            ["heal", 2]
+          ]
+        },
+        "135112": {
+          actions: [
+            ["add_c_of_x", 2, "force_of_water"],
+            ["add_c_of_x", 3, "max_hp"],
+            ["heal", 3]
+          ]
+        },
+        "135113": {
+          actions: [
+            ["add_c_of_x", 3, "force_of_water"],
+            ["add_c_of_x", 4, "max_hp"],
+            ["heal", 4]
+          ]
+        },
+        "135121": {
+          name: "Primordial Spirit Transmutation",
+          actions: [
+            ["qi", 1],
+            ["activate_wood_spirit"],
+            ["activate_fire_spirit"],
+            ["activate_earth_spirit"],
+            ["activate_metal_spirit"],
+            ["activate_water_spirit"]
+          ]
+        },
+        "135122": {
+          actions: [
+            ["qi", 3],
+            ["activate_wood_spirit"],
+            ["activate_fire_spirit"],
+            ["activate_earth_spirit"],
+            ["activate_metal_spirit"],
+            ["activate_water_spirit"]
+          ]
+        },
+        "135123": {
+          actions: [
+            ["qi", 5],
+            ["activate_wood_spirit"],
+            ["activate_fire_spirit"],
+            ["activate_earth_spirit"],
+            ["activate_metal_spirit"],
+            ["activate_water_spirit"]
           ]
         },
         "141011": {
@@ -3804,6 +4287,28 @@
             ["add_c_of_x", 4, "hexproof"]
           ]
         },
+        "142121": {
+          name: "Vajra Smash",
+          hp_cost: 4,
+          actions: [
+            ["atk", 7],
+            ["def", 4]
+          ]
+        },
+        "142122": {
+          hp_cost: 4,
+          actions: [
+            ["atk", 11],
+            ["def", 4]
+          ]
+        },
+        "142123": {
+          hp_cost: 4,
+          actions: [
+            ["atk", 15],
+            ["def", 4]
+          ]
+        },
         "143011": {
           name: "Crash Footwork",
           actions: [
@@ -3963,28 +4468,28 @@
           name: "Double Trouble",
           qi_cost: 1,
           actions: [
-            ["add_enemy_c_of_x", 1, "internal_injury"],
-            ["add_enemy_c_of_x", 1, "wound"],
             ["add_c_of_x", 1, "internal_injury"],
+            ["add_enemy_c_of_x", 1, "internal_injury"],
             ["add_c_of_x", 1, "wound"],
+            ["add_enemy_c_of_x", 1, "wound"],
             ["rep", 2, ["atk", 6]]
           ]
         },
         "143082": {
           actions: [
-            ["add_enemy_c_of_x", 2, "internal_injury"],
-            ["add_enemy_c_of_x", 1, "wound"],
             ["add_c_of_x", 2, "internal_injury"],
+            ["add_enemy_c_of_x", 2, "internal_injury"],
             ["add_c_of_x", 1, "wound"],
+            ["add_enemy_c_of_x", 1, "wound"],
             ["rep", 2, ["atk", 7]]
           ]
         },
         "143083": {
           actions: [
-            ["add_enemy_c_of_x", 2, "internal_injury"],
-            ["add_enemy_c_of_x", 2, "wound"],
             ["add_c_of_x", 2, "internal_injury"],
+            ["add_enemy_c_of_x", 2, "internal_injury"],
             ["add_c_of_x", 2, "wound"],
+            ["add_enemy_c_of_x", 2, "wound"],
             ["rep", 2, ["atk", 8]]
           ]
         },
@@ -4058,6 +4563,28 @@
             ["for_each_x_add_c_y", "bonus_def_amt", 3, "bonus_atk_amt"],
             ["atk", 12]
           ]
+        },
+        "143121": {
+          name: "Drunken Fist Stance",
+          actions: [
+            ["continuous"],
+            ["physique", 2]
+          ],
+          is_continuous: true
+        },
+        "143122": {
+          actions: [
+            ["continuous"],
+            ["physique", 3]
+          ],
+          is_continuous: true
+        },
+        "143123": {
+          actions: [
+            ["continuous"],
+            ["physique", 4]
+          ],
+          is_continuous: true
         },
         "144011": {
           name: "Crash Citta-Dharma",
@@ -4288,6 +4815,38 @@
             ["add_c_of_x", 7, "agility"]
           ]
         },
+        "144111": {
+          name: "Mystic Spirit Healing",
+          actions: []
+        },
+        "144112": {
+          actions: []
+        },
+        "144113": {
+          actions: []
+        },
+        "144121": {
+          name: "Aerial Sweep",
+          hp_cost: 6,
+          actions: [
+            ["atk", 7],
+            ["add_c_of_x", 3, "agility"]
+          ]
+        },
+        "144122": {
+          hp_cost: 6,
+          actions: [
+            ["atk", 12],
+            ["add_c_of_x", 3, "agility"]
+          ]
+        },
+        "144123": {
+          hp_cost: 6,
+          actions: [
+            ["atk", 17],
+            ["add_c_of_x", 3, "agility"]
+          ]
+        },
         "145011": {
           name: "Crash Fist - Blink",
           hp_cost: 7,
@@ -4450,7 +5009,7 @@
               1,
               ["add_enemy_c_of_x", 2, "styx"]
             ],
-            ["for_each_x_add_y", "debuff", "bonus_force_amt"],
+            ["debuffs_count_as_force"],
             ["ignore_weaken"],
             ["ignore_decrease_atk"],
             ["atk", 8]
@@ -4500,7 +5059,7 @@
               1,
               ["add_enemy_c_of_x", 2, "styx"]
             ],
-            ["for_each_x_add_y", "debuff", "bonus_force_amt"],
+            ["debuffs_count_as_force"],
             ["ignore_weaken"],
             ["ignore_decrease_atk"],
             ["atk", 14]
@@ -4550,7 +5109,7 @@
               1,
               ["add_enemy_c_of_x", 2, "styx"]
             ],
-            ["for_each_x_add_y", "debuff", "bonus_force_amt"],
+            ["debuffs_count_as_force"],
             ["ignore_weaken"],
             ["ignore_decrease_atk"],
             ["atk", 20]
@@ -4602,6 +5161,79 @@
             ["heal", 8],
             ["add_c_of_x", 6, "agility"],
             ["for_each_x_add_c_y", "force", 2, "agility"]
+          ]
+        },
+        "145091": {
+          name: "Crash Fist - Shatter",
+          hp_cost: 8,
+          actions: []
+        },
+        "145092": {
+          hp_cost: 8,
+          actions: []
+        },
+        "145093": {
+          hp_cost: 8,
+          actions: []
+        },
+        "145101": {
+          name: "Thousand Souls Strike",
+          hp_cost: 8,
+          actions: [
+            ["force", 1],
+            ["atk", 10]
+          ]
+        },
+        "145102": {
+          hp_cost: 8,
+          actions: [
+            ["force", 1],
+            ["atk", 16]
+          ]
+        },
+        "145103": {
+          hp_cost: 8,
+          actions: [
+            ["force", 1],
+            ["atk", 22]
+          ]
+        },
+        "145111": {
+          name: "Blood Shadow Escape",
+          hp_cost: 8,
+          actions: [
+            ["heal", 4],
+            ["agility", 8]
+          ]
+        },
+        "145112": {
+          hp_cost: 8,
+          actions: [
+            ["heal", 10],
+            ["agility", 8]
+          ]
+        },
+        "145113": {
+          hp_cost: 8,
+          actions: [
+            ["heal", 16],
+            ["agility", 8]
+          ]
+        },
+        "145121": {
+          name: "Spirit Forging Finger",
+          actions: [
+            ["physique", 0]
+          ]
+        },
+        "145122": {
+          actions: [
+            ["physique", 0]
+          ]
+        },
+        "145123": {
+          actions: [
+            ["physique", 0]
           ]
         },
         "211011": {
@@ -5853,8 +6485,7 @@
             ["for_each_x_reduce_c_pct_y", "wound", 100, "wound"],
             ["for_each_x_reduce_c_pct_y", "styx", 100, "styx"],
             ["for_each_x_add_y", "bonus_def_amt", "physique"],
-            ["for_each_x_add_y", "bonus_def_amt", "hp"],
-            ["physique", 0]
+            ["for_each_x_add_y", "bonus_def_amt", "hp"]
           ]
         },
         "245012": {
@@ -5869,8 +6500,7 @@
             ["for_each_x_reduce_c_pct_y", "wound", 100, "wound"],
             ["for_each_x_reduce_c_pct_y", "styx", 100, "styx"],
             ["for_each_x_add_y", "bonus_def_amt", "physique"],
-            ["for_each_x_add_y", "bonus_def_amt", "hp"],
-            ["physique", 0]
+            ["for_each_x_add_y", "bonus_def_amt", "hp"]
           ]
         },
         "245013": {
@@ -5885,8 +6515,7 @@
             ["for_each_x_reduce_c_pct_y", "wound", 100, "wound"],
             ["for_each_x_reduce_c_pct_y", "styx", 100, "styx"],
             ["for_each_x_add_y", "bonus_def_amt", "physique"],
-            ["for_each_x_add_y", "bonus_def_amt", "hp"],
-            ["physique", 0]
+            ["for_each_x_add_y", "bonus_def_amt", "hp"]
           ]
         },
         "245021": {
@@ -7404,18 +8033,18 @@
             ["rep", 3, ["atk", 3]]
           ]
         },
-        "361021": {
+        "362081": {
           name: "Hard Bamboo",
           actions: [
             ["def", 4]
           ]
         },
-        "361022": {
+        "362082": {
           actions: [
             ["def", 6]
           ]
         },
-        "361023": {
+        "362083": {
           actions: [
             ["def", 8],
             ["continuous"],
@@ -8381,6 +9010,16 @@
             ["add_enemy_c_of_x", 2, "cannot_act_stacks"]
           ]
         },
+        "406031": {
+          name: "Myriad Manifestations Seed",
+          actions: []
+        },
+        "406032": {
+          actions: []
+        },
+        "406033": {
+          actions: []
+        },
         "501011": {
           name: "Break Sky Eagle",
           actions: [
@@ -8592,19 +9231,19 @@
           name: "Shadow Owl Rabbit",
           actions: [
             ["continuous"],
-            ["add_c_of_x", 10, "shadow_owl_rabbit_stacks"]
+            ["set_c_of_x", 10, "shadow_owl_rabbit_stacks"]
           ]
         },
         "505022": {
           actions: [
             ["continuous"],
-            ["add_c_of_x", 8, "shadow_owl_rabbit_stacks"]
+            ["set_c_of_x", 8, "shadow_owl_rabbit_stacks"]
           ]
         },
         "505023": {
           actions: [
             ["continuous"],
-            ["add_c_of_x", 6, "shadow_owl_rabbit_stacks"]
+            ["set_c_of_x", 6, "shadow_owl_rabbit_stacks"]
           ]
         },
         "506011": {
@@ -8650,6 +9289,22 @@
             ["deal_damage", 9],
             ["continuous"],
             ["add_enemy_c_of_x", 1, "nether_void_canine_stacks"]
+          ]
+        },
+        "506031": {
+          name: "Nameless White Deer",
+          actions: [
+            ["add_c_of_x", 2, "qi"]
+          ]
+        },
+        "506032": {
+          actions: [
+            ["add_c_of_x", 4, "qi"]
+          ]
+        },
+        "506033": {
+          actions: [
+            ["add_c_of_x", 6, "qi"]
           ]
         },
         "601011": {
@@ -10093,7 +10748,6 @@
           name: "Wan Xuan Demon Breaking Palm",
           actions: [
             ["physique", 2],
-            ["for_each_x_convert_c_pct_debuff_to_y", "physique", 5, "increase_atk"],
             ["rep", 3, ["atk", 3]]
           ],
           character: "dx4"
@@ -10101,14 +10755,12 @@
         "645022": {
           actions: [
             ["physique", 3],
-            ["for_each_x_convert_c_pct_debuff_to_y", "physique", 5, "increase_atk"],
             ["rep", 4, ["atk", 3]]
           ]
         },
         "645023": {
           actions: [
             ["physique", 4],
-            ["for_each_x_convert_c_pct_debuff_to_y", "physique", 5, "increase_atk"],
             ["rep", 5, ["atk", 3]]
           ]
         },
@@ -12484,7 +13136,8 @@
           name: "Crimson Star",
           actions: [[]]
         },
-        "906002": {
+        "901001": {
+          marking: "no_marking",
           does_not_exist: true,
           actions: []
         },
@@ -14153,6 +14806,22 @@
         D11095: {
           actions: [["hp", 8]]
         },
+        D11201: {
+          name: "Dream - Unrestrained Sword Two",
+          actions: [["atk", 4], ["hp", 2], ["add_c_of_x", 1, "unrestrained_sword_count"]]
+        },
+        D11202: {
+          actions: [["atk", 4], ["hp", 4], ["add_c_of_x", 1, "unrestrained_sword_count"]]
+        },
+        D11203: {
+          actions: [["atk", 4], ["hp", 6], ["add_c_of_x", 1, "unrestrained_sword_count"]]
+        },
+        D11204: {
+          actions: [["atk", 2], ["continuous"], ["add_c_of_x", 1, "dream_unrestrained_sword_two_stacks"]]
+        },
+        D11205: {
+          actions: [["atk", 7], ["continuous"], ["add_c_of_x", 1, "dream_unrestrained_sword_two_stacks"]]
+        },
         D11081: {
           name: "Dream - Dharma Spirit Sword",
           actions: [["atk", 3]]
@@ -14180,10 +14849,10 @@
           actions: [["def", 9], ["add_c_of_x", 2, "cloud_sea"], ["cloud_hit", ["for_each_x_add_c_y", "cloud_sword_chain_count", 2, "def"]]]
         },
         D11114: {
-          actions: [["def", 9], ["add_c_of_x", 2, "cloud_sea"], ["add_c_of_x", 1, "moon_water_sword_formation_stacks"], ["cloud_hit", ["for_each_x_add_c_y", "cloud_sword_chain_count", 3, "def"]]]
+          actions: [["def", 9], ["add_c_of_x", 3, "cloud_sea"], ["add_c_of_x", 1, "moon_water_sword_formation_stacks"], ["cloud_hit", ["for_each_x_add_c_y", "cloud_sword_chain_count", 3, "def"]]]
         },
         D11115: {
-          actions: [["def", 12], ["add_c_of_x", 2, "cloud_sea"], ["add_c_of_x", 2, "moon_water_sword_formation_stacks"], ["for_each_x_add_c_y", "cloud_sword_used_count", 3, "def"]]
+          actions: [["def", 12], ["add_c_of_x", 3, "cloud_sea"], ["add_c_of_x", 3, "moon_water_sword_formation_stacks"], ["for_each_x_add_c_y", "cloud_sword_used_count", 3, "def"]]
         },
         D11121: {
           name: "Dream - Reflexive Sword",
@@ -14203,10 +14872,10 @@
         },
         D11131: {
           name: "Dream - Rule Sky Sword Formation",
-          actions: [["deal_damage", 5]]
+          actions: [["deal_damage", 6]]
         },
         D11132: {
-          actions: [["deal_damage", 5]]
+          actions: [["deal_damage", 6]]
         },
         D11133: {
           actions: [["deal_damage", 6]]
@@ -14244,7 +14913,7 @@
           actions: [["atk", 2], ["add_enemy_c_of_x", 4, "internal_injury"]]
         },
         D11154: {
-          actions: [["rep", 2, ["atk", 1]], ["add_enemy_c_of_x", 5, "internal_injury"]]
+          actions: [["rep", 2, ["atk", 1]], ["add_enemy_c_of_x", 6, "internal_injury"]]
         },
         D11155: {
           actions: [["rep", 2, ["atk", 1]], ["add_enemy_c_of_x", 99, "internal_injury"]]
@@ -14263,7 +14932,7 @@
           actions: [["increase_idx_def", 0, 4], ["continuous"], ["increase_idx_x_by_c", 0, "dream_cloud_sword_softheart_gain_def", 3], ["increase_idx_x_by_c", 0, "dream_cloud_sword_softheart_sword_formation_gives_cloud_sea", 1]]
         },
         D11165: {
-          actions: [["increase_idx_def", 0, 4], ["continuous"], ["increase_idx_x_by_c", 0, "dream_cloud_sword_softheart_gain_def", 5], ["increase_idx_x_by_c", 0, "dream_cloud_sword_softheart_sword_formation_gives_cloud_sea", 1]]
+          actions: [["increase_idx_def", 0, 4], ["add_c_of_x", 2, "moon_water_sword_formation_stacks"], ["continuous"], ["increase_idx_x_by_c", 0, "dream_cloud_sword_softheart_gain_def", 5], ["increase_idx_x_by_c", 0, "dream_cloud_sword_softheart_sword_formation_gives_cloud_sea", 1]]
         },
         D11171: {
           name: "Dream - Contemplate Spirits Rhythm",
@@ -14281,38 +14950,6 @@
         D11175: {
           actions: [["sword_intent", 1], ["increase_idx_x_by_c", 0, "next_attack_double_sword_intent_and_increase_atk", 1]]
         },
-        D11191: {
-          name: "Dream - Spiritage Sword",
-          actions: [["qi", 2], ["add_c_of_x", 1, "sword_qi"], ["consumption"]]
-        },
-        D11192: {
-          actions: [["qi", 2], ["add_c_of_x", 2, "sword_qi"], ["consumption"]]
-        },
-        D11193: {
-          actions: [["qi", 2], ["add_c_of_x", 3, "sword_qi"], ["consumption"]]
-        },
-        D11194: {
-          actions: [["qi", 1], ["continuous"]]
-        },
-        D11195: {
-          actions: [["qi", 3], ["continuous"]]
-        },
-        D11201: {
-          name: "Dream - Unrestrained Sword Two",
-          actions: [["atk", 4], ["add_c_of_x", 2, "max_hp"], ["add_c_of_x", 2, "hp"]]
-        },
-        D11202: {
-          actions: [["atk", 4], ["add_c_of_x", 4, "max_hp"], ["add_c_of_x", 4, "hp"]]
-        },
-        D11203: {
-          actions: [["atk", 4], ["add_c_of_x", 6, "max_hp"], ["add_c_of_x", 6, "hp"]]
-        },
-        D11204: {
-          actions: [["atk", 2], ["continuous"]]
-        },
-        D11205: {
-          actions: [["atk", 7], ["continuous"]]
-        },
         D11181: {
           name: "Dream - Cloud Sword - Spirit Coercion",
           actions: [["atk", 4]]
@@ -14324,12 +14961,28 @@
           actions: [["atk", 6]]
         },
         D11184: {
-          actions: [["atk", 3]],
+          actions: [["atk", 4]],
           opening: [["add_c_of_x", 2, "cloud_sea"]]
         },
         D11185: {
-          actions: [["atk", 4]],
+          actions: [["atk", 5]],
           opening: [["add_c_of_x", 2, "cloud_sea"]]
+        },
+        D11191: {
+          name: "Dream - Spiritage Sword",
+          actions: [["qi", 2], ["sword_qi", 1], ["consumption"]]
+        },
+        D11192: {
+          actions: [["qi", 2], ["sword_qi", 2], ["consumption"]]
+        },
+        D11193: {
+          actions: [["qi", 2], ["sword_qi", 3], ["consumption"]]
+        },
+        D11194: {
+          actions: [["qi", 1], ["continuous"], ["increase_idx_x_by_c", 0, "dream_spiritage_sword_sword_qi_stacks", 1]]
+        },
+        D11195: {
+          actions: [["qi", 3], ["continuous"], ["increase_idx_x_by_c", 0, "dream_spiritage_sword_sword_qi_stacks", 1]]
         },
         D12011: {
           name: "Dream - Astral Move - Block",
@@ -14390,10 +15043,10 @@
           actions: [["continuous"], ["increase_idx_x_by_c", 0, "dream_yin_yang_formation_def_stacks", 1], ["increase_idx_x_by_c", 0, "dream_yin_yang_formation_hp_stacks", 1]]
         },
         D12044: {
-          actions: [["continuous"], ["increase_idx_x_by_c", 0, "dream_yin_yang_formation_def_stacks", 2], ["increase_idx_x_by_c", 0, "dream_yin_yang_formation_hp_stacks", 2]]
+          actions: [["continuous"], ["increase_idx_x_by_c", 0, "dream_yin_yang_formation_def_stacks", 1], ["increase_idx_x_by_c", 0, "dream_yin_yang_formation_hp_stacks", 2]]
         },
         D12045: {
-          actions: [["max_hp", 10], ["continuous"], ["increase_idx_x_by_c", 0, "dream_yin_yang_formation_def_stacks", 2], ["increase_idx_x_by_c", 0, "dream_yin_yang_formation_hp_stacks", 3]]
+          actions: [["continuous"], ["increase_idx_x_by_c", 0, "dream_yin_yang_formation_def_stacks", 2], ["increase_idx_x_by_c", 0, "dream_yin_yang_formation_hp_stacks", 3]]
         },
         D12051: {
           name: "Dream - Falling Thunder",
@@ -14467,7 +15120,7 @@
           actions: [["max_hp", 5], ["hp", 5], ["add_c_of_x", 1, "dream_repel_citta_dharma_stacks"]]
         },
         D12093: {
-          actions: [["max_hp", 7], ["hp", 7], ["add_c_of_x", 1, "dream_repel_citta_dharma_stacks"]]
+          actions: [["max_hp", 6], ["hp", 6], ["add_c_of_x", 1, "dream_repel_citta_dharma_stacks"]]
         },
         D12094: {
           actions: [["max_hp", 3], ["hp", 3], ["add_c_of_x", 2, "dream_repel_citta_dharma_stacks"]]
@@ -14603,38 +15256,6 @@
         D12175: {
           actions: [["hexagram", 2], ["chase"], ["consumption"]]
         },
-        D12191: {
-          name: "Dream - Star Chess Point",
-          actions: [["atk", 5], ["star_point", ["add_enemy_c_of_x", 1, "internal_injury"]]]
-        },
-        D12192: {
-          actions: [["atk", 5], ["star_point", ["add_enemy_c_of_x", 2, "internal_injury"]]]
-        },
-        D12193: {
-          actions: [["atk", 5], ["star_point", ["add_enemy_c_of_x", 3, "internal_injury"]]]
-        },
-        D12194: {
-          actions: [["atk", 5], ["star_power", 1], ["continuous"]]
-        },
-        D12195: {
-          actions: [["atk", 5], ["star_power", 2], ["continuous"]]
-        },
-        D12201: {
-          name: "Dream - Thunder Hexagram Rhythm",
-          actions: [["atk_rand_range", 1, 10], ["consumption"]]
-        },
-        D12202: {
-          actions: [["atk_rand_range", 3, 12], ["consumption"]]
-        },
-        D12203: {
-          actions: [["atk_rand_range", 5, 14], ["consumption"]]
-        },
-        D12204: {
-          actions: [["atk_rand_range", 9, 18], ["consumption"]]
-        },
-        D12205: {
-          actions: [["atk_rand_range", 1, 8], ["continuous"]]
-        },
         D12181: {
           name: "Dream - Revitalized",
           actions: [["atk", 5], ["add_c_of_x", 1, "dream_revitalized_played_count"]]
@@ -14651,6 +15272,39 @@
         D12185: {
           actions: [["atk", 12], ["add_c_of_x", 1, "dream_revitalized_played_count"]]
         },
+        D12191: {
+          name: "Dream - Thunder Hexagram Rhythm",
+          actions: [["atk_rand_range", 1, 10], ["for_each_x_add_y", "dream_lost_hexagram_count", "hexagram"], ["consumption"]]
+        },
+        D12192: {
+          actions: [["atk_rand_range", 3, 12], ["for_each_x_add_y", "dream_lost_hexagram_count", "hexagram"], ["consumption"]]
+        },
+        D12193: {
+          actions: [["atk_rand_range", 5, 14], ["for_each_x_add_y", "dream_lost_hexagram_count", "hexagram"], ["consumption"]]
+        },
+        D12194: {
+          actions: [["atk_rand_range", 9, 18], ["for_each_x_add_y", "dream_lost_hexagram_count", "hexagram"], ["consumption"]]
+        },
+        D12195: {
+          is_continuous: true,
+          actions: [["atk_rand_range", 1, 8], ["continuous"], ["add_c_of_x", 1, "dream_thunder_hexagram_rhythm_stacks"]]
+        },
+        D12201: {
+          name: "Dream - Astral Move Point",
+          actions: [["atk", 5], ["star_point", ["add_enemy_c_of_x", 1, "internal_injury"]]]
+        },
+        D12202: {
+          actions: [["atk", 3], ["star_point", ["add_enemy_c_of_x", 2, "internal_injury"]]]
+        },
+        D12203: {
+          actions: [["atk", 3], ["star_point", ["add_enemy_c_of_x", 3, "internal_injury"]]]
+        },
+        D12204: {
+          actions: [["atk", 5], ["star_power", 1]]
+        },
+        D12205: {
+          actions: [["atk", 5], ["star_power", 2]]
+        },
         D13011: {
           name: "Dream - Metal Spirit Formation",
           actions: [["activate_metal_spirit"], ["add_c_of_x", 6, "penetrate"]]
@@ -14665,23 +15319,23 @@
           actions: [["activate_metal_spirit"], ["add_c_of_x", 4, "penetrate"], ["continuous"], ["add_c_of_x", 4, "gain_penetrate_on_chase_stacks"]]
         },
         D13015: {
-          actions: [["activate_metal_spirit"], ["add_c_of_x", 4, "penetrate"], ["continuous"], ["add_c_of_x", 6, "gain_penetrate_on_chase_stacks"]]
+          actions: [["activate_metal_spirit"], ["add_c_of_x", 6, "penetrate"], ["continuous"], ["add_c_of_x", 6, "gain_penetrate_on_chase_stacks"]]
         },
         D13021: {
           name: "Dream - Cosmos Seal",
-          actions: [["qi", 1], ["deal_damage", 4]]
+          actions: [["qi", 1], ["deal_damage", 5]]
         },
         D13022: {
-          actions: [["qi", 1], ["deal_damage", 6]]
+          actions: [["qi", 1], ["deal_damage", 7]]
         },
         D13023: {
-          actions: [["qi", 1], ["deal_damage", 8]]
+          actions: [["qi", 1], ["deal_damage", 9]]
         },
         D13024: {
-          actions: [["qi", 2], ["deal_damage", 10]]
+          actions: [["qi", 3], ["deal_damage", 10]]
         },
         D13025: {
-          actions: [["qi", 3], ["deal_damage", 12]]
+          actions: [["trigger_replay_card"]]
         },
         D13031: {
           name: "Dream - Water Spirit Billows",
@@ -14704,7 +15358,7 @@
           actions: [[]]
         },
         D13042: {
-          actions: [[]]
+          actions: [["atk", 6], ["for_each_x_add_c_y", "n_different_five_elements", 2, "def"]]
         },
         D13043: {
           actions: [[]]
@@ -14783,7 +15437,7 @@
         D13075: {
           actions: [
             ["hp", 2],
-            ["for_each_x_add_c_pct_y_up_to_d", "force_of_water", 50, "increase_atk", 3],
+            ["for_each_x_add_c_pct_y_up_to_d", "force_of_water", 50, "increase_atk", 4],
             ["if_x_at_least_c_do", "force_of_water", 1, ["chase"]],
             ["if_x_at_least_c_do", "increase_atk", 1, ["chase"]]
           ]
@@ -14802,7 +15456,7 @@
           actions: [["activate_wood_spirit"], ["qi", 1], ["add_c_of_x", 1, "wood_thorn"], ["continuous"], ["add_c_of_x", 5, "dream_wood_spirit_formation_attack_steal_hp_stacks"]]
         },
         D13085: {
-          actions: [["activate_wood_spirit"], ["qi", 1], ["add_c_of_x", 1, "wood_thorn"], ["continuous"], ["add_c_of_x", 3, "convert_increase_atk_to_wood_thorn"]]
+          actions: [["activate_wood_spirit"], ["qi", 1], ["add_c_of_x", 1, "wood_thorn"], ["continuous"], ["add_c_of_x", 4, "convert_increase_atk_to_wood_thorn"]]
         },
         D13091: {
           name: "Dream - Fire Spirit Heart Fire",
@@ -14910,7 +15564,7 @@
         D13144: {
           actions: [
             ["continuous"],
-            ["add_c_of_x", 1, "dream_heavenly_marrow_unlimited_stacks"]
+            ["add_c_of_x", 3, "dream_heavenly_marrow_limited_stacks"]
           ]
         },
         D13145: {
@@ -14956,10 +15610,10 @@
           actions: [["activate_fire_spirit"], ["add_c_of_x", 2, "def"], ["reduce_enemy_c_of_x", 6, "hp"], ["reduce_enemy_c_of_x", 6, "max_hp"]]
         },
         D13172: {
-          actions: [["activate_fire_spirit"], ["add_c_of_x", 3, "def"], ["reduce_enemy_c_of_x", 8, "hp"], ["reduce_enemy_c_of_x", 8, "max_hp"]]
+          actions: [["activate_fire_spirit"], ["add_c_of_x", 2, "def"], ["reduce_enemy_c_of_x", 8, "hp"], ["reduce_enemy_c_of_x", 8, "max_hp"]]
         },
         D13173: {
-          actions: [["activate_fire_spirit"], ["add_c_of_x", 4, "def"], ["reduce_enemy_c_of_x", 10, "hp"], ["reduce_enemy_c_of_x", 10, "max_hp"]]
+          actions: [["activate_fire_spirit"], ["add_c_of_x", 2, "def"], ["reduce_enemy_c_of_x", 10, "hp"], ["reduce_enemy_c_of_x", 10, "max_hp"]]
         },
         D13174: {
           actions: [["activate_fire_spirit"], ["add_c_of_x", 6, "def"], ["reduce_enemy_c_of_x", 6, "hp"], ["reduce_enemy_c_of_x", 6, "max_hp"], ["continuous"], ["add_c_of_x", 3, "dream_fire_formation_stacks"]]
@@ -14984,36 +15638,36 @@
           actions: [["add_c_of_x", 15, "def"]]
         },
         D13191: {
+          name: "Dream - World Smash",
+          actions: [["qi", 1], ["atk", 2]]
+        },
+        D13192: {
+          actions: [["qi", 1], ["atk", 4]]
+        },
+        D13193: {
+          actions: [["qi", 1], ["atk", 6]]
+        },
+        D13194: {
+          actions: [["qi", 1], ["atk", 8]]
+        },
+        D13195: {
+          actions: [["qi", 1], ["atk", 1]]
+        },
+        D13201: {
           name: "Dream - Water Spirit Turbulent",
           actions: [["atk", 5]]
         },
-        D13192: {
+        D13202: {
           actions: [["atk", 7]]
         },
-        D13193: {
+        D13203: {
           actions: [["atk", 9]]
         },
-        D13194: {
+        D13204: {
           actions: [["atk", 5]]
         },
-        D13195: {
-          actions: [["atk", 10]]
-        },
-        D13201: {
-          name: "Dream - Mixed Origin Smash",
-          actions: [["qi", 1]]
-        },
-        D13202: {
-          actions: [["qi", 1]]
-        },
-        D13203: {
-          actions: [["qi", 1]]
-        },
-        D13204: {
-          actions: [["qi", 1]]
-        },
         D13205: {
-          actions: [["qi", 1]]
+          actions: [["atk", 10]]
         },
         D14011: {
           name: "Dream - Elusive Footwork",
@@ -15073,16 +15727,16 @@
           actions: [["atk", 5], ["def", 2], ["physique", 2]]
         },
         D14042: {
-          actions: [["atk", 6], ["def", 3], ["physique", 3]]
+          actions: [["atk", 6], ["def", 2], ["physique", 3]]
         },
         D14043: {
-          actions: [["atk", 7], ["def", 4], ["physique", 4]]
+          actions: [["atk", 7], ["def", 2], ["physique", 4]]
         },
         D14044: {
-          actions: [["atk", 2], ["def", 2], ["physique", 2]]
+          actions: [["atk", 2], ["def", 2], ["physique", 1]]
         },
         D14045: {
-          actions: [["atk", 4], ["def", 4], ["physique", 4]]
+          actions: [["atk", 5], ["def", 5], ["physique", 2]]
         },
         D14051: {
           name: "Dream - Surging Waves",
@@ -15250,23 +15904,23 @@
         },
         D14141: {
           name: "Dream - Crash Fist Continue",
-          hp_cost: 4,
+          hp_cost: 2,
           actions: [["atk", 3], ["atk", 3]]
         },
         D14142: {
-          hp_cost: 4,
+          hp_cost: 2,
           actions: [["atk", 4], ["atk", 4]]
         },
         D14143: {
-          hp_cost: 4,
+          hp_cost: 2,
           actions: [["atk", 5], ["atk", 5]]
         },
         D14144: {
-          hp_cost: 6,
+          hp_cost: 2,
           actions: [["atk", 6], ["atk", 6]]
         },
         D14145: {
-          hp_cost: 6,
+          hp_cost: 2,
           actions: [["atk", 9], ["atk", 9]]
         },
         D14151: {
@@ -15328,2078 +15982,2833 @@
           actions: [["physique", 4], ["heal", 10]]
         },
         D14184: {
-          actions: [["add_c_of_x", 5, "agility"]]
+          actions: [["add_c_of_x", 5, "agility"], ["physique", 1]]
         },
         D14185: {
-          actions: [["add_c_of_x", 5, "agility"]]
+          actions: [["add_c_of_x", 5, "agility"], ["physique", 1]]
         },
         D14191: {
-          name: "Dream - Crash Fist Exercise",
+          name: "Dream - Exercise Fist",
+          hp_cost: 2,
           actions: [["atk", 6], ["physique", 2]]
         },
         D14192: {
+          hp_cost: 2,
           actions: [["atk", 8], ["physique", 2]]
         },
         D14193: {
+          hp_cost: 2,
           actions: [["atk", 10], ["physique", 2]]
         },
         D14194: {
-          is_add_physique: true,
-          actions: [["atk", 10]]
+          hp_cost: 2,
+          actions: [["atk", 5], ["atk", 5], ["physique", 0]]
         },
         D14195: {
-          is_add_physique: true,
-          actions: [["atk", 15]]
+          hp_cost: 2,
+          actions: [["atk", 7], ["atk", 7], ["physique", 0]]
         },
         D14201: {
-          name: "Dream - Stand Firm",
-          actions: [["def", 3], ["continuous"]]
+          name: "Dream - Standing Firm",
+          actions: [["def", 3], ["continuous"], ["add_c_of_x", 2, "dream_standing_firm_def_damage"]]
         },
         D14202: {
-          actions: [["def", 6], ["continuous"]]
+          actions: [["def", 6], ["continuous"], ["add_c_of_x", 2, "dream_standing_firm_def_damage"]]
         },
         D14203: {
-          actions: [["def", 9], ["continuous"]]
+          actions: [["def", 9], ["continuous"], ["add_c_of_x", 2, "dream_standing_firm_def_damage"]]
         },
         D14204: {
-          actions: [["def", 9], ["continuous"]]
+          actions: [["def", 9], ["continuous"], ["add_c_of_x", 40, "dream_standing_firm_def_hp_damage_pct"]]
         },
         D14205: {
-          actions: [["def", 9], ["continuous"]]
+          actions: [["def", 12], ["continuous"], ["add_c_of_x", 50, "dream_standing_firm_def_hp_damage_pct"]]
         },
-        D15011: { name: "Dream - Immovable Diamond Formation", actions: [] },
-        D15014: { actions: [["max_hp", 20], ["hp", 20], ["add_c_of_x", 1, "cannot_act_stacks"], ["add_c_of_x", 4, "metal_spirit_iron_bone_stacks"]] },
-        D15015: { actions: [["max_hp", 20], ["hp", 20], ["add_c_of_x", 1, "cannot_act_stacks"], ["add_c_of_x", 4, "metal_spirit_iron_bone_stacks"]] },
-        D15021: { name: "Dream - Nine Evils Spirit Breaker", actions: [] },
-        D15024: { actions: [["reduce_c_of_x", 5, "qi"], ["reduce_enemy_c_of_x", 5, "qi"]] },
-        D15025: { actions: [["reduce_c_of_x", 5, "qi"], ["reduce_enemy_c_of_x", 5, "qi"]] },
-        D15031: { name: "Dream - Frozen Snow Lotus", actions: [] },
-        D15034: { actions: [["def", 12], ["add_c_of_x", 2, "guard_up"]] },
-        D15035: { actions: [["def", 15], ["add_c_of_x", 3, "guard_up"]] },
-        D15041: { name: "Dream - Calamity Entangled", actions: [] },
-        D15044: { actions: [["add_enemy_c_of_x", 5, "internal_injury"]] },
-        D15045: { actions: [["add_enemy_c_of_x", 6, "internal_injury"]] },
-        D15051: { name: "Dream - Echo Pattern", actions: [] },
-        D15054: { actions: [["max_hp", 10], ["hp", 10]] },
-        D15055: { actions: [["max_hp", 14], ["hp", 14]] },
-        D15061: { name: "Dream - Great Rejuvenation Pill", actions: [] },
-        D15064: { actions: [["max_hp", 16], ["hp", 16], ["continuous"], ["add_c_of_x", 2, "dream_great_pill_stacks"]] },
-        D15065: { actions: [["max_hp", 20], ["hp", 20], ["continuous"], ["add_c_of_x", 3, "dream_great_pill_stacks"]] },
-        D15071: { name: "Dream - Destiny Reappear", actions: [] },
-        D15074: { actions: [["chase"]] },
-        D15075: { actions: [["chase"]] },
-        D15081: { name: "Dream - Heavenly Sound Trap Immortal", actions: [] },
-        D15084: { actions: [] },
-        D15085: { actions: [] },
-        D15091: { name: "Dream - Sky-Horse Free", actions: [] },
-        D15094: { actions: [["atk", 12]] },
-        D15095: { actions: [["atk", 12]] },
-        D15101: { name: "Dream - Frost Spell", actions: [] },
-        D15104: { actions: [["rep", 3, ["deal_damage", 5]]] },
-        D15105: { actions: [["rep", 4, ["deal_damage", 5]]] },
-        D15111: { name: "Dream - Weakness Talisman", actions: [] },
-        D15114: { actions: [["add_enemy_c_of_x", 5, "weaken"], ["chase"], ["consumption"]] },
-        D15115: { actions: [["add_enemy_c_of_x", 5, "weaken"], ["chase"], ["consumption"]] },
-        D15121: { name: "Dream - Clear Heart Spell", actions: [] },
-        D15124: { actions: [["qi", 4], ["add_c_of_x", 2, "guard_up"]] },
-        D15125: { actions: [["qi", 4], ["add_c_of_x", 2, "guard_up"]] },
-        D15131: { name: "Dream - Frenzy Dance", actions: [] },
-        D15134: { actions: [["chase"], ["chase"]] },
-        D15135: { actions: [["chase"], ["chase"]] },
-        D15141: { name: "Dream - Divine Pen", actions: [] },
-        D15144: { actions: [["def", 15], ["trigger_random_sect_card", 1]] },
-        D15145: { actions: [["def", 18], ["trigger_random_sect_card", 2]] },
-        D15151: { name: "Dream - Binding Ancient Vine", actions: [] },
-        D15154: { actions: [["add_enemy_c_of_x", 3, "wound"], ["add_c_of_x", 2, "smash_def"], ["add_enemy_c_of_x", 2, "entangle"], ["atk", 4]] },
-        D15155: { actions: [["add_enemy_c_of_x", 4, "wound"], ["add_c_of_x", 3, "smash_def"], ["add_enemy_c_of_x", 3, "entangle"], ["atk", 5]] },
-        D15161: { name: "Dream - Transpose Harmony", actions: [] },
-        D15164: { actions: [["qi", 4], ["chase"]] },
-        D15165: { actions: [["qi", 5], ["chase"]] },
-        D15171: { name: "Dream - Sharp Metal Talisman", actions: [] },
-        D15174: { actions: [["deal_damage", 7]] },
-        D15175: { actions: [["deal_damage", 10]] },
-        D15181: { name: "Dream - Flying Cloud Pill", actions: [] },
-        D15184: { actions: [["qi", 4], ["continuous"], ["add_c_of_x", 2, "dream_flying_cloud_stacks"]] },
-        D15185: { actions: [["qi", 5], ["continuous"], ["add_c_of_x", 3, "dream_flying_cloud_stacks"]] },
-        "160001": { name: "Spirit Feather", actions: [["atk", 2], ["qi", 1], ["physique", 1], ["add_c_of_x", 2, "agility"]] },
-        "160002": { actions: [["atk", 3], ["qi", 1], ["physique", 1], ["add_c_of_x", 3, "agility"]] },
-        "160003": { actions: [["atk", 4], ["qi", 2], ["physique", 2], ["add_c_of_x", 4, "agility"]] },
-        "160011": { name: "Ultimate Raven Spirit Sword", actions: [["atk", 3], ["qi", 1], ["for_each_x_add_c_y", "qi", 1, "def"]] },
-        "160012": { actions: [["atk", 4], ["qi", 1], ["for_each_x_add_c_y", "qi", 2, "def"]] },
-        "160013": { actions: [["atk", 5], ["qi", 2], ["for_each_x_add_c_y", "qi", 2, "def"]] },
-        "160021": { name: "Star-Gazing Incantation", actions: [["qi", 1], ["def", 2], ["become_star_point", 1]] },
-        "160022": { actions: [["qi", 1], ["def", 3], ["become_star_point", 2]] },
-        "160023": { actions: [["qi", 2], ["def", 4], ["become_star_point", 2]] },
-        "160031": { name: "Ultimate Yin Yang Formation", actions: [["qi", 1], ["add_c_of_x", 1, "hexagram"], ["for_each_x_add_c_y", "hexagram", 1, "def"], ["for_each_x_add_c_y", "hexagram", 1, "hp"]] },
-        "160032": { actions: [["qi", 1], ["add_c_of_x", 2, "hexagram"], ["for_each_x_add_c_y", "hexagram", 1, "def"], ["for_each_x_add_c_y", "hexagram", 1, "hp"]] },
-        "160033": { actions: [["qi", 2], ["add_c_of_x", 2, "hexagram"], ["for_each_x_add_c_y", "hexagram", 2, "def"], ["for_each_x_add_c_y", "hexagram", 1, "hp"]] },
-        "160041": { name: "Wind-Riding Flash", actions: [["add_c_of_x", 3, "agility"]] },
-        "160042": { actions: [["add_c_of_x", 4, "agility"]] },
-        "160043": { actions: [["add_c_of_x", 5, "agility"]] },
-        "160051": { name: "Cyclone Palm", actions: [["atk", 2], ["atk", 2]] },
-        "160052": { actions: [["atk", 3], ["atk", 3]] },
-        "160053": { actions: [["atk", 4], ["atk", 4]] },
-        "160061": { name: "Spirit Pivot Sword Formation", actions: [["qi", 1], ["def", 2], ["atk", 2], ["atk", 2]] },
-        "160062": { actions: [["qi", 1], ["def", 3], ["atk", 3], ["atk", 3]] },
-        "160063": { actions: [["qi", 2], ["def", 4], ["atk", 4], ["atk", 4]] },
-        "160071": { name: "Ultimate Wind-Greeting Palm", actions: [["atk", 3], ["atk", 3]] },
-        "160072": { actions: [["physique", 2], ["atk", 3], ["atk", 3]] },
-        "160073": { actions: [["physique", 3], ["atk", 4], ["atk", 4]] },
-        "160081": { name: "Forging Spirit Finger", actions: [["atk", 3], ["qi", 1], ["physique", 1]] },
-        "160082": { actions: [["atk", 4], ["qi", 1], ["physique", 1]] },
-        "160083": { actions: [["atk", 5], ["qi", 2], ["physique", 2]] },
-        "160091": { name: "Star Chess - Long", actions: [["atk", 3], ["add_c_of_x", 1, "star_power"]] },
-        "160092": { actions: [["atk", 4], ["add_c_of_x", 1, "star_power"]] },
-        "160093": { actions: [["atk", 5], ["add_c_of_x", 2, "star_power"]] },
-        "160101": { name: "Star Chess - Robbery", actions: [["atk", 3], ["qi", 1]] },
-        "160102": { actions: [["atk", 4], ["qi", 1]] },
-        "160103": { actions: [["atk", 5], ["qi", 2]] },
-        "160111": { name: "Spirit Snake Coil Pillar", actions: [["add_enemy_c_of_x", 2, "internal_injury"], ["def", 4]] },
-        "160112": { actions: [["add_enemy_c_of_x", 3, "internal_injury"], ["def", 5]] },
-        "160113": { actions: [["add_enemy_c_of_x", 4, "internal_injury"], ["def", 6]] },
-        "160121": { name: "Vermilion Sparrow Spirit Sword", actions: [["atk", 3]] },
-        "160122": { actions: [["atk", 4]] },
-        "160123": { actions: [["atk", 5]] },
-        "160131": { name: "Vajra Pestle", actions: [["atk", 3], ["def", 2]] },
-        "160132": { actions: [["atk", 4], ["def", 3]] },
-        "160133": { actions: [["atk", 5], ["def", 4]] },
-        "160141": { name: "Sky-Sweeping Strike", actions: [["atk", 3]] },
-        "160142": { actions: [["atk", 4]] },
-        "160143": { actions: [["atk", 5]] },
-        "160151": { name: "Sword Shadow Barrier", actions: [["atk", 3], ["atk", 3], ["def", 3]] },
-        "160152": { actions: [["atk", 4], ["atk", 4], ["def", 4]] },
-        "160153": { actions: [["atk", 5], ["atk", 5], ["def", 5]] },
-        "160161": { name: "Bend Bow Shoot Tiger", actions: [["max_hp", 3], ["atk", 4]] },
-        "160162": { actions: [["max_hp", 4], ["atk", 5]] },
-        "160163": { actions: [["max_hp", 5], ["atk", 6]] },
-        "160171": { name: "Pluck Branch Pressure Point", actions: [["atk", 3], ["atk", 3]] },
-        "160172": { actions: [["atk", 4], ["atk", 4]] },
-        "160173": { actions: [["atk", 5], ["atk", 5]] },
-        "160181": { name: "Rhino Gazing Moon", actions: [["atk", 5], ["max_hp", 3]] },
-        "160182": { actions: [["atk", 6], ["max_hp", 4]] },
-        "160183": { actions: [["atk", 7], ["max_hp", 5]] },
-        "160191": { name: "Flying Leopard Spirit Sword", actions: [["atk", 3], ["add_c_of_x", 2, "sword_qi"], ["add_c_of_x", 3, "agility"]] },
-        "160192": { actions: [["atk", 4], ["add_c_of_x", 2, "sword_qi"], ["add_c_of_x", 4, "agility"]] },
-        "160193": { actions: [["atk", 5], ["add_c_of_x", 3, "sword_qi"], ["add_c_of_x", 5, "agility"]] },
-        "160201": { name: "Water Spirit - Ride Wind Wave", actions: [["add_c_of_x", 2, "force_of_water"], ["max_hp", 3], ["add_c_of_x", 3, "agility"]] },
-        "160202": { actions: [["add_c_of_x", 2, "force_of_water"], ["max_hp", 4], ["add_c_of_x", 4, "agility"]] },
-        "160203": { actions: [["add_c_of_x", 3, "force_of_water"], ["max_hp", 5], ["add_c_of_x", 5, "agility"]] },
-        "160211": { name: "Mystic Spirit Body Heal", actions: [["qi", 1], ["add_c_of_x", 2, "internal_injury"], ["max_hp", 3]] },
-        "160212": { actions: [["qi", 1], ["add_c_of_x", 2, "internal_injury"], ["max_hp", 4]] },
-        "160213": { actions: [["qi", 2], ["add_c_of_x", 3, "internal_injury"], ["max_hp", 5]] },
-        "160221": { name: "Wounded Soul Curse Formation", actions: [["qi", 1], ["continuous"], ["add_c_of_x", 3, "shang_hun_zhou_zhen_stacks"]] },
-        "160222": { actions: [["qi", 1], ["continuous"], ["add_c_of_x", 4, "shang_hun_zhou_zhen_stacks"]] },
-        "160223": { actions: [["qi", 2], ["continuous"], ["add_c_of_x", 5, "shang_hun_zhou_zhen_stacks"]] },
-        "160231": { name: "Ultimate Cloud Sword Soft-Heart", actions: [["max_hp", 4], ["chase"], ["continuous"], ["add_c_of_x", 1, "ji_yun_jian_rou_xin_stacks"]] },
-        "160232": { actions: [["max_hp", 5], ["chase"], ["continuous"], ["add_c_of_x", 2, "ji_yun_jian_rou_xin_stacks"]] },
-        "160233": { actions: [["max_hp", 6], ["chase"], ["continuous"], ["add_c_of_x", 2, "ji_yun_jian_rou_xin_stacks"]] },
-        "160241": { name: "Ultimate Water Spirit Formation", actions: [["chase"], ["continuous"], ["add_c_of_x", 1, "ji_shui_ling_zhen_stacks"]] },
-        "160242": { actions: [["qi", 1], ["chase"], ["continuous"], ["add_c_of_x", 1, "ji_shui_ling_zhen_stacks"]] },
-        "160243": { actions: [["qi", 2], ["chase"], ["continuous"], ["add_c_of_x", 2, "ji_shui_ling_zhen_stacks"]] },
-        "160251": { name: "Ultimate Crash Sky Step", actions: [["add_c_of_x", 3, "agility"], ["continuous"], ["add_c_of_x", 1, "ji_beng_tian_bu_stacks"]] },
-        "160252": { actions: [["qi", 1], ["add_c_of_x", 4, "agility"], ["continuous"], ["add_c_of_x", 1, "ji_beng_tian_bu_stacks"]] },
-        "160253": { actions: [["qi", 2], ["add_c_of_x", 5, "agility"], ["continuous"], ["add_c_of_x", 1, "ji_beng_tian_bu_stacks"]] },
-        "160261": { name: "Guard Spirit Heart Method", actions: [["continuous"], ["add_c_of_x", 1, "yu_ling_xin_fa_qi_gain_def_stacks"], ["add_c_of_x", 1, "yu_ling_xin_fa_qi_loss_def_stacks"]] },
-        "160262": { actions: [["continuous"], ["add_c_of_x", 2, "yu_ling_xin_fa_qi_gain_def_stacks"], ["add_c_of_x", 1, "yu_ling_xin_fa_qi_loss_def_stacks"]] },
-        "160263": { actions: [["continuous"], ["add_c_of_x", 2, "yu_ling_xin_fa_qi_gain_def_stacks"], ["add_c_of_x", 2, "yu_ling_xin_fa_qi_loss_def_stacks"]] },
-        "160271": { name: "Ultimate Stillness Heart Method", actions: [["max_hp", 4], ["chase"], ["continuous"], ["add_c_of_x", 1, "ji_jing_qi_xin_fa_stacks"]] },
-        "160272": { actions: [["max_hp", 5], ["chase"], ["continuous"], ["add_c_of_x", 1, "ji_jing_qi_xin_fa_stacks"]] },
-        "160273": { actions: [["max_hp", 6], ["chase"], ["continuous"], ["add_c_of_x", 2, "ji_jing_qi_xin_fa_stacks"]] },
-        "160281": { name: "Hundred Birds Shadow Decree", actions: [["qi", 1], ["continuous"], ["add_c_of_x", 1, "bird_shadow_decree_stacks"]] },
-        "160282": { actions: [["qi", 1], ["continuous"], ["add_c_of_x", 1, "bird_shadow_decree_stacks"]] },
-        "160283": { actions: [["qi", 2], ["continuous"], ["add_c_of_x", 2, "bird_shadow_decree_stacks"]] },
-        "160291": { name: "Nimble Footwork", actions: [["add_c_of_x", 3, "agility"], ["continuous"], ["add_c_of_x", 1, "shan_zhuan_teng_nuo_stacks"]] },
-        "160292": { actions: [["add_c_of_x", 4, "agility"], ["continuous"], ["add_c_of_x", 1, "shan_zhuan_teng_nuo_stacks"]] },
-        "160293": { actions: [["add_c_of_x", 5, "agility"], ["continuous"], ["add_c_of_x", 1, "shan_zhuan_teng_nuo_stacks"]] },
-        "160301": { name: "Soaring With The Wind", actions: [["hp", 3], ["add_c_of_x", 3, "agility"], ["continuous"], ["add_c_of_x", 1, "feng_xu_yu_feng_stacks"]] },
-        "160302": { actions: [["hp", 4], ["add_c_of_x", 4, "agility"], ["continuous"], ["add_c_of_x", 1, "feng_xu_yu_feng_stacks"]] },
-        "160303": { actions: [["hp", 5], ["add_c_of_x", 5, "agility"], ["continuous"], ["add_c_of_x", 2, "feng_xu_yu_feng_stacks"]] },
-        "160311": { name: "Drunken Fist Stance", actions: [["physique", 2], ["hp", 3], ["add_c_of_x", 2, "flaw"], ["continuous"], ["add_c_of_x", 1, "zui_quan_jia_shi_stacks"]] },
-        "160312": { actions: [["physique", 2], ["hp", 4], ["add_c_of_x", 3, "flaw"], ["continuous"], ["add_c_of_x", 2, "zui_quan_jia_shi_stacks"]] },
-        "160313": { actions: [["physique", 3], ["hp", 5], ["add_c_of_x", 3, "flaw"], ["continuous"], ["add_c_of_x", 2, "zui_quan_jia_shi_stacks"]] },
-        "160321": { name: "Suppress Seal Heart Method", actions: [["deal_damage", 2], ["continuous"], ["add_c_of_x", 1, "zhen_yin_xin_fa_stacks"]] },
-        "160322": { actions: [["deal_damage", 3], ["continuous"], ["add_c_of_x", 2, "zhen_yin_xin_fa_stacks"]] },
-        "160323": { actions: [["deal_damage", 4], ["continuous"], ["add_c_of_x", 2, "zhen_yin_xin_fa_stacks"]] },
-        "160331": { name: "Myriad Souls Break Army", actions: [["atk", 3]] },
-        "160332": { actions: [["atk", 4]] },
-        "160333": { actions: [["atk", 5]] },
-        "160341": { name: "Cloud Sword - Sky Rend", actions: [["atk", 3], ["atk", 3]] },
-        "160342": { actions: [["atk", 4], ["atk", 4]] },
-        "160343": { actions: [["atk", 5], ["atk", 5]] },
-        "160351": { name: "Lightning Shadow Flying Sword", actions: [["atk", 4], ["add_c_of_x", 1, "sword_intent"]] },
-        "160352": { actions: [["atk", 5], ["add_c_of_x", 2, "sword_intent"]] },
-        "160353": { actions: [["atk", 6], ["add_c_of_x", 2, "sword_intent"]] },
-        "160361": { name: "Five Elements Spirit Strike", actions: [["atk", 4]] },
-        "160362": { actions: [["atk", 5]] },
-        "160363": { actions: [["atk", 6]] },
-        "160371": { name: "Cloud Sword - Pursuing Wind", actions: [["def", 3], ["add_c_of_x", 1, "cloud_sea"], ["add_c_of_x", 1, "cloud_sword_chain_count"], ["chase"]] },
-        "160372": { actions: [["def", 4], ["add_c_of_x", 1, "cloud_sea"], ["add_c_of_x", 2, "cloud_sword_chain_count"], ["chase"]] },
-        "160373": { actions: [["def", 5], ["add_c_of_x", 2, "cloud_sea"], ["add_c_of_x", 2, "cloud_sword_chain_count"], ["chase"]] },
-        "160381": { name: "Earth Spirit - Burrow", actions: [["def", 3]] },
-        "160382": { actions: [["def", 4]] },
-        "160383": { actions: [["def", 5]] },
-        "160391": { name: "Wood Spirit - Spring Breeze", actions: [["qi", 1], ["atk", 3]] },
-        "160392": { actions: [["qi", 1], ["atk", 4]] },
-        "160393": { actions: [["qi", 2], ["atk", 5]] },
-        "160401": { name: "Fire Spirit - Burn Vein", actions: [["qi", 1]] },
-        "160402": { actions: [["qi", 1]] },
-        "160403": { actions: [["qi", 2]] },
-        "160411": { name: "Ultimate Wood Spirit Forest Patrol", actions: [["add_c_of_x", 2, "wood_thorn"], ["atk", 3], ["atk", 3]] },
-        "160412": { actions: [["add_c_of_x", 3, "wood_thorn"], ["atk", 4], ["atk", 4]] },
-        "160413": { actions: [["add_c_of_x", 4, "wood_thorn"], ["atk", 5], ["atk", 5]] },
-        "160421": { name: "Cosmic Transformation", actions: [["qi", 1]] },
-        "160422": { actions: [["qi", 1]] },
-        "160423": { actions: [["qi", 2]] },
-        "160431": { name: "Crash Fist - Shattered Bone", hp_cost: 3, is_crash_fist: true, actions: [["deal_damage", 3], ["add_c_of_x", 1, "crash_fist_shattered_bone_carry_stacks"], ["atk", 4], ["atk", 4], ["add_c_of_x", 1, "smash_def"]] },
-        "160432": { hp_cost: 3, is_crash_fist: true, actions: [["deal_damage", 3], ["add_c_of_x", 1, "crash_fist_shattered_bone_carry_stacks"], ["atk", 5], ["atk", 5], ["add_c_of_x", 1, "smash_def"]] },
-        "160433": { hp_cost: 4, is_crash_fist: true, actions: [["deal_damage", 4], ["add_c_of_x", 1, "crash_fist_shattered_bone_carry_stacks"], ["atk", 6], ["atk", 6], ["add_c_of_x", 2, "smash_def"]] },
-        "160441": { name: "Blood Shadow Escape", actions: [["hp", 3], ["add_c_of_x", 3, "agility"], ["add_c_of_x", 1, "blood_shadow_escape_stacks"]] },
-        "160442": { actions: [["hp", 4], ["add_c_of_x", 4, "agility"], ["add_c_of_x", 1, "blood_shadow_escape_stacks"]] },
-        "160443": { actions: [["hp", 5], ["add_c_of_x", 5, "agility"], ["add_c_of_x", 1, "blood_shadow_escape_stacks"]] },
-        "160451": { name: "Metal Spirit - Return Edge", actions: [["atk", 4], ["atk", 4]] },
-        "160452": { actions: [["atk", 5], ["atk", 5]] },
-        "160453": { actions: [["atk", 6], ["atk", 6]] }
+        D21011: { name: "Dream - Cloud Elixir", does_not_exist: true, actions: [] },
+        D21012: { does_not_exist: true, actions: [] },
+        D21013: { does_not_exist: true, actions: [] },
+        D21014: {
+          name: "Dream - Cloud Elixir",
+          actions: [["qi", 1], ["continuous"], ["add_c_of_x", 1, "dream_cloud_elixir_stacks"]]
+        },
+        D21015: {
+          name: "Dream - Cloud Elixir",
+          actions: [["qi", 3], ["continuous"], ["add_c_of_x", 1, "dream_cloud_elixir_stacks"]]
+        },
+        D21021: { name: "Dream - Great Recover Elixir", does_not_exist: true, actions: [] },
+        D21022: { does_not_exist: true, actions: [] },
+        D21023: { does_not_exist: true, actions: [] },
+        D21024: {
+          name: "Dream - Great Recover Elixir",
+          actions: [["max_hp", 10], ["heal", 10], ["continuous"], ["add_c_of_x", 4, "dream_great_recover_elixir_stacks"]]
+        },
+        D21025: {
+          name: "Dream - Great Recover Elixir",
+          actions: [["max_hp", 15], ["heal", 15], ["continuous"], ["add_c_of_x", 8, "dream_great_recover_elixir_stacks"]]
+        },
+        D22011: { name: "Dream - Calm Incantation", does_not_exist: true, actions: [] },
+        D22012: { does_not_exist: true, actions: [] },
+        D22013: { does_not_exist: true, actions: [] },
+        D22014: { does_not_exist: true, actions: [] },
+        D22015: {
+          name: "Dream - Calm Incantation",
+          actions: [
+            ["qi", 3],
+            ["reduce_c_of_x", 4, "internal_injury"],
+            ["reduce_c_of_x", 4, "weaken"],
+            ["reduce_c_of_x", 4, "flaw"],
+            ["reduce_c_of_x", 4, "decrease_atk"],
+            ["reduce_c_of_x", 4, "entangle"],
+            ["reduce_c_of_x", 4, "wound"],
+            ["reduce_c_of_x", 4, "styx"],
+            ["add_c_of_x", 4, "hexproof"]
+          ]
+        },
+        D22021: { name: "Dream - Ice Incantation", does_not_exist: true, actions: [] },
+        D22022: { does_not_exist: true, actions: [] },
+        D22023: { does_not_exist: true, actions: [] },
+        D22024: {
+          name: "Dream - Ice Incantation",
+          actions: [["rep", 2, ["reduce_enemy_c_of_x", 5, "hp"]], ["add_enemy_c_of_x", 1, "prevent_gain_def_stacks"], ["add_enemy_c_of_x", 1, "prevent_gain_hp_stacks"]]
+        },
+        D22025: {
+          name: "Dream - Ice Incantation",
+          actions: [["rep", 3, ["reduce_enemy_c_of_x", 5, "hp"]]]
+        },
+        D22031: { name: "Dream - Sharp Metal Fulu", does_not_exist: true, actions: [] },
+        D22032: { does_not_exist: true, actions: [] },
+        D22033: { does_not_exist: true, actions: [] },
+        D22034: {
+          name: "Dream - Sharp Metal Fulu",
+          actions: [["deal_damage", 13]]
+        },
+        D22035: {
+          name: "Dream - Sharp Metal Fulu",
+          actions: [["deal_damage", 18]]
+        },
+        D22041: { name: "Dream - Weaken Fulu", does_not_exist: true, actions: [] },
+        D22042: { does_not_exist: true, actions: [] },
+        D22043: { does_not_exist: true, actions: [] },
+        D22044: { does_not_exist: true, actions: [] },
+        D22045: {
+          name: "Dream - Weaken Fulu",
+          actions: [["add_enemy_c_of_x", 1, "weaken"], ["chase"], ["consumption"]]
+        },
+        D23011: { name: "Dream - Craze Dance Tune", does_not_exist: true, actions: [] },
+        D23012: { does_not_exist: true, actions: [] },
+        D23013: { does_not_exist: true, actions: [] },
+        D23014: { does_not_exist: true, actions: [] },
+        D23015: {
+          name: "Dream - Craze Dance Tune",
+          actions: [["add_c_of_x", 2, "dream_craze_dance_tune_pending_stacks"], ["add_enemy_c_of_x", 2, "dream_craze_dance_tune_pending_stacks"]]
+        },
+        D23021: { name: "Dream - Chord In Tune", does_not_exist: true, actions: [] },
+        D23022: { does_not_exist: true, actions: [] },
+        D23023: { does_not_exist: true, actions: [] },
+        D23024: {
+          name: "Dream - Chord In Tune",
+          actions: [["qi", 1], ["add_c_of_x", 1, "prevent_anti_chase"]]
+        },
+        D23025: {
+          name: "Dream - Chord In Tune",
+          actions: [["qi", 2], ["add_c_of_x", 1, "prevent_anti_chase"]]
+        },
+        D23031: { name: "Dream - Predicament for Immortals", does_not_exist: true, actions: [] },
+        D23032: { does_not_exist: true, actions: [] },
+        D23033: { does_not_exist: true, actions: [] },
+        D23034: { does_not_exist: true, actions: [] },
+        D23035: {
+          name: "Dream - Predicament for Immortals",
+          actions: [["reduce_c_of_x", 5, "hp"]]
+        },
+        D23041: { name: "Dream - Nine Evil Ruptsprite", does_not_exist: true, actions: [] },
+        D23042: { does_not_exist: true, actions: [] },
+        D23043: { does_not_exist: true, actions: [] },
+        D23044: { does_not_exist: true, actions: [] },
+        D23045: {
+          name: "Dream - Nine Evil Ruptsprite",
+          actions: [["reduce_c_of_x", 4, "qi"], ["reduce_enemy_c_of_x", 4, "qi"]]
+        },
+        D24011: { name: "Dream - Divine Brush", does_not_exist: true, actions: [] },
+        D24012: { does_not_exist: true, actions: [] },
+        D24013: { does_not_exist: true, actions: [] },
+        D24014: {
+          name: "Dream - Divine Brush",
+          actions: [["def", 2]]
+        },
+        D24015: {
+          name: "Dream - Divine Brush",
+          actions: [["def", 10]]
+        },
+        D24021: { name: "Dream - Finishing Touch", does_not_exist: true, actions: [] },
+        D24022: { does_not_exist: true, actions: [] },
+        D24023: { does_not_exist: true, actions: [] },
+        D24024: { does_not_exist: true, actions: [] },
+        D24025: {
+          name: "Dream - Finishing Touch",
+          actions: []
+        },
+        D24031: { name: "Dream - Wonderful Strokes", does_not_exist: true, actions: [] },
+        D24032: { does_not_exist: true, actions: [] },
+        D24033: { does_not_exist: true, actions: [] },
+        D24034: {
+          name: "Dream - Wonderful Strokes",
+          actions: []
+        },
+        D24035: {
+          name: "Dream - Wonderful Strokes",
+          actions: []
+        },
+        D25011: { name: "Dream - Motionless Tutelary Formation", does_not_exist: true, actions: [] },
+        D25012: { does_not_exist: true, actions: [] },
+        D25013: { does_not_exist: true, actions: [] },
+        D25014: { does_not_exist: true, actions: [] },
+        D25015: {
+          name: "Dream - Motionless Tutelary Formation",
+          actions: [["max_hp", 20], ["heal", 20], ["add_c_of_x", 1, "cannot_act_stacks"]]
+        },
+        D25021: { name: "Dream - Echo Formation", does_not_exist: true, actions: [] },
+        D25022: { does_not_exist: true, actions: [] },
+        D25023: { does_not_exist: true, actions: [] },
+        D25024: {
+          name: "Dream - Echo Formation",
+          actions: [["do_dream_echo_formation_thing"]]
+        },
+        D25025: {
+          name: "Dream - Echo Formation",
+          actions: [["max_hp", 6], ["heal", 6], ["do_dream_echo_formation_thing"]]
+        },
+        D26011: { name: "Dream - Frozen Snow Lotus", does_not_exist: true, actions: [] },
+        D26012: { does_not_exist: true, actions: [] },
+        D26013: { does_not_exist: true, actions: [] },
+        D26014: {
+          name: "Dream - Frozen Snow Lotus",
+          actions: [["def", 10], ["add_c_of_x", 1, "guard_up"]]
+        },
+        D26015: {
+          name: "Dream - Frozen Snow Lotus",
+          actions: [["def", 10], ["add_c_of_x", 1, "guard_up"]]
+        },
+        D26021: { name: "Dream - Entangling Ancient Vine", does_not_exist: true, actions: [] },
+        D26022: { does_not_exist: true, actions: [] },
+        D26023: { does_not_exist: true, actions: [] },
+        D26024: {
+          name: "Dream - Entangling Ancient Vine",
+          actions: [["add_enemy_c_of_x", 1, "wound"], ["add_c_of_x", 2, "smash_def"], ["add_enemy_c_of_x", 1, "entangle"]]
+        },
+        D26025: {
+          name: "Dream - Entangling Ancient Vine",
+          actions: [["add_enemy_c_of_x", 2, "wound"], ["add_c_of_x", 2, "smash_def"], ["add_enemy_c_of_x", 1, "entangle"]]
+        },
+        D26031: { name: "Dream - Space Spiritual Field", does_not_exist: true, actions: [] },
+        D26032: { does_not_exist: true, actions: [] },
+        D26033: { does_not_exist: true, actions: [] },
+        D26034: { does_not_exist: true, actions: [] },
+        D26035: {
+          name: "Dream - Space Spiritual Field",
+          actions: [[]]
+        },
+        D26041: { name: "Dream - Flying Owl Reishi", does_not_exist: true, actions: [] },
+        D26042: { does_not_exist: true, actions: [] },
+        D26043: { does_not_exist: true, actions: [] },
+        D26044: { does_not_exist: true, actions: [] },
+        D26045: {
+          name: "Dream - Flying Owl Reishi",
+          actions: []
+        },
+        D27011: { name: "Dream - Heavenly Time Recurring", does_not_exist: true, actions: [] },
+        D27012: { does_not_exist: true, actions: [] },
+        D27013: { does_not_exist: true, actions: [] },
+        D27014: { does_not_exist: true, actions: [] },
+        D27015: {
+          name: "Dream - Heavenly Time Recurring",
+          actions: [["reduce_c_of_x", 2, "hp"], ["add_enemy_c_of_x", 1, "skip_to_previous_card_stacks"]]
+        },
+        D27021: { name: "Dream - Envelop In Disaster", does_not_exist: true, actions: [] },
+        D27022: { does_not_exist: true, actions: [] },
+        D27023: { does_not_exist: true, actions: [] },
+        D27024: {
+          name: "Dream - Envelop In Disaster",
+          actions: [["add_enemy_c_of_x", 1, "internal_injury"]],
+          opening: [["downgrade_enemy_card_or_skip"]]
+        },
+        D27025: {
+          name: "Dream - Envelop In Disaster",
+          actions: [["add_enemy_c_of_x", 3, "internal_injury"]],
+          opening: [["downgrade_enemy_card_or_skip"]]
+        },
+        D30011: { name: "Dream - At Own Pace", does_not_exist: true, actions: [] },
+        D30012: { does_not_exist: true, actions: [] },
+        D30013: { does_not_exist: true, actions: [] },
+        D30014: { does_not_exist: true, actions: [] },
+        D30015: {
+          name: "Dream - At Own Pace",
+          actions: []
+        }
       };
     }
   });
 
-  // vendor/yisim/names.json
+  // vendor/yisim-master/names.json
   var names_default;
   var init_names = __esm({
-    "vendor/yisim/names.json"() {
+    "vendor/yisim-master/names.json"() {
       names_default = [
         {
           id: 111011,
+          other_id: 1000001,
           name: "Cloud Sword - Touch Sky",
           namecn: "\u4E91\u5251\xB7\u63A2\u4E91"
         },
         {
           id: 111021,
+          other_id: 1000002,
           name: "Cloud Sword - Fleche",
           namecn: "\u4E91\u5251\xB7\u98DE\u523A"
         },
         {
           id: 111031,
+          other_id: 1000003,
           name: "Cloud Sword - Touch Earth",
           namecn: "\u4E91\u5251\xB7\u539A\u571F"
         },
         {
           id: 111041,
+          other_id: 1000004,
           name: "Light Sword",
           namecn: "\u8F7B\u5251"
         },
         {
           id: 111051,
+          other_id: 1000005,
           name: "Guard Qi",
           namecn: "\u62A4\u8EAB\u7075\u6C14"
         },
         {
           id: 111061,
+          other_id: 1000006,
           name: "Qi Perfusion",
           namecn: "\u7075\u6C14\u704C\u6CE8"
         },
         {
           id: 111071,
+          other_id: 1000007,
           name: "Giant Tiger Spirit Sword",
           namecn: "\u5DE8\u864E\u7075\u5251"
         },
         {
           id: 111081,
+          other_id: 1000009,
           name: "Thunder Sword",
           namecn: "\u9707\u96F7\u5251"
         },
         {
           id: 111091,
+          other_id: 1000010,
           name: "Sword Slash",
           namecn: "\u5251\u5288"
         },
         {
           id: 111101,
+          other_id: 1000012,
           name: "Sword Defence",
           namecn: "\u5251\u6321"
         },
         {
           id: 111111,
+          other_id: 1000021,
           name: "Flying Fang Sword",
           namecn: "\u98DE\u7259\u5251"
         },
         {
           id: 111121,
+          other_id: 1000013,
           name: "Wind Sword",
           namecn: "\u9AA4\u98CE\u5251"
         },
         {
           id: 112011,
+          other_id: 1000016,
           name: "Cloud Sword - Reguard",
           namecn: "\u4E91\u5251\xB7\u56DE\u5B88"
         },
         {
           id: 112021,
+          other_id: 1000015,
           name: "Cloud Sword - Riddle",
           namecn: "\u4E91\u5251\xB7\u6781\u610F"
         },
         {
           id: 112031,
+          other_id: 1000014,
           name: "Cloud Sword - Conceal",
           namecn: "\u4E91\u5251\xB7\u65E0\u950B"
         },
         {
           id: 112041,
+          other_id: 1000018,
           name: "Transforming Spirits Rhythm",
           namecn: "\u5316\u7075\u8BC0"
         },
         {
           id: 112051,
+          other_id: 1000024,
           name: "Spiritage Sword",
           namecn: "\u5F15\u6C14\u5251"
         },
         {
           id: 112061,
+          other_id: 1000019,
           name: "Giant Whale Spirit Sword",
           namecn: "\u5DE8\u9CB8\u7075\u5251"
         },
         {
           id: 112071,
+          other_id: 1000017,
           name: "Contemplate Spirits Rhythm",
           namecn: "\u51DD\u610F\u8BC0"
         },
         {
           id: 112081,
+          other_id: 1000033,
           name: "Consonance Sword Formation",
           namecn: "\u7075\u7280\u5251\u9635"
         },
         {
           id: 112091,
+          other_id: 1000030,
           name: "Earth Evil Sword",
           namecn: "\u5730\u715E\u5251"
         },
         {
           id: 112101,
+          other_id: 1000011,
           name: "Form-Intention Sword",
           namecn: "\u5F62\u610F\u5251"
         },
         {
           id: 112111,
+          other_id: 1000022,
           name: "Unrestrained Sword - One",
           namecn: "\u72C2\u5251\xB7\u4E00\u5F0F"
         },
         {
+          id: 112121,
+          other_id: 1000088,
+          name: "Spirit Command Citta-Dharma",
+          namecn: "\u5FA1\u7075\u5FC3\u6CD5"
+        },
+        {
           id: 113011,
+          other_id: 1000026,
           name: "Cloud Sword - Softheart",
           namecn: "\u4E91\u5251\xB7\u67D4\u5FC3",
           namealta: "\u67D4\u4E91\u5FC3\u6CD5"
         },
         {
           id: 113021,
+          other_id: 1000028,
           name: "Cloud Sword - Necessity",
           namecn: "\u4E91\u5251\xB7\u65E0\u5984"
         },
         {
           id: 113031,
+          other_id: 1000027,
           name: "Cloud Sword - Pierce the Star",
           namecn: "\u4E91\u5251\xB7\u70B9\u661F"
         },
         {
           id: 113041,
+          other_id: 1000063,
           name: "Cloud Sword - Spirit Coercion",
           namecn: "\u4E91\u5251\xB7\u6C47\u7075"
         },
         {
           id: 113051,
+          other_id: 1000031,
           name: "Cloud Dance Rhythm",
           namecn: "\u4E91\u821E\u8BC0"
         },
         {
           id: 113061,
+          other_id: 1000020,
           name: "Raven Spirit Sword",
           namecn: "\u6697\u9E26\u7075\u5251"
         },
         {
           id: 113071,
+          other_id: 1000023,
           name: "Burst Sword",
           namecn: "\u7834\u6C14\u5251"
         },
         {
           id: 113081,
+          other_id: 1000029,
           name: "Giant Roc Spirit Sword",
           namecn: "\u5DE8\u9E4F\u7075\u5251"
         },
         {
           id: 113091,
+          other_id: 1000008,
           name: "Reflexive Sword",
           namecn: "\u53CD\u8EAB\u5251"
         },
         {
           id: 113101,
+          other_id: 1000046,
           name: "Mirror Flower Sword Formation",
           namecn: "\u955C\u82B1\u5251\u9635"
         },
         {
           id: 113111,
+          other_id: 1000032,
           name: "Tri-Peak Sword",
           namecn: "\u4E09\u5CF0\u5251"
         },
         {
+          id: 113121,
+          other_id: 1000089,
+          name: "Vermilion Sparrow Spirit Sword",
+          namecn: "\u4E39\u96C0\u7075\u5251"
+        },
+        {
           id: 114011,
+          other_id: 1000039,
           name: "Cloud Sword - Flash Wind",
           namecn: "\u4E91\u5251\xB7\u95EA\u98CE"
         },
         {
           id: 114021,
+          other_id: 1000040,
           name: "Cloud Sword - Moon Shade",
           namecn: "\u4E91\u5251\xB7\u6708\u5F71"
         },
         {
           id: 114031,
+          other_id: 1000034,
           name: "Spirit Gather Citta-Dharma",
           namecn: "\u805A\u7075\u5FC3\u6CD5"
         },
         {
           id: 114041,
+          other_id: 1000065,
           name: "CentiBird Spirit Sword Rhythm",
-          namecn: "\u767D\u9E1F\u7075\u5251\u8BC0"
+          namecn: "\u767E\u9E1F\u7075\u5251\u8BC0"
         },
         {
           id: 114051,
+          other_id: 1000059,
           name: "Egret Spirit Sword",
           namecn: "\u767D\u9E6D\u7075\u5251"
         },
         {
           id: 114061,
+          other_id: 1000036,
           name: "Giant Kun Spirit Sword",
           namecn: "\u5DE8\u9CB2\u7075\u5251"
         },
         {
           id: 114071,
+          other_id: 1000038,
           name: "Inspiration Sword",
           namecn: "\u7075\u611F\u5251"
         },
         {
           id: 114081,
+          other_id: 1000037,
           name: "Flow Cloud Chaos Sword",
           namecn: "\u6D41\u4E91\u4E71\u5251"
         },
         {
           id: 114091,
+          other_id: 1000041,
           name: "Moon Water Sword Formation",
           namecn: "\u6C34\u6708\u5251\u9635"
         },
         {
           id: 114101,
+          other_id: 1000035,
           name: "Unrestrained Sword - Two",
           namecn: "\u72C2\u5251\xB7\u4E8C\u5F0F"
         },
         {
+          id: 114111,
+          other_id: 1000090,
+          name: "Flying Leopard Spirit Sword",
+          namecn: "\u98DE\u8C79\u7075\u5251"
+        },
+        {
+          id: 114121,
+          other_id: 1000091,
+          name: "Cloud Sword - Rend Sky",
+          namecn: "\u4E91\u5251\xB7\u88C2\u7A7A"
+        },
+        {
           id: 115011,
+          other_id: 1000042,
           name: "Cloud Sword - Dragon Roam",
           namecn: "\u4E91\u5251\xB7\u6E38\u9F99"
         },
         {
           id: 115021,
+          other_id: 1000060,
           name: "Cloud Sword - Step Lightly",
           namecn: "\u4E91\u5251\xB7\u51CC\u6CE2"
         },
         {
           id: 115031,
+          other_id: 1000043,
           name: "Flying Spirit Shade Sword",
           namecn: "\u98DE\u7075\u95EA\u5F71\u5251"
         },
         {
           id: 115041,
+          other_id: 1000045,
           name: "Dharma Spirit Sword",
           namecn: "\u4E07\u6CD5\u5F52\u7075\u5251"
         },
         {
           id: 115051,
+          other_id: 1000044,
           name: "Sword Intent Surge",
           namecn: "\u5251\u610F\u6FC0\u8361"
         },
         {
           id: 115061,
+          other_id: 1000025,
           name: "Rule Sky Sword Formation",
           namecn: "\u5FA1\u7A7A\u5251\u9635"
         },
         {
           id: 115071,
+          other_id: 1000064,
           name: "Chain Sword Formation",
           namecn: "\u8FDE\u73AF\u5251\u9635"
         },
         {
           id: 115081,
+          other_id: 1000066,
           name: "Unrestrained Sword - Zero",
           namecn: "\u72C2\u5251\xB7\u96F6\u5F0F"
         },
         {
+          id: 115091,
+          other_id: 1000092,
+          name: "Spirit Pivot Sword Formation",
+          namecn: "\u7075\u67A2\u5251\u9635"
+        },
+        {
+          id: 115101,
+          other_id: 1000094,
+          name: "Swift Shadow Flying Sword",
+          namecn: "\u8FC5\u5F71\u98DE\u5251"
+        },
+        {
+          id: 115111,
+          other_id: 1000095,
+          name: "Sword Shadow Barrier",
+          namecn: "\u5251\u5F71\u7ED3\u754C"
+        },
+        {
+          id: 115121,
+          other_id: 1000098,
+          name: "Cloud Sword - Chase Wind",
+          namecn: "\u4E91\u5251\xB7\u8FFD\u98CE"
+        },
+        {
           id: 121011,
+          other_id: 4000023,
           name: "Shifting Stars",
           namecn: "\u6597\u8F6C\u661F\u79FB"
         },
         {
           id: 121021,
+          other_id: 4000008,
           name: "Dotted Around",
           namecn: "\u661F\u7F57\u68CB\u5E03"
         },
         {
           id: 121031,
+          other_id: 4000011,
           name: "Astral Move - Block",
           namecn: "\u661F\u5F08\xB7\u6321"
         },
         {
           id: 121041,
+          other_id: 4000010,
           name: "Astral Move - Flank",
           namecn: "\u661F\u5F08\xB7\u5939"
         },
         {
           id: 121051,
+          other_id: 4000003,
           name: "Zhen Hexagram",
           namecn: "\u9707\u5366",
           namealta: "\u2633"
         },
         {
           id: 121061,
+          other_id: 4000002,
           name: "Earth Hexagram",
           namecn: "\u5764\u5366",
           namealta: "\u2637"
         },
         {
           id: 121071,
+          other_id: 4000001,
           name: "Wind Hexagram",
           namecn: "\u5DFD\u5366",
           namealta: "\u2634"
         },
         {
           id: 121081,
+          other_id: 4000004,
           name: "Palm Thunder",
           namecn: "\u638C\u5FC3\u96F7"
         },
         {
           id: 121091,
+          other_id: 4000005,
           name: "White Crane Bright Wings",
           namecn: "\u767D\u9E64\u4EAE\u7FC5"
         },
         {
           id: 121101,
+          other_id: 4000061,
           name: "Sparrow's Tail",
           namecn: "\u63FD\u96C0\u5C3E"
         },
         {
           id: 121111,
+          other_id: 4000006,
           name: "Wild Horses Part the Mane",
           namecn: "\u91CE\u9A6C\u5206\u9B03",
           namealta: "Striding Into the Wind"
         },
         {
           id: 121121,
+          other_id: 4000013,
           name: "Incessant",
           namecn: "\u85D5\u65AD\u4E1D\u8FDE"
         },
         {
           id: 122011,
+          other_id: 4000024,
           name: "Astral Fleche",
           namecn: "\u98DE\u661F\u523A"
         },
         {
           id: 122021,
+          other_id: 4000028,
           name: "Astral Move - Point",
           namecn: "\u661F\u5F08\xB7\u70B9"
         },
         {
           id: 122031,
+          other_id: 4000009,
           name: "Astral Move - Stand",
           namecn: "\u661F\u5F08\xB7\u7ACB"
         },
         {
           id: 122041,
+          other_id: 4000016,
           name: "Mountain Hexagram",
           namecn: "\u826E\u5366",
           namealta: "\u2636"
         },
         {
           id: 122051,
+          other_id: 4000015,
           name: "Water Hexagram",
           namecn: "\u574E\u5366",
           namealta: "\u2635"
         },
         {
           id: 122061,
+          other_id: 4000030,
           name: "Falling Thunder",
           namecn: "\u843D\u96F7\u672F"
         },
         {
           id: 122071,
+          other_id: 4000019,
           name: "Cutting Weeds",
           namecn: "\u65A9\u8349\u9664\u6839"
         },
         {
           id: 122081,
+          other_id: 4000020,
           name: "Golden Rooster Independence",
           namecn: "\u91D1\u9E21\u72EC\u7ACB"
         },
         {
           id: 122091,
+          other_id: 4000027,
           name: "Stillness Citta-Dharma",
           namecn: "\u9759\u6C14\u5FC3\u6CD5"
         },
         {
           id: 122101,
+          other_id: 4000021,
           name: "Flower Sentient",
           namecn: "\u843D\u82B1\u6709\u610F"
         },
         {
           id: 122111,
+          other_id: 4000018,
           name: "Imposing",
           namecn: "\u6C14\u8D2F\u957F\u8679"
         },
         {
+          id: 122121,
+          other_id: 4000090,
+          name: "Star Gazing Rhythm",
+          namecn: "\u671B\u661F\u8BC0"
+        },
+        {
           id: 123011,
+          other_id: 4000032,
           name: "Starry Moon",
           namecn: "\u4F17\u661F\u62F1\u6708"
         },
         {
           id: 123021,
+          other_id: 4000029,
           name: "Astral Move - Hit",
           namecn: "\u661F\u5F08\xB7\u6253"
         },
         {
           id: 123031,
+          other_id: 4000025,
           name: "Lake Hexagram",
           namecn: "\u5151\u5366",
           namealta: "\u2631"
         },
         {
           id: 123041,
+          other_id: 4000031,
           name: "White Snake",
           namecn: "\u767D\u86C7\u5410\u4FE1"
         },
         {
           id: 123051,
+          other_id: 4000068,
           name: "Thunder Hexagram Rhythm",
           namecn: "\u5FA1\u96F7\u5366\u8BC0"
         },
         {
           id: 123061,
+          other_id: 4000040,
           name: "Yin Yang Formation",
           namecn: "\u4E24\u4EEA\u9635"
         },
         {
           id: 123071,
+          other_id: 4000022,
           name: "Ruthless Water",
           namecn: "\u6D41\u6C34\u65E0\u60C5"
         },
         {
           id: 123081,
+          other_id: 4000017,
           name: "Qi Therapy",
           namecn: "\u6C14\u7597\u672F"
         },
         {
           id: 123091,
+          other_id: 4000042,
           name: "Revitalized",
           namecn: "\u67AF\u6728\u9022\u6625"
         },
         {
           id: 123101,
+          other_id: 4000043,
           name: "Hunter Becomes Preyer",
           namecn: "\u87B3\u8782\u6355\u8749"
         },
         {
           id: 123111,
+          other_id: 4000033,
           name: "Drag Moon In Sea",
           namecn: "\u6D77\u5E95\u635E\u6708"
         },
         {
+          id: 123121,
+          other_id: 4000091,
+          name: "Rhinoceros Gazing at the Moon",
+          namecn: "\u7280\u725B\u671B\u6708"
+        },
+        {
           id: 124011,
+          other_id: 4000038,
           name: "Astral Move - Fly",
           namecn: "\u661F\u5F08\xB7\u98DE"
         },
         {
           id: 124021,
+          other_id: 4000039,
           name: "Astral Move - Tiger",
           namecn: "\u661F\u5F08\xB7\u864E"
         },
         {
           id: 124031,
+          other_id: 4000014,
           name: "Hexagram Formacide",
           namecn: "\u516D\u723B\u7EDD\u9635"
         },
         {
           id: 124041,
+          other_id: 4000034,
           name: "Flame Hexagram",
           namecn: "\u79BB\u5366",
           namealta: "\u2632"
         },
         {
           id: 124051,
+          other_id: 4000062,
           name: "Star Trail Divination",
           namecn: "\u661F\u8F68\u63A8\u884D"
         },
         {
           id: 124061,
+          other_id: 4000035,
           name: "Dance Of The Dragonfly",
           namecn: "\u873B\u8713\u70B9\u6C34"
         },
         {
           id: 124071,
+          other_id: 4000063,
           name: "Thunder And Lighting",
           namecn: "\u8F70\u96F7\u63A3\u7535",
           namealta: "Thunder And Lightning"
         },
         {
           id: 124081,
+          other_id: 4000037,
           name: "Repel Citta-Dharma",
           namecn: "\u53CD\u9707\u5FC3\u6CD5"
         },
         {
           id: 124091,
+          other_id: 4000036,
           name: "Escape Plan",
           namecn: "\u91D1\u8749\u8131\u58F3"
         },
         {
           id: 124101,
+          other_id: 4000059,
           name: "Snake in Reflection",
           namecn: "\u676F\u5F13\u86C7\u5F71",
           namealta: "Extremely Suspicious"
         },
         {
+          id: 124111,
+          other_id: 4000092,
+          name: "Soul Wound Curse Formation",
+          namecn: "\u4F24\u9B42\u5492\u9635"
+        },
+        {
+          id: 124121,
+          other_id: 4000093,
+          name: "Astral Move - Extend",
+          namecn: "\u661F\u5F08\xB7\u957F"
+        },
+        {
           id: 125011,
+          other_id: 4000045,
           name: "Polaris Citta-Dharma",
           namecn: "\u5929\u5143\u5FC3\u6CD5"
         },
         {
           id: 125021,
+          other_id: 4000044,
           name: "Astral Move - Cide",
           namecn: "\u661F\u5F08\xB7\u65AD"
         },
         {
           id: 125031,
+          other_id: 4000026,
           name: "Heaven Hexagram",
           namecn: "\u4E7E\u5366",
           namealta: "\u2630"
         },
         {
           id: 125041,
+          other_id: 4000046,
           name: "Five Thunders",
           namecn: "\u4E94\u96F7\u8F70\u9876"
         },
         {
           id: 125051,
+          other_id: 4000041,
           name: "Strike Twice",
           namecn: "\u6885\u5F00\u4E8C\u5EA6"
         },
         {
           id: 125061,
+          other_id: 4000060,
           name: "Great Spirit",
           namecn: "\u6C14\u541E\u5C71\u6CB3"
         },
         {
           id: 125071,
+          other_id: 4000066,
           name: "Hunter Hunting Hunter",
           namecn: "\u9EC4\u96C0\u5728\u540E"
         },
         {
           id: 125081,
+          other_id: 4000067,
           name: "Propitious Omen",
           namecn: "\u7D2B\u6C14\u4E1C\u6765"
         },
         {
+          id: 125091,
+          other_id: 4000094,
+          name: "Astral Move - Ko Fight",
+          namecn: "\u661F\u5F08\xB7\u52AB\u4E89"
+        },
+        {
+          id: 125101,
+          other_id: 4000095,
+          name: "Spirit Snake Coiling Pillar",
+          namecn: "\u7075\u86C7\u7ED5\u67F1"
+        },
+        {
+          id: 125111,
+          other_id: 4000096,
+          name: "Branch Break Acupressure",
+          namecn: "\u6298\u679D\u70B9\u7A74",
+          namealt: "Branch Break Pressure Point"
+        },
+        {
+          id: 125121,
+          other_id: 4000097,
+          name: "Drawing the Bow at the Tiger",
+          namecn: "\u5F2F\u5F13\u5C04\u864E"
+        },
+        {
           id: 131011,
+          other_id: 7000003,
           name: "Wood Spirit Seal",
           namecn: "\u6728\u7075\u5370"
         },
         {
           id: 131021,
+          other_id: 7000004,
           name: "Wood Spirit - Bud",
           namecn: "\u6728\u7075\xB7\u82BD"
         },
         {
           id: 131031,
+          other_id: 7000009,
           name: "Fire Spirit Seal",
           namecn: "\u706B\u7075\u5370"
         },
         {
           id: 131041,
+          other_id: 7000010,
           name: "Fire Spirit - Rush",
           namecn: "\u706B\u7075\xB7\u7A9C"
         },
         {
           id: 131051,
+          other_id: 7000011,
           name: "Earth Spirit Seal",
           namecn: "\u571F\u7075\u5370"
         },
         {
           id: 131061,
+          other_id: 7000013,
           name: "Earth Spirit - Smash",
           namecn: "\u571F\u7075\xB7\u788E"
         },
         {
           id: 131071,
+          other_id: 7000001,
           name: "Metal Spirit Seal",
           namecn: "\u91D1\u7075\u5370"
         },
         {
           id: 131081,
+          other_id: 7000002,
           name: "Metal Spirit - Needle",
           namecn: "\u91D1\u7075\xB7\u9488"
         },
         {
           id: 131091,
+          other_id: 7000006,
           name: "Water Spirit Seal",
           namecn: "\u6C34\u7075\u5370"
         },
         {
           id: 131101,
+          other_id: 7000007,
           name: "Water Spirit - Waves",
           namecn: "\u6C34\u7075\xB7\u6D9B"
         },
         {
           id: 131111,
+          other_id: 7000060,
           name: "Five Elements Fleche",
           namecn: "\u4E94\u884C\u523A"
         },
         {
           id: 132011,
+          other_id: 7000018,
           name: "Wood Spirit - Recovery",
           namecn: "\u6728\u7075\xB7\u590D\u82CF"
         },
         {
           id: 132021,
+          other_id: 7000017,
           name: "Wood Spirit - Sparse Shadow",
           namecn: "\u6728\u7075\xB7\u758F\u5F71"
         },
         {
           id: 132031,
+          other_id: 7000021,
           name: "Fire Spirit - Flame Eater",
           namecn: "\u706B\u7075\xB7\u805A\u708E"
         },
         {
           id: 132041,
+          other_id: 7000022,
           name: "Fire Spirit - Scarlet Flame",
           namecn: "\u706B\u7075\xB7\u8D64\u7130"
         },
         {
           id: 132051,
+          other_id: 7000023,
           name: "Earth Spirit Formation",
           namecn: "\u571F\u7075\u9635"
         },
         {
           id: 132061,
+          other_id: 7000024,
           name: "Earth Spirit - Mountains",
           namecn: "\u571F\u7075\xB7\u7FA4\u5C71"
         },
         {
           id: 132071,
+          other_id: 7000016,
           name: "Metal Spirit Formation",
           namecn: "\u91D1\u7075\u9635"
         },
         {
           id: 132081,
+          other_id: 7000015,
           name: "Metal Spirit - Heart Pierce",
           namecn: "\u91D1\u7075\xB7\u7A7F\u5FC3"
         },
         {
           id: 132091,
+          other_id: 7000019,
           name: "Water Spirit - Billows",
           namecn: "\u6C34\u7075\xB7\u6CE2\u6F9C"
         },
         {
           id: 132101,
+          other_id: 7000037,
           name: "Water Spirit - Turbulent",
           namecn: "\u6C34\u7075\xB7\u6C79\u6D8C"
         },
         {
           id: 132111,
+          other_id: 7000014,
           name: "Cosmos Seal",
           namecn: "\u6D51\u5929\u5370"
         },
         {
+          id: 132121,
+          other_id: 7000094,
+          name: "Seal Suppression Citta-Dharma",
+          namecn: "\u9547\u5370\u5FC3\u6CD5"
+        },
+        {
           id: 133011,
+          other_id: 7000036,
           name: "Wood Spirit Formation",
           namecn: "\u6728\u7075\u9635"
         },
         {
           id: 133021,
+          other_id: 7000028,
           name: "Wood Spirit - Forest Guard",
           namecn: "\u6728\u7075\xB7\u5DE1\u6797"
         },
         {
           id: 133031,
+          other_id: 7000031,
           name: "Fire Spirit Formation",
           namecn: "\u706B\u7075\u9635"
         },
         {
           id: 133041,
+          other_id: 7000032,
           name: "Fire Spirit - Blast",
           namecn: "\u706B\u7075\xB7\u8F70\u7206"
         },
         {
           id: 133051,
+          other_id: 7000012,
           name: "Earth Spirit - Dust",
           namecn: "\u571F\u7075\xB7\u626C\u5C18"
         },
         {
           id: 133061,
+          other_id: 7000062,
           name: "Earth Spirit - Cliff",
           namecn: "\u571F\u7075\xB7\u65AD\u5D16"
         },
         {
           id: 133071,
+          other_id: 7000025,
           name: "Metal Spirit - Charge",
           namecn: "\u91D1\u7075\xB7\u84C4\u9510"
         },
         {
           id: 133081,
+          other_id: 7000026,
           name: "Metal Spirit - Sharp",
           namecn: "\u91D1\u7075\xB7\u950B\u8292"
         },
         {
           id: 133091,
+          other_id: 7000029,
           name: "Water Spirit Formation",
           namecn: "\u6C34\u7075\u9635"
         },
         {
           id: 133101,
+          other_id: 7000059,
           name: "Water Spirit - Spring",
           namecn: "\u6C34\u7075\xB7\u6CC9\u6D8C"
         },
         {
           id: 133111,
+          other_id: 7000067,
           name: "Five Elements Circulation",
           namecn: "\u4E94\u884C\u6D41\u8F6C"
         },
         {
+          id: 133121,
+          other_id: 7000095,
+          name: "Five Elements Spirit Strike",
+          namecn: "\u4E94\u884C\u7075\u51FB"
+        },
+        {
           id: 134011,
+          other_id: 7000061,
           name: "Wood Spirit - Fragrant",
           namecn: "\u6728\u7075\xB7\u6697\u9999"
         },
         {
           id: 134021,
+          other_id: 7000027,
           name: "Wood Spirit - Thorn",
           namecn: "\u6728\u7075\xB7\u73AB\u523A"
         },
         {
           id: 134031,
+          other_id: 7000038,
           name: "Fire Spirit - Flash Fire",
           namecn: "\u706B\u7075\xB7\u77AC\u71C3"
         },
         {
           id: 134041,
+          other_id: 7000039,
           name: "Fire Spirit - Heart Fire",
           namecn: "\u706B\u7075\xB7\u707C\u5FC3"
         },
         {
           id: 134051,
+          other_id: 7000040,
           name: "Earth Spirit - Steep",
           namecn: "\u571F\u7075\xB7\u7EDD\u58C1"
         },
         {
           id: 134061,
+          other_id: 7000033,
           name: "Earth Spirit - Quicksand",
           namecn: "\u571F\u7075\xB7\u6D41\u6C99"
         },
         {
           id: 134071,
+          other_id: 7000034,
           name: "Metal Spirit - Shuttle",
           namecn: "\u91D1\u7075\xB7\u98DE\u68AD"
         },
         {
           id: 134081,
+          other_id: 7000035,
           name: "Metal Spirit - Iron Bone",
           namecn: "\u91D1\u7075\xB7\u94C1\u9AA8"
         },
         {
           id: 134091,
+          other_id: 7000030,
           name: "Water Spirit - Great Waves",
           namecn: "\u6C34\u7075\xB7\u817E\u6D6A"
         },
         {
           id: 134101,
+          other_id: 7000020,
           name: "Water Spirit - Dive",
           namecn: "\u6C34\u7075\xB7\u6F5C\u9041"
         },
         {
           id: 134111,
+          other_id: 7000066,
           name: "World Smash",
           namecn: "\u6DF7\u5143\u788E\u51FB"
         },
         {
+          id: 134121,
+          other_id: 7000096,
+          name: "Earth Spirit - Burrow",
+          namecn: "\u571F\u7075\xB7\u9041\u5730"
+        },
+        {
           id: 135011,
+          other_id: 7000043,
           name: "Wood Spirit - Willow Leaf",
           namecn: "\u6728\u7075\xB7\u67F3\u7EB7\u98DE"
         },
         {
           id: 135021,
+          other_id: 7000056,
           name: "Fire Spirit - Blazing Prairie",
           namecn: "\u706B\u7075\xB7\u70C8\u71CE\u539F"
         },
         {
           id: 135031,
+          other_id: 7000053,
           name: "Earth Spirit - Combine World",
           namecn: "\u571F\u7075\xB7\u5408\u516B\u8352"
         },
         {
           id: 135041,
+          other_id: 7000042,
           name: "Metal Spirit - Giant Tripod",
           namecn: "\u91D1\u7075\xB7\u5DE8\u9F0E\u843D"
         },
         {
           id: 135051,
+          other_id: 7000057,
           name: "Water Spirit - Combine Rivers",
           namecn: "\u6C34\u7075\xB7\u7EB3\u767E\u5DDD"
         },
         {
           id: 135061,
+          other_id: 7000058,
           name: "Ultimate World Formation",
           namecn: "\u6DF7\u5143\u65E0\u6781\u9635"
         },
         {
           id: 135071,
+          other_id: 7000073,
           name: "Five Elements Heavenly Marrow Rhythm",
           namecn: "\u4E94\u884C\u5929\u9AD3\u8BC0"
         },
         {
+          id: 135081,
+          other_id: 7000097,
+          name: "Wood Spirit - Spring Breeze",
+          namecn: "\u6728\u7075\xB7\u6625\u98CE\u62C2"
+        },
+        {
+          id: 135091,
+          other_id: 7000098,
+          name: "Fire Spirit - Vein Burn Rhythm",
+          namecn: "\u706B\u7075\xB7\u711A\u8109\u8BC0"
+        },
+        {
+          id: 135101,
+          other_id: 7000099,
+          name: "Metal Spirit - Returning Edge",
+          namecn: "\u91D1\u7075\xB7\u56DE\u950B\u5203"
+        },
+        {
+          id: 135111,
+          other_id: 7000100,
+          name: "Water Spirit - Ride the Waves",
+          namecn: "\u6C34\u7075\xB7\u4E58\u98CE\u6D6A"
+        },
+        {
+          id: 135121,
+          other_id: 7000101,
+          name: "Primordial Spirit Transmutation",
+          namecn: "\u6DF7\u5143\u5316\u7075",
+          namealt: "Cosmos Spirit Transmutation"
+        },
+        {
           id: 141011,
+          other_id: 10000001,
           name: "Crash Fist - Poke",
           namecn: "\u5D29\u62F3\xB7\u6233"
         },
         {
           id: 141021,
+          other_id: 10000002,
           name: "Crash Fist - Block",
           namecn: "\u5D29\u62F3\xB7\u5C01"
         },
         {
           id: 141031,
+          other_id: 10000003,
           name: "Crash Fist - Bounce",
           namecn: "\u5D29\u62F3\xB7\u5F39"
         },
         {
           id: 141041,
+          other_id: 10000004,
           name: "Exercise Fist",
           namecn: "\u953B\u62F3"
         },
         {
           id: 141051,
+          other_id: 10000005,
           name: "Mountain-Cleaving Palms",
           namecn: "\u5288\u5C71\u638C"
         },
         {
           id: 141061,
+          other_id: 10000006,
           name: "Embracing Qi Technique",
           namecn: "\u62B1\u6C14\u6CD5"
         },
         {
           id: 141071,
+          other_id: 10000008,
           name: "Rakshasa Pouncing",
           namecn: "\u7F57\u5239\u6251"
         },
         {
           id: 141081,
+          other_id: 10000007,
           name: "Sky-Piercing Claw",
           namecn: "\u7834\u7A7A\u722A"
         },
         {
           id: 141091,
+          other_id: 10000009,
           name: "Mountain Falling",
           namecn: "\u5343\u65A4\u5760"
         },
         {
           id: 141101,
+          other_id: 10000010,
           name: "Gather Force",
           namecn: "\u8D77\u52BF"
         },
         {
           id: 141111,
+          other_id: 10000011,
           name: "Vigorous Force",
           namecn: "\u671D\u6C14\u84EC\u52C3"
         },
         {
           id: 141121,
+          other_id: 10000012,
           name: "Youthful Vigor",
           namecn: "\u8840\u6C14\u65B9\u521A"
         },
         {
           id: 142011,
+          other_id: 10000013,
           name: "Crash Fist - Shake",
           namecn: "\u5D29\u62F3\xB7\u64BC"
         },
         {
           id: 142021,
+          other_id: 10000014,
           name: "Crash Fist - Entangle",
           namecn: "\u5D29\u62F3\xB7\u7F20"
         },
         {
           id: 142031,
+          other_id: 10000015,
           name: "Crash Fist - Blitz",
           namecn: "\u5D29\u62F3\xB7\u7A81"
         },
         {
           id: 142041,
+          other_id: 10000016,
           name: "Exercise Tendons",
           namecn: "\u953B\u7B4B"
         },
         {
           id: 142051,
+          other_id: 10000017,
           name: "Detect-Horse Palms",
           namecn: "\u63A2\u9A6C\u638C"
         },
         {
           id: 142061,
+          other_id: 10000018,
           name: "Gale Shadow Claw",
           namecn: "\u98CE\u51A5\u722A"
         },
         {
           id: 142071,
+          other_id: 10000019,
           name: "Ghost Howling",
           namecn: "\u591C\u9B3C\u5578"
         },
         {
           id: 142081,
+          other_id: 10000021,
           name: "Standing Firm",
           namecn: "\u5CBF\u7136\u4E0D\u52A8"
         },
         {
           id: 142091,
+          other_id: 10000022,
           name: "Strong Force",
           namecn: "\u52BF\u5927\u529B\u6C89"
         },
         {
           id: 142101,
+          other_id: 10000032,
           name: "Sinking Qi",
           namecn: "\u6C14\u6C89\u4E39\u7530"
         },
         {
           id: 142111,
+          other_id: 10000023,
           name: "Magnanimous Righteousness",
           namecn: "\u6D69\u7136\u6B63\u6C14"
         },
         {
+          id: 142121,
+          other_id: 10000097,
+          name: "Vajra Smash",
+          namecn: "\u91D1\u521A\u6363\u787E"
+        },
+        {
           id: 143011,
+          other_id: 10000026,
           name: "Crash Footwork",
           namecn: "\u5D29\u5929\u6B65"
         },
         {
           id: 143021,
+          other_id: 10000024,
           name: "Crash Fist - Truncate",
           namecn: "\u5D29\u62F3\xB7\u622A\u8109"
         },
         {
           id: 143031,
+          other_id: 10000036,
           name: "Crash Fist - Subdue Dragon",
           namecn: "\u5D29\u62F3\xB7\u964D\u9F99"
         },
         {
           id: 143041,
+          other_id: 10000027,
           name: "Exercise Bones",
           namecn: "\u953B\u9AA8"
         },
         {
           id: 143051,
+          other_id: 10000031,
           name: "Bearing the Load",
           namecn: "\u8377\u91CD\u524D\u884C"
         },
         {
           id: 143061,
+          other_id: 10000028,
           name: "Windward Palms",
           namecn: "\u8FCE\u98CE\u638C"
         },
         {
           id: 143071,
+          other_id: 10000029,
           name: "Tiger Pouncing",
           namecn: "\u997F\u864E\u6251\u98DF"
         },
         {
           id: 143081,
+          other_id: 10000030,
           name: "Double Trouble",
           namecn: "\u53CC\u9B3C\u62CD\u95E8"
         },
         {
           id: 143091,
+          other_id: 10000020,
           name: "Majestic Qi",
           namecn: "\u6C14\u82E5\u60AC\u6CB3"
         },
         {
           id: 143101,
+          other_id: 10000034,
           name: "Sailing through Sky",
           namecn: "\u8E0F\u7834\u4E5D\u9704"
         },
         {
           id: 143111,
+          other_id: 10000033,
           name: "Mighty Force",
           namecn: "\u52BF\u5982\u7834\u7AF9"
         },
         {
+          id: 143121,
+          other_id: 10000090,
+          name: "Drunken Fist Stance",
+          namecn: "\u9189\u62F3\u67B6\u52BF"
+        },
+        {
           id: 144011,
+          other_id: 10000044,
           name: "Crash Citta-Dharma",
           namecn: "\u5D29\u706D\u5FC3\u6CD5"
         },
         {
           id: 144021,
+          other_id: 10000025,
           name: "Crash Fist - Inch Force",
           namecn: "\u5D29\u62F3\xB7\u5BF8\u52B2"
         },
         {
           id: 144031,
+          other_id: 10000035,
           name: "Crash Fist - Continue",
           namecn: "\u5D29\u62F3\xB7\u8FDE\u5D29"
         },
         {
           id: 144041,
+          other_id: 10000037,
           name: "Exercise Marrow",
           namecn: "\u953B\u9AD3"
         },
         {
           id: 144051,
+          other_id: 10000038,
           name: "Crane Footwork",
           namecn: "\u9E64\u6B65"
         },
         {
           id: 144061,
+          other_id: 10000050,
           name: "Elusive Footwork",
           namecn: "\u7075\u7384\u8FF7\u8E2A\u6B65"
         },
         {
           id: 144071,
+          other_id: 10000039,
           name: "Styx Agility",
           namecn: "\u51A5\u5F71\u8EAB\u6CD5"
         },
         {
           id: 144081,
+          other_id: 10000040,
           name: "Soul Seizing",
           namecn: "\u7384\u624B\u593A\u9B42"
         },
         {
           id: 144091,
+          other_id: 10000042,
           name: "Surging Waves",
           namecn: "\u51B2\u9704\u7834\u6D6A"
         },
         {
           id: 144101,
+          other_id: 10000043,
           name: "Overwhelming Force",
           namecn: "\u78C5\u7934\u4E4B\u52BF"
         },
         {
+          id: 144111,
+          other_id: 10000091,
+          name: "Mystic Spirit Healing",
+          namecn: "\u7384\u7075\u6108\u4F53"
+        },
+        {
+          id: 144121,
+          other_id: 10000092,
+          name: "Aerial Sweep",
+          namecn: "\u51CC\u7A7A\u98DE\u626B"
+        },
+        {
           id: 145011,
+          other_id: 10000045,
           name: "Crash Fist - Blink",
           namecn: "\u5D29\u62F3\xB7\u95EA\u51FB"
         },
         {
           id: 145021,
+          other_id: 10000046,
           name: "Crash Fist - Shocked",
           namecn: "\u5D29\u62F3\xB7\u60CA\u89E6"
         },
         {
           id: 145031,
+          other_id: 10000048,
           name: "Exercise Soul",
           namecn: "\u953B\u795E\u5F00\u6D77"
         },
         {
           id: 145041,
+          other_id: 10000047,
           name: "Realm-Killing Palms",
           namecn: "\u767E\u6740\u7834\u5883\u638C"
         },
         {
           id: 145051,
+          other_id: 10000041,
           name: "Shura Roar",
           namecn: "\u4FEE\u7F57\u543C"
         },
         {
           id: 145061,
+          other_id: 10000068,
           name: "Soul Cleaving",
           namecn: "\u7384\u5FC3\u65A9\u9B44"
         },
         {
           id: 145071,
+          other_id: 10000051,
           name: "Gather Intense Force",
           namecn: "\u5A01\u9707\u56DB\u65B9"
         },
         {
           id: 145081,
+          other_id: 10000052,
           name: "Vast Universe",
           namecn: "\u5929\u5730\u6D69\u8361"
         },
         {
+          id: 145091,
+          other_id: 10000093,
+          name: "Crash Fist - Shatter",
+          namecn: "\u5D29\u62F3\xB7\u788E\u9AA8"
+        },
+        {
+          id: 145101,
+          other_id: 10000094,
+          name: "Thousand Souls Strike",
+          namecn: "\u4E07\u9B42\u7834\u519B"
+        },
+        {
+          id: 145111,
+          other_id: 10000095,
+          name: "Blood Shadow Escape",
+          namecn: "\u8840\u5F71\u9041\u672F"
+        },
+        {
+          id: 145121,
+          other_id: 10000096,
+          name: "Spirit Forging Finger",
+          namecn: "\u953B\u7075\u6307"
+        },
+        {
           id: 211011,
+          other_id: 1000047,
           name: "Rhyme Spirit Sword",
           namecn: "\u97F5\u7075\u5251"
         },
         {
           id: 211021,
+          other_id: 1000054,
           name: "Diligent Sword",
           namecn: "\u52E4\u62D9\u5251"
         },
         {
           id: 212011,
+          other_id: 1000048,
           name: "Cloud Sword - Dawn",
           namecn: "\u4E91\u5251\xB7\u62C2\u6653"
         },
         {
           id: 212021,
+          other_id: 1000055,
           name: "Giant Ape Spirit Sword",
           namecn: "\u5DE8\u733F\u7075\u5251"
         },
         {
           id: 213011,
+          other_id: 1000049,
           name: "Unrestrained Sword - Dragon Coiled",
           namecn: "\u72C2\u5251\xB7\u76D8\u9F99"
         },
         {
           id: 213021,
+          other_id: 1000056,
           name: "One Heart One Sword",
           namecn: "\u4E00\u5FC3\u4E00\u5251"
         },
         {
           id: 213031,
+          other_id: 1000062,
           name: "Synergy Sword Formation",
           namecn: "\u5408\u52BF\u5251\u9635"
         },
         {
           id: 214011,
+          other_id: 1000050,
           name: "Sword Intent Flow",
           namecn: "\u5251\u610F\u6D41\u8F6C"
         },
         {
           id: 214021,
+          other_id: 1000051,
           name: "Emptiness Sword Formation",
           namecn: "\u6E9F\u7A7A\u5251\u9635\u8BC0"
         },
         {
           id: 215011,
+          other_id: 1000053,
           name: "Apex Sword Citta-Dharma",
           namecn: "\u51CC\u5251\u5FC3\u6CD5"
         },
         {
           id: 215021,
+          other_id: 1000057,
           name: "Step Moon Into Cloud",
           namecn: "\u6B65\u6708\u767B\u4E91"
         },
         {
           id: 215031,
+          other_id: 1000061,
           name: "Unrestrained Sword - Twin Dragons",
           namecn: "\u72C2\u5251\xB7\u53CC\u9F99"
         },
         {
           id: 216011,
+          other_id: 1000052,
           name: "Remnant Cloud Sky Sealing Sword",
           namecn: "\u6B8B\u4E91\u5C01\u5929\u5251",
           namealta: "Remnant Cloud Phocosky Sword"
         },
         {
           id: 216021,
+          other_id: 1000058,
           name: "Secret Sword - Spirit Cloud",
           namecn: "\u79D8\u5251\xB7\u7075\u4E91"
         },
         {
           id: 221011,
+          other_id: 4000047,
           name: "Hexagrams Spirit Resurrection",
           namecn: "\u5366\u7075\u8FD4\u751F"
         },
         {
           id: 221021,
+          other_id: 4000053,
           name: "Throwing Stones For Directions",
           namecn: "\u6295\u77F3\u95EE\u8DEF"
         },
         {
           id: 222011,
+          other_id: 4000048,
           name: "Vitality Blossom",
           namecn: "\u751F\u673A\u7EFD\u653E"
         },
         {
           id: 222021,
+          other_id: 4000054,
           name: "Star Born Rhythm",
           namecn: "\u661F\u884D\u8BC0"
         },
         {
           id: 223011,
+          other_id: 4000050,
           name: "Sun And Moon For Glory",
           namecn: "\u65E5\u6708\u4E89\u8F89"
         },
         {
           id: 223021,
+          other_id: 4000055,
           name: "All-Or-Nothing",
           namecn: "\u4E00\u63B7\u4E7E\u5764"
         },
         {
           id: 224011,
+          other_id: 4000056,
           name: "Flowers And Water",
           namecn: "\u843D\u82B1\u6D41\u6C34"
         },
         {
           id: 224021,
+          other_id: 4000051,
           name: "Astral Move - Dragon Slay",
           namecn: "\u661F\u5F08\xB7\u5C60\u9F99"
         },
         {
           id: 224031,
+          other_id: 4000064,
           name: "Thunder Citta-Dharma",
           namecn: "\u96F7\u9706\u5FC3\u6CD5"
         },
         {
           id: 225011,
+          other_id: 4000057,
           name: "Thin On The Ground",
           namecn: "\u94C1\u6811\u5F00\u82B1"
         },
         {
           id: 225021,
+          other_id: 4000049,
           name: "Preemptive Strike",
           namecn: "\u5148\u53D1\u5236\u4EBA"
         },
         {
           id: 225031,
+          other_id: 4000065,
           name: "Meteorite Meteor",
           namecn: "\u6D41\u661F\u5929\u9668"
         },
         {
           id: 226011,
+          other_id: 4000058,
           name: "Destiny Catastrophe",
           namecn: "\u5929\u547D\u52AB"
         },
         {
           id: 226021,
+          other_id: 4000052,
           name: "Covert Shift",
           namecn: "\u79FB\u82B1\u63A5\u6728"
         },
         {
           id: 231011,
+          other_id: 7000068,
           name: "Wood Spirit Secret Seal",
           namecn: "\u6728\u7075\u79D8\u5370"
         },
         {
           id: 231021,
+          other_id: 7000069,
           name: "Fire Spirit Secret Seal",
           namecn: "\u706B\u7075\u79D8\u5370"
         },
         {
           id: 231031,
+          other_id: 7000070,
           name: "Earth Spirit Secret Seal",
           namecn: "\u571F\u7075\u79D8\u5370"
         },
         {
           id: 231041,
+          other_id: 7000071,
           name: "Metal Spirit Secret Seal",
           namecn: "\u91D1\u7075\u79D8\u5370"
         },
         {
           id: 231051,
+          other_id: 7000072,
           name: "Water Spirit Secret Seal",
           namecn: "\u6C34\u7075\u79D8\u5370"
         },
         {
           id: 232011,
+          other_id: 7000063,
           name: "Metal Spirit - Chokehold",
           namecn: "\u91D1\u7075\xB7\u5C01\u5589"
         },
         {
           id: 232021,
+          other_id: 7000048,
           name: "Water Spirit - Rhythm Wood",
           namecn: "\u6C34\u7075\xB7\u6DA6\u6728"
         },
         {
           id: 232031,
+          other_id: 7000049,
           name: "Fire Spirit - Rhythm Earth",
           namecn: "\u706B\u7075\xB7\u7A91\u571F"
         },
         {
           id: 233011,
+          other_id: 7000064,
           name: "Wood Spirit - Vine",
           namecn: "\u6728\u7075\xB7\u85E4\u8513"
         },
         {
           id: 233021,
+          other_id: 7000050,
           name: "Metal Spirit - Rhythm Water",
           namecn: "\u91D1\u7075\xB7\u51DD\u6C34"
         },
         {
           id: 233031,
+          other_id: 7000055,
           name: "Five Elements Escape",
           namecn: "\u4E94\u884C\u9041\u672F"
         },
         {
           id: 234011,
+          other_id: 7000046,
           name: "Earth Spirit - Earthquake",
           namecn: "\u571F\u7075\xB7\u64BC\u5730"
         },
         {
           id: 234021,
+          other_id: 7000051,
           name: "Wood Spirit - Rhythm Fire",
           namecn: "\u6728\u7075\xB7\u71C3\u706B"
         },
         {
           id: 234031,
+          other_id: 7000047,
           name: "Earth Spirit - Rhythm Metal",
           namecn: "\u571F\u7075\xB7\u97F5\u91D1"
         },
         {
           id: 235011,
+          other_id: 7000045,
           name: "Fire Spirit - Burning Sky",
           namecn: "\u706B\u7075\xB7\u711A\u5929\u7131"
         },
         {
           id: 235021,
+          other_id: 7000044,
           name: "Water Spirit - Tsunami",
           namecn: "\u6C34\u7075\xB7\u6D77\u9F99\u5578"
         },
         {
           id: 236011,
+          other_id: 7000052,
           name: "Five Elements Spirit Blast",
           namecn: "\u4E94\u884C\u7075\u7206\u672F"
         },
         {
           id: 236021,
+          other_id: 7000065,
           name: "Five Elements Blossom",
           namecn: "\u4E94\u884C\u7EFD\u653E"
         },
         {
           id: 241011,
+          other_id: 10000054,
           name: "Endless Entanglement",
           namecn: "\u6B7B\u7F20\u70C2\u6253"
         },
         {
           id: 241021,
+          other_id: 10000053,
           name: "Endless Force",
           namecn: "\u6C14\u52BF\u4E0D\u7EDD"
         },
         {
           id: 242011,
+          other_id: 10000055,
           name: "Toxin Immunity",
           namecn: "\u767E\u6BD2\u4E0D\u4FB5"
         },
         {
           id: 242021,
+          other_id: 10000056,
           name: "Lying Drunk",
           namecn: "\u9189\u5367\u900D\u9065"
         },
         {
+          id: 243011,
+          other_id: 10000058,
+          name: "Herbal Bath",
+          namecn: "\u7075\u8349\u836F\u6D74",
+          non_playable: true
+        },
+        {
           id: 243021,
+          other_id: 10000061,
           name: "Break Pots and Sink Boats",
           namecn: "\u7834\u91DC\u6C89\u821F"
         },
         {
           id: 244011,
+          other_id: 10000057,
           name: "Strength Driven Mad",
-          namecn: "\u7C7B\u522B"
+          namecn: "\u529B\u82E5\u75AF\u9B54"
         },
         {
           id: 244021,
+          other_id: 10000060,
           name: "Crash Fist - Double",
           namecn: "\u5D29\u62F3\xB7\u53CC\u5F71"
         },
         {
           id: 244031,
+          other_id: 10000067,
           name: "Styx Three Hit",
           namecn: "\u5E7D\u51A5\u4E09\u70B9\u624B"
         },
         {
           id: 245011,
+          other_id: 10000062,
           name: "Break Cocoon",
           namecn: "\u7834\u8327\u5316\u8776"
         },
         {
           id: 245021,
+          other_id: 10000064,
           name: "Eerie Melody Buries Soul",
           namecn: "\u9B3C\u97F3\u846C\u9B42"
         },
         {
           id: 246011,
+          other_id: 10000065,
           name: "Endless Crash",
           namecn: "\u65E0\u5C3D\u5D29\u7EDD"
         },
         {
           id: 246021,
+          other_id: 10000066,
           name: "Return to Simplicity",
           namecn: "\u8FD4\u749E\u5F52\u771F"
         },
         {
           id: 311011,
+          other_id: 2000003,
           name: "Earth Spirit Elixir",
           namecn: "\u5730\u7075\u4E39"
         },
         {
           id: 311021,
+          other_id: 2000002,
           name: "Fundamental Elixir",
           namecn: "\u57F9\u5143\u4E39"
         },
         {
           id: 311031,
+          other_id: 2000001,
           name: "Small Recover Elixir",
           namecn: "\u5C0F\u8FD8\u4E39"
         },
         {
           id: 312011,
+          other_id: 2000005,
           name: "Cloud Elixir",
           namecn: "\u98DE\u4E91\u4E39"
         },
         {
           id: 312021,
+          other_id: 2000004,
           name: "Exorcism Elixir",
           namecn: "\u9A71\u90AA\u4E39"
         },
         {
+          id: 312031,
+          other_id: 2000006,
+          name: "Bodybuilding Elixir",
+          namecn: "\u953B\u4F53\u4E39",
+          non_playable: true
+        },
+        {
           id: 313011,
+          other_id: 2000007,
           name: "Healing Elixir",
           namecn: "\u7597\u4F24\u4E39"
         },
         {
           id: 313021,
+          other_id: 2000008,
           name: "Divine Power Elixir",
           namecn: "\u795E\u529B\u4E39"
         },
         {
+          id: 313031,
+          other_id: 2000009,
+          name: "Resurrection Elixir",
+          namecn: "\u8FD8\u9B42\u4E39",
+          non_playable: true
+        },
+        {
           id: 314011,
+          other_id: 2000011,
           name: "Great Recover Elixir",
           namecn: "\u5927\u8FD8\u4E39"
         },
         {
           id: 314021,
+          other_id: 2000010,
           name: "Spiritage Elixir",
           namecn: "\u805A\u7075\u4E39"
         },
         {
+          id: 314031,
+          other_id: 2000012,
+          name: "Talent Elixir",
+          namecn: "\u6D17\u9AD3\u4E39",
+          non_playable: true
+        },
+        {
           id: 315011,
+          other_id: 2000013,
           name: "Ice Spirit Guard Elixir",
           namecn: "\u51B0\u7075\u62A4\u4F53\u4E39"
         },
         {
+          id: 315021,
+          other_id: 2000014,
+          name: "Great Bodybuilding Elixir",
+          namecn: "\u953B\u4F53\u7384\u4E39",
+          non_playable: true
+        },
+        {
+          id: 315031,
+          other_id: 2000015,
+          name: "Enlightenment Elixir",
+          namecn: "\u609F\u9053\u4E39",
+          non_playable: true
+        },
+        {
           id: 321011,
+          other_id: 3000001,
           name: "Thunder Fulu",
           namecn: "\u5954\u96F7\u7B26"
         },
         {
           id: 321021,
+          other_id: 3000002,
           name: "Guard Spirit Fulu",
           namecn: "\u62A4\u7075\u7B26"
         },
         {
           id: 321031,
+          other_id: 3000003,
           name: "Sharp Metal Fulu",
           namecn: "\u9510\u91D1\u7B26"
         },
         {
           id: 322011,
+          other_id: 3000005,
           name: "Fire Cloud Fulu",
           namecn: "\u706B\u4E91\u7B26"
         },
         {
           id: 322021,
+          other_id: 3000006,
           name: "Calm Incantation",
           namecn: "\u6E05\u5FC3\u5492"
         },
         {
           id: 322031,
+          other_id: 3000004,
           name: "Mist Fulu",
           namecn: "\u6C34\u6C14\u7B26"
         },
         {
           id: 323011,
+          other_id: 3000009,
           name: "Ice Incantation",
           namecn: "\u5BD2\u51B0\u5492"
         },
         {
           id: 323021,
+          other_id: 3000007,
           name: "Spirit Absorb Fulu",
           namecn: "\u5438\u7075\u7B26"
         },
         {
           id: 323031,
+          other_id: 3000008,
           name: "Miasma Fulu",
           namecn: "\u7634\u6C14\u7B26"
         },
         {
           id: 324011,
+          other_id: 3000010,
           name: "Spiritage Incantation",
           namecn: "\u805A\u6C14\u5492"
         },
         {
           id: 324021,
-          name: "Distubing Fulu",
+          other_id: 3000011,
+          name: "Disturbing Fulu",
           namecn: "\u6270\u5FC3\u7B26",
-          namealta: "Disturbing Fulu"
+          namealta: "Distubing Fulu"
         },
         {
           id: 324031,
+          other_id: 3000012,
           name: "Weaken Fulu",
           namecn: "\u5F31\u4F53\u7B26"
         },
         {
           id: 325011,
+          other_id: 3000014,
           name: "Soul Requiem Fulu",
           namecn: "\u9547\u9B42\u5C01\u5143\u7B26"
         },
         {
           id: 325021,
+          other_id: 3000013,
           name: "Divine Walk Fulu",
           namecn: "\u5343\u91CC\u795E\u884C\u7B26"
         },
         {
           id: 325031,
+          other_id: 3000015,
           name: "Thousand Evil Incantation",
           namecn: "\u4E07\u90AA\u5165\u4F53\u5492",
           namealta: "Thousand Evils Incantation"
         },
         {
           id: 331011,
+          other_id: 5000001,
           name: "Cracking Voice",
           namecn: "\u7834\u97F3"
         },
         {
           id: 331021,
+          other_id: 5000002,
           name: "Earth Tune",
           namecn: "\u571F\u884C\u66F2"
         },
         {
           id: 331031,
+          other_id: 5000003,
           name: "Carefree Tune",
           namecn: "\u900D\u9065\u66F2"
         },
         {
           id: 332011,
+          other_id: 5000006,
           name: "Kindness Tune",
           namecn: "\u6148\u5FF5\u66F2"
         },
         {
           id: 332021,
+          other_id: 5000005,
           name: "Illusion Tune",
           namecn: "\u5E7B\u97F3\u66F2"
         },
         {
           id: 332031,
+          other_id: 5000004,
           name: "Sky Spirit Tune",
           namecn: "\u5929\u7075\u66F2"
         },
         {
           id: 333011,
+          other_id: 5000007,
           name: "Heartbroken Tune",
           namecn: "\u65AD\u80A0\u66F2"
         },
         {
           id: 333021,
+          other_id: 5000008,
           name: "Craze Dance Tune",
           namecn: "\u72C2\u821E\u66F2"
         },
         {
           id: 333031,
+          other_id: 5000009,
           name: "Tremolo",
           namecn: "\u8F6E\u6307\u8FDE\u97F3"
         },
         {
           id: 334011,
+          other_id: 5000010,
           name: "Regen Tune",
           namecn: "\u56DE\u6625\u66F2"
         },
         {
           id: 334021,
+          other_id: 5000011,
           name: "Nine Evil Ruptsprite",
           namecn: "\u4E5D\u715E\u7834\u7075\u66F2",
           namealta: "Nine Evils Ruptsprite"
         },
         {
           id: 334031,
+          other_id: 5000012,
           name: "Concentric Tune",
           namecn: "\u540C\u5FC3\u66F2"
         },
         {
           id: 335011,
+          other_id: 5000015,
           name: "Predicament for Immortals",
           namecn: "\u5929\u97F3\u56F0\u4ED9\u66F2"
         },
         {
           id: 335021,
+          other_id: 5000013,
           name: "Apparition Confusion",
           namecn: "\u5E7D\u7EEA\u4E71\u5FC3\u66F2"
         },
         {
           id: 335031,
+          other_id: 5000014,
           name: "Chord In Tune",
           namecn: "\u8F6C\u5F26\u5408\u8C03"
         },
         {
           id: 341011,
+          other_id: 6000001,
           name: "Toning",
           namecn: "\u8C03\u8272"
         },
         {
           id: 341021,
+          other_id: 6000003,
           name: "Grinding Ink",
           namecn: "\u7814\u58A8"
         },
         {
+          id: 341031,
+          other_id: 6000002,
+          name: "Practice Writing",
+          namecn: "\u7EC3\u7B14",
+          non_playable: true
+        },
+        {
           id: 342011,
+          other_id: 6000004,
           name: "Pen Walks Dragon Snake",
           namecn: "\u7B14\u8D70\u9F99\u86C7"
         },
         {
           id: 342021,
+          other_id: 6000005,
           name: "Feed On Illusions",
           namecn: "\u753B\u997C\u5145\u9965"
         },
         {
           id: 342031,
+          other_id: 6000006,
           name: "Paint Feet on Snake",
           namecn: "\u753B\u86C7\u6DFB\u8DB3",
           namealta: "Gild The Lily"
         },
         {
           id: 343011,
+          other_id: 6000007,
           name: "Splash Ink",
           namecn: "\u6325\u6BEB\u6CFC\u58A8"
         },
         {
           id: 343021,
+          other_id: 6000008,
           name: "Inspiration",
           namecn: "\u7075\u611F\u8FF8\u53D1"
         },
         {
+          id: 343031,
+          other_id: 6000009,
+          name: "Ask Dao By Paint",
+          namecn: "\u4EE5\u753B\u5165\u9053",
+          non_playable: true
+        },
+        {
           id: 344011,
+          other_id: 6000011,
           name: "Divine Brush",
           namecn: "\u795E\u6765\u4E4B\u7B14"
         },
         {
           id: 344021,
+          other_id: 6000014,
           name: "Falling Paper Clouds",
           namecn: "\u843D\u7EB8\u4E91\u70DF"
         },
         {
+          id: 344031,
+          other_id: 6000010,
+          name: "Reason By Analogy",
+          namecn: "\u89E6\u7C7B\u65C1\u901A",
+          non_playable: true
+        },
+        {
           id: 345011,
+          other_id: 6000012,
           name: "Flying Brush",
           namecn: "\u8FD0\u7B14\u5982\u98DE"
         },
         {
           id: 345021,
+          other_id: 6000013,
           name: "Finishing Touch",
           namecn: "\u753B\u9F99\u70B9\u775B"
         },
         {
+          id: 345031,
+          other_id: 6000015,
+          name: "Wonderful Strokes",
+          namecn: "\u5999\u7B14\u751F\u82B1",
+          non_playable: true
+        },
+        {
           id: 351011,
+          other_id: 8000001,
           name: "Thunderphilia Formation",
           namecn: "\u5F15\u96F7\u9635"
         },
         {
           id: 351021,
+          other_id: 8000002,
           name: "Fraccide Formation",
           namecn: "\u788E\u6740\u9635"
         },
         {
           id: 351031,
+          other_id: 8000003,
           name: "Impact Formation",
           namecn: "\u51B2\u51FB\u9635\u7EB9"
         },
         {
           id: 352011,
+          other_id: 8000004,
           name: "Scutturtle Formation",
           namecn: "\u9F9F\u7532\u9635"
         },
         {
           id: 352021,
+          other_id: 8000005,
           name: "Cacopoisonous Formation",
           namecn: "\u90AA\u86CA\u9635"
         },
         {
           id: 352031,
+          other_id: 8000006,
           name: "Cure Formation",
           namecn: "\u7597\u6108\u9635\u7EB9"
         },
         {
           id: 353011,
+          other_id: 8000007,
           name: "Spiritage Formation",
           namecn: "\u805A\u7075\u9635"
         },
         {
           id: 353021,
+          other_id: 8000008,
           name: "Endless Sword Formation",
           namecn: "\u5468\u5929\u5251\u9635"
         },
         {
           id: 353031,
+          other_id: 8000009,
           name: "Hexproof Formation",
           namecn: "\u8F9F\u90AA\u9635\u7EB9"
         },
         {
           id: 354011,
+          other_id: 8000011,
           name: "Heavenly Spirit Forceage Formation",
           namecn: "\u5929\u7F61\u805A\u529B\u9635"
         },
         {
           id: 354021,
+          other_id: 8000010,
           name: "Octgates Lock Formation",
           namecn: "\u516B\u95E8\u91D1\u9501\u9635"
         },
         {
           id: 354031,
+          other_id: 8000016,
           name: "Motionless Tutelary Formation",
           namecn: "\u4E0D\u52A8\u91D1\u521A\u9635"
         },
         {
           id: 355011,
+          other_id: 8000013,
           name: "Anthomania Formation",
           namecn: "\u4E07\u82B1\u8FF7\u9B42\u9635"
         },
         {
           id: 355021,
+          other_id: 8000012,
           name: "Echo Formation",
           namecn: "\u56DE\u54CD\u9635\u7EB9"
         },
         {
           id: 355031,
+          other_id: 8000014,
           name: "Meru Formation",
           namecn: "\u987B\u5F25\u9635\u7EB9"
         },
         {
           id: 361011,
+          other_id: 9000003,
           name: "Sword Bamboo",
           namecn: "\u5251\u679D\u7AF9"
         },
         {
           id: 361021,
-          name: "Hard Bamboo",
-          namecn: "\u786C\u679D\u7AF9"
+          other_id: 9000001,
+          name: "Origin Herb",
+          namecn: "\u5F52\u5143\u8349",
+          non_playable: true
+        },
+        {
+          id: 361031,
+          other_id: 9000002,
+          name: "Shuttle Orchid",
+          namecn: "\u91D1\u68AD\u5170",
+          non_playable: true
+        },
+        {
+          id: 362011,
+          other_id: 9000008,
+          name: "Divine Power Grass",
+          namecn: "\u795E\u529B\u8349",
+          non_playable: true
         },
         {
           id: 362021,
+          other_id: 9000006,
           name: "Mystery Seed",
           namecn: "\u795E\u79D8\u79CD\u5B50"
         },
         {
           id: 362031,
+          other_id: 9000009,
           name: "Leaf Shield Flower",
           namecn: "\u53F6\u76FE\u82B1"
         },
         {
           id: 362041,
+          other_id: 9000018,
           name: "Leaf Blade Flower",
           namecn: "\u53F6\u5203\u82B1"
         },
         {
+          id: 362051,
+          other_id: 9000016,
+          name: "Rock Herb",
+          namecn: "\u5F52\u5CA9\u8349",
+          non_playable: true
+        },
+        {
+          id: 362061,
+          other_id: 9000021,
+          name: "Fire Orchid",
+          namecn: "\u706B\u68AD\u5170",
+          non_playable: true
+        },
+        {
+          id: 362071,
+          other_id: 9000022,
+          name: "Lose Power Grass",
+          namecn: "\u5931\u529B\u8349",
+          non_playable: true
+        },
+        {
+          id: 362081,
+          other_id: 9000027,
+          name: "Hard Bamboo",
+          namecn: "\u786C\u679D\u7AF9"
+        },
+        {
           id: 363011,
+          other_id: 9000005,
           name: "Qi-seeking Sunflower",
           namecn: "\u5411\u7075\u8475"
         },
         {
           id: 363021,
+          other_id: 9000017,
           name: "Qi-corrupting Sunflower",
           namecn: "\u90AA\u7075\u8475"
         },
         {
+          id: 363031,
+          other_id: 9000004,
+          name: "Healing Chamomile",
+          namecn: "\u6108\u7518\u83CA",
+          non_playable: true
+        },
+        {
+          id: 363041,
+          other_id: 9000007,
+          name: "Spiritual Plant Watering",
+          namecn: "\u7075\u690D\u6D47\u704C",
+          non_playable: true
+        },
+        {
+          id: 363051,
+          other_id: 9000023,
+          name: "Clear Chamomile",
+          namecn: "\u6E05\u7518\u83CA",
+          non_playable: true
+        },
+        {
           id: 364011,
+          other_id: 9000013,
           name: "Frozen Snow Lotus",
           namecn: "\u51B0\u5C01\u96EA\u83B2"
         },
         {
           id: 364021,
+          other_id: 9000026,
           name: "Detoxific Purple Fern",
           namecn: "\u6E05\u80A0\u7D2B\u8568"
         },
         {
           id: 364031,
+          other_id: 9000020,
           name: "Frozen Blood Lotus",
           namecn: "\u51B0\u5C01\u8840\u83B2"
         },
         {
+          id: 364041,
+          other_id: 9000010,
+          name: "Flying Owl Reishi",
+          namecn: "\u98DE\u67AD\u7075\u829D",
+          non_playable: true
+        },
+        {
+          id: 364051,
+          other_id: 9000012,
+          name: "Toxic Purple Fern",
+          namecn: "\u7A7F\u80A0\u7D2B\u8568",
+          non_playable: true
+        },
+        {
+          id: 364061,
+          other_id: 9000024,
+          name: "Shadow Owl Reishi",
+          namecn: "\u5F71\u67AD\u7075\u829D",
+          non_playable: true
+        },
+        {
+          id: 365011,
+          other_id: 9000014,
+          name: "Mysterious Dao Fruit",
+          namecn: "\u7384\u97F5\u9053\u679C",
+          non_playable: true
+        },
+        {
           id: 365021,
+          other_id: 9000015,
           name: "Space Spiritual Field",
           namecn: "\u7A7A\u95F4\u7075\u7530"
         },
         {
           id: 365031,
+          other_id: 9000011,
           name: "Entangling Ancient Vine",
           namecn: "\u7F1A\u4ED9\u53E4\u85E4"
         },
         {
           id: 365041,
+          other_id: 9000019,
           name: "Devouring Ancient Vine",
           namecn: "\u566C\u4ED9\u53E4\u85E4"
         },
         {
+          id: 365051,
+          other_id: 9000025,
+          name: "Demonic Dao Fruit",
+          namecn: "\u9B54\u97F5\u9053\u679C",
+          non_playable: true
+        },
+        {
           id: 371011,
+          other_id: 11000004,
           name: "Heavenly Decree - Attack",
           namecn: "\u5929\u8C15\xB7\u653B",
           namealta: "God Saying - Attack"
         },
         {
           id: 371021,
+          other_id: 11000003,
           name: "Heavenly Decree - Defend",
           namecn: "\u5929\u8C15\xB7\u5B88",
           namealta: "God Saying - Defend"
         },
         {
           id: 371031,
+          other_id: 11000001,
           name: "Foretell Fate",
           namecn: "\u535C\u547D",
           namealta: "Learn Fortune"
         },
         {
           id: 371041,
+          other_id: 11000022,
           name: "Examine Body",
           namecn: "\u5BDF\u4F53",
           namealta: "Observe Body"
         },
         {
           id: 372011,
+          other_id: 11000008,
           name: "Heavenly Fortune - Seek Fortune",
           namecn: "\u5929\u8FD0\xB7\u8D8B\u5409",
           namealta: "God Luck - Approach"
         },
         {
           id: 372021,
+          other_id: 11000007,
           name: "Heavenly Fortune - Shun Misfortune",
           namecn: "\u5929\u8FD0\xB7\u907F\u51F6",
           namealta: "God Luck - Avoid"
         },
         {
           id: 372031,
+          other_id: 11000009,
           name: "Detect Qi",
           namecn: "\u63A2\u7075"
         },
         {
           id: 372041,
+          other_id: 11000023,
           name: "Bad Omen",
           namecn: "\u51F6\u8C61"
         },
         {
           id: 373011,
+          other_id: 11000011,
           name: "Heavenly Time - Fleeting",
           namecn: "\u5929\u547D\xB7\u98DE\u901D",
           namealta: "God Fate - Flies"
         },
         {
           id: 373021,
+          other_id: 11000012,
           name: "Heavenly Time - Recurring",
           namecn: "\u5929\u547D\xB7\u91CD\u73B0",
           namealta: "God Fate - Reborn"
         },
         {
           id: 373031,
+          other_id: 11000024,
           name: "Disaster of Bloodshed",
           namecn: "\u8840\u5149\u4E4B\u707E"
         },
         {
           id: 373041,
+          other_id: 11000005,
           name: "Lucky Start",
           namecn: "\u5409\u8FD0\u521D\u663E",
           namealta: "Good Omen"
         },
         {
           id: 374011,
+          other_id: 11000013,
           name: "Everything Goes Your Way",
           namecn: "\u4E07\u4E8B\u5982\u610F",
           namealta: "Everything Goes Way"
         },
         {
           id: 374021,
+          other_id: 11000026,
           name: "Heavenly Star - Guard",
           namecn: "\u5929\u661F\xB7\u5FA1\u5FC3",
           namealta: "God Star - Promotion"
         },
         {
           id: 374031,
+          other_id: 11000025,
           name: "Heavenly Star - Pull",
           namecn: "\u5929\u661F\xB7\u7275\u5F15",
           namealta: "God Star - Traction"
         },
         {
           id: 374041,
+          other_id: 11000014,
           name: "Everything is Unadvisable",
           namecn: "\u8BF8\u4E8B\u4E0D\u5B9C",
           namealta: "Nothing Is Appropriate"
         },
         {
           id: 375011,
+          other_id: 11000018,
           name: "Envelop In Disaster",
           namecn: "\u5384\u52AB\u7F20\u8EAB",
           namealta: "Calamity Plaguin",
@@ -17407,462 +18816,678 @@
         },
         {
           id: 375021,
+          other_id: 11000021,
           name: "Cycle of Fate",
           namecn: "\u547D\u8FD0\u8F6E\u56DE",
           namealta: "Fate Reincarnates"
         },
         {
           id: 375031,
+          other_id: 11000019,
           name: "Heavenly Will - Comply",
           namecn: "\u5929\u673A\xB7\u987A\u5E94",
           namealta: "God's Opportunity - Conform"
         },
         {
           id: 375041,
+          other_id: 11000020,
           name: "Heavenly Will - Defy",
           namecn: "\u5929\u673A\xB7\u9006\u65BD",
           namealta: "God's Opportunity - Reversal"
         },
         {
           id: 401011,
+          other_id: 99000100,
           name: "Black Silver Armor",
           namecn: "\u7384\u94F6\u7532"
         },
         {
           id: 401021,
+          other_id: 99000107,
           name: "Thorns Spear",
           namecn: "\u523A\u5C16\u67AA"
         },
         {
           id: 402011,
+          other_id: 99000101,
           name: "Dew Jade Vase",
           namecn: "\u7389\u9732\u74F6"
         },
         {
           id: 402021,
+          other_id: 99000108,
           name: "Nameless Ancient Sword",
           namecn: "\u65E0\u540D\u53E4\u5251"
         },
         {
           id: 403011,
+          other_id: 99000102,
           name: "Fire Soul Refinement Flag",
           namecn: "\u5929\u706B\u70BC\u9B42\u65D7"
         },
         {
           id: 403021,
+          other_id: 99000109,
           name: "Requiem Jade Lotus",
           namecn: "\u517B\u9B42\u7389\u83B2"
         },
         {
           id: 403031,
+          other_id: 99000112,
           name: "Blood Crystal of Wolf King",
           namecn: "\u72FC\u7687\u8840\u6676"
         },
         {
           id: 404011,
+          other_id: 99000103,
           name: "Cosmos Seal Divine Orb",
           namecn: "\u6DF7\u5143\u5C01\u795E\u73E0"
         },
         {
           id: 404021,
+          other_id: 99000110,
           name: "Metal Tri-Thorn Spear",
           namecn: "\u91D1\u5143\u4E09\u5C16\u67AA"
         },
         {
           id: 404031,
+          other_id: 99000113,
           name: "Carefree Guqin",
           namecn: "\u900D\u9065\u53E4\u7434"
         },
         {
           id: 405011,
+          other_id: 99000104,
           name: "Nether Seal Evil Signet",
           namecn: "\u4E5D\u51A5\u9547\u9B54\u5370"
         },
         {
           id: 405021,
+          other_id: 99000106,
           name: "Dark Crystal Heart Shield",
           namecn: "\u7384\u6676\u62A4\u5FC3\u955C"
         },
         {
           id: 405031,
+          other_id: 99000114,
           name: "Bow of Hunting Owl",
           namecn: "\u730E\u67AD\u53E4\u5F13"
         },
         {
           id: 406011,
+          other_id: 99000105,
           name: "Void Split Spear",
           namecn: "\u88C2\u865A\u754C\u5143\u67AA"
         },
         {
           id: 406021,
+          other_id: 99000111,
           name: "Qimen Monster-Locking Tower",
           namecn: "\u5947\u95E8\u9501\u5996\u5854",
           namealta: "Mysterious Gates Devil Seal Tower"
         },
         {
+          id: 406031,
+          other_id: 99000213,
+          name: "Myriad Manifestations Seed",
+          namecn: "\u4E07\u8C61\u9053\u79CD"
+        },
+        {
           id: 501011,
+          other_id: 99000200,
           name: "Break Sky Eagle",
           namecn: "\u7834\u7A7A\u96D5"
         },
         {
           id: 501021,
+          other_id: 99000208,
           name: "Fat Immortal Raccoon",
           namecn: "\u80D6\u4ED9\u72F8"
         },
         {
           id: 502011,
+          other_id: 99000201,
           name: "Dark Star Bat",
           namecn: "\u6697\u661F\u8759\u8760"
         },
         {
           id: 502021,
+          other_id: 99000209,
           name: "Lonely Night Wolf",
           namecn: "\u5B64\u591C\u72FC"
         },
         {
           id: 503011,
+          other_id: 99000202,
           name: "Black Earth Turtle",
           namecn: "\u5730\u7384\u9F9F"
         },
         {
           id: 503021,
+          other_id: 99000203,
           name: "Brocade Rat",
           namecn: "\u9526\u6BDB\u9F20"
         },
         {
           id: 504011,
+          other_id: 99000205,
           name: "Scarlet-Eye The Sky Consumer",
           namecn: "\u541E\u5929\u8D64\u773C\u517D"
         },
         {
           id: 504021,
+          other_id: 99000207,
           name: "Ashes Phoenix",
           namecn: "\u6D74\u706B\u51E4\u51F0"
         },
         {
           id: 504031,
+          other_id: 99000212,
           name: "Three-tailed Huan",
           namecn: "\u4E09\u5C3E\u8B99",
           namealta: "Three Tailed Cat"
         },
         {
           id: 505011,
+          other_id: 99000204,
           name: "Colorful Spirit Crane",
           namecn: "\u4E03\u5F69\u7075\u9E64"
         },
         {
           id: 505021,
+          other_id: 99000210,
           name: "Shadow Owl Rabbit",
           namecn: "\u5F71\u67AD\u5154"
         },
         {
           id: 506011,
+          other_id: 99000206,
           name: "Void The Spirit Consumer",
           namecn: "\u566C\u7075\u865A\u517D"
         },
         {
           id: 506021,
+          other_id: 99000211,
           name: "Nether Void Canine",
           namecn: "\u5E7D\u51A5\u865A\u9B42\u72AC"
         },
         {
+          id: 506031,
+          other_id: 99000214,
+          name: "Nameless White Deer",
+          namecn: "\u65E0\u540D\u767D\u9E7F"
+        },
+        {
           id: 601011,
+          other_id: 286,
           name: "Normal Attack",
           namecn: "\u666E\u901A\u653B\u51FB"
         },
         {
           id: 601021,
+          other_id: 78,
           name: "Leaping the Dragon Gate",
           namecn: "\u9C7C\u8DC3\u9F99\u95E8"
         },
         {
+          id: 601031,
+          other_id: -90001,
+          name: "Deviation Syndrome",
+          namecn: "\u8D70\u706B\u5165\u9B54",
+          non_playable: true
+        },
+        {
+          id: 601041,
+          other_id: 99000001,
+          name: "Treasures Appear",
+          namecn: "\u91CD\u5B9D\u73B0\u4E16",
+          non_playable: true
+        },
+        {
+          id: 601051,
+          other_id: 99000002,
+          name: "Spirit Pet Mastered",
+          namecn: "\u7075\u5BA0\u8BA4\u4E3B",
+          non_playable: true
+        },
+        {
+          id: 601061,
+          other_id: 99000003,
+          name: "Inheritance of the Secret Enchantment",
+          namecn: "\u79D8\u672F\u4F20\u627F",
+          non_playable: true
+        },
+        {
+          id: 601071,
+          other_id: 330,
+          name: "Hidden Weapon",
+          namecn: "\u6697\u5668"
+        },
+        {
+          id: 601081,
+          other_id: 71,
+          name: "Rakshasa Pouncing",
+          namecn: "\u7F57\u5239\u6251"
+        },
+        {
+          id: 601091,
+          other_id: 72,
+          name: "Sky-Piercing Claw",
+          namecn: "\u7834\u7A7A\u722A"
+        },
+        {
           id: 602011,
+          other_id: 41,
           name: "Firecracker",
           namecn: "\u7206\u7AF9"
         },
         {
           id: 603011,
+          other_id: 39,
           name: "Demonic Qi Haunt",
           namecn: "\u9B54\u6C14\u7F20\u8EAB"
         },
         {
           id: 603021,
+          other_id: 76,
           name: "Magic Dragon's Paw",
           namecn: "\u9B54\u9F99\u4E4B\u722A"
         },
         {
           id: 603031,
+          other_id: 80,
           name: "Firework",
           namecn: "\u70DF\u82B1"
         },
         {
+          id: 603041,
+          other_id: 27,
+          name: "At Own Pace",
+          namecn: "\u81EA\u5728\u968F\u5FC3",
+          non_playable: true
+        },
+        {
           id: 605011,
+          other_id: 67,
           name: "Mirroring Merpeople Pearl",
           namecn: "\u955C\u50CF\u9C9B\u73E0"
         },
         {
           id: 605021,
+          other_id: 65,
           name: "Qi-Gathering Merpeople Pearl",
           namecn: "\u805A\u7075\u9C9B\u73E0"
         },
         {
           id: 605031,
+          other_id: 62,
           name: "Frenzied Merpeople Pearl",
           namecn: "\u72C2\u5316\u9C9B\u73E0"
         },
         {
           id: 605041,
+          other_id: 63,
           name: "Bewildering Merpeople Pearl",
           namecn: "\u8FF7\u60D8\u9C9B\u73E0"
         },
         {
           id: 605051,
+          other_id: 66,
           name: "Crystallized Merpeople Pearl",
           namecn: "\u7ED3\u6676\u9C9B\u73E0"
         },
         {
           id: 605061,
+          other_id: 60,
           name: "Cursed Merpeople Pearl",
           namecn: "\u9B54\u5316\u9C9B\u73E0"
         },
         {
           id: 605071,
+          other_id: 61,
           name: "Abyssal Merpeople Pearl",
           namecn: "\u6DF1\u6E0A\u9C9B\u73E0"
         },
         {
           id: 605081,
+          other_id: 64,
           name: "Multicolored Merpeople Pearl",
           namecn: "\u4E94\u5F69\u9C9B\u73E0"
         },
         {
           id: 605091,
+          other_id: 68,
           name: "Sneak Merpeople Pearl",
           namecn: "\u6F5C\u88AD\u9C9B\u73E0"
         },
         {
           id: 605101,
+          other_id: 69,
           name: "Blood-cultivated Merpeople Pearl",
           namecn: "\u8840\u4FEE\u9C9B\u73E0"
         },
         {
           id: 606011,
+          other_id: 40,
           name: "Demonic Qi Burst",
           namecn: "\u9B54\u6C14\u7206\u53D1"
         },
         {
           id: 606021,
+          other_id: 77,
           name: "Demonic Dragon's Chaotic Dance",
           namecn: "\u9B54\u9F99\u4E71\u821E"
         },
         {
           id: 606031,
+          other_id: 79,
           name: "Loong",
           namecn: "\u9F99"
         },
         {
           id: 611011,
+          other_id: 36,
           name: "Cloud Sword - Flying Sand",
           namecn: "\u4E91\u5251\xB7\u98DE\u7802"
         },
         {
           id: 611021,
+          other_id: 37,
           name: "Bronze Cat",
           namecn: "\u9752\u94DC\u732B"
         },
         {
           id: 611031,
+          other_id: 19,
           name: "Clear Heart Sword Embryo",
           namecn: "\u6F84\u5FC3\u5251\u80DA"
         },
         {
+          id: 611041,
+          other_id: 33,
+          name: "Dried small fish",
+          namecn: "\u5C0F\u9C7C\u5E72",
+          non_playable: true
+        },
+        {
+          id: 611051,
+          other_id: 34,
+          name: "Catnip",
+          namecn: "\u732B\u8584\u8377",
+          non_playable: true
+        },
+        {
+          id: 611061,
+          other_id: 35,
+          name: "Cat Teaser",
+          namecn: "\u9017\u732B\u68D2",
+          non_playable: true
+        },
+        {
           id: 612011,
+          other_id: 8,
           name: "Cloud Sword - Cat Paw",
           namecn: "\u4E91\u5251\xB7\u732B\u722A"
         },
         {
           id: 614011,
+          other_id: 3,
           name: "Cloud Sword - Avalanche",
           namecn: "\u4E91\u5251\xB7\u5D29\u96EA"
         },
         {
           id: 614021,
+          other_id: 15,
           name: "Cloud Sword - Pray Rain",
           namecn: "\u4E91\u5251\xB7\u5524\u96E8"
         },
         {
           id: 614031,
+          other_id: 9,
           name: "Spirit Cat Chaos Sword",
           namecn: "\u7075\u732B\u4E71\u5251"
         },
         {
           id: 615011,
+          other_id: 2,
           name: "Unrestrained Sword - Flame Dance",
           namecn: "\u72C2\u5251\xB7\u708E\u821E"
         },
         {
           id: 615021,
+          other_id: 16,
           name: "Sky Delicate Bracelet",
           namecn: "\u4E5D\u9704\u73B2\u73D1\u956F"
         },
         {
           id: 615031,
+          other_id: 213,
           name: "Yeying Sword Formation",
           namecn: "\u66F3\u5F71\u5251\u9635"
         },
         {
+          id: 615041,
+          other_id: 1,
+          name: "Spring Course Tea",
+          namecn: "\u4E91\u6CC9\u9053\u8336",
+          non_playable: true
+        },
+        {
           id: 621011,
+          other_id: 22,
           name: "Perfectly Planned",
           namecn: "\u7B97\u65E0\u9057\u7B56"
         },
         {
           id: 622011,
+          other_id: 12,
           name: "Only Traces",
           namecn: "\u98DE\u9E3F\u8E0F\u96EA"
         },
         {
           id: 622021,
+          other_id: 214,
           name: "Jade Scroll of Yin Symbol",
           namecn: "\u9634\u7B26\u7389\u7B80"
         },
         {
           id: 623011,
+          other_id: 28,
           name: "Ultimate Hexagram Base",
           namecn: "\u65E0\u6781\u5366\u76D8"
         },
         {
           id: 623021,
+          other_id: 10,
           name: "Starburst",
           namecn: "\u661F\u7206\u672F"
         },
         {
           id: 623031,
+          other_id: 6,
           name: "Flame Flutter",
           namecn: "\u706F\u7130\u98DE\u821E"
         },
         {
           id: 624011,
+          other_id: 11,
           name: "Heptastar Soulstat",
           namecn: "\u4E03\u661F\u5B9A\u9B42"
         },
         {
           id: 624021,
+          other_id: 5,
           name: "Within Reach",
           namecn: "\u74EE\u4E2D\u6349\u9CD6"
         },
         {
           id: 624031,
+          other_id: 7,
           name: "Rotary Divination Hexagram",
           namecn: "\u65CB\u706F\u5360\u5366"
         },
         {
           id: 625011,
+          other_id: 23,
           name: "Star Moon Folding Fan",
           namecn: "\u661F\u6708\u6298\u6247"
         },
         {
           id: 625021,
+          other_id: 29,
           name: "Fury Thunder",
           namecn: "\u72C2\u96F7\u7535\u95EA"
         },
         {
           id: 625031,
+          other_id: 215,
           name: "Solitary Void Golden Scroll",
           namecn: "\u5B64\u865A\u91D1\u4E66"
         },
         {
           id: 625041,
+          other_id: 216,
           name: "Face Isolation",
           namecn: "\u80CC\u5B64"
         },
         {
           id: 625051,
+          other_id: 217,
           name: "Strike Vacuity",
           namecn: "\u51FB\u865A"
         },
         {
           id: 632011,
+          other_id: 20,
           name: "Wood Spirit - Peach Blossom Seal",
           namecn: "\u6728\u7075\xB7\u6843\u82B1\u5370"
         },
         {
           id: 633011,
+          other_id: 38,
           name: "Kun Wu Metal Ring",
           namecn: "\u951F\u94FB\u91D1\u73AF"
         },
         {
           id: 633021,
+          other_id: 13,
           name: "Gourd Of Leisurely",
           namecn: "\u60A0\u7136\u846B\u82A6"
         },
         {
+          id: 633031,
+          other_id: 259,
+          name: "Heavenly Rain",
+          namecn: "\u5929\u964D\u7518\u9716",
+          non_playable: true
+        },
+        {
           id: 634011,
+          other_id: 18,
           name: "Metal Spirit - Vigorous",
           namecn: "\u91D1\u7075\xB7\u521A\u52B2"
         },
         {
           id: 634021,
+          other_id: 32,
           name: "Overcome with each other",
           namecn: "\u53CC\u9E33\u9006\u514B"
         },
         {
           id: 634031,
+          other_id: 17,
           name: "Water Spirit - Spring Rain",
           namecn: "\u6C34\u7075\xB7\u6625\u96E8"
         },
         {
           id: 635011,
+          other_id: 21,
           name: "Earth Spirit - Landslide",
           namecn: "\u571F\u7075\xB7\u5C71\u5D29"
         },
         {
           id: 635021,
+          other_id: 218,
           name: "Forget Worries",
           namecn: "\u5FD8\u5FE7"
         },
         {
+          id: 635031,
+          other_id: 31,
+          name: "Inheritance of Five Elements",
+          namecn: "\u4E94\u884C\u4F20\u627F",
+          non_playable: true
+        },
+        {
           id: 641011,
+          other_id: 219,
           name: "Double Stick",
           namecn: "\u53CC\u8282\u68CD"
         },
         {
           id: 642011,
+          other_id: 45,
           name: "Unceasing Exercising",
           namecn: "\u953B\u4F53\u4E0D\u606F"
         },
         {
           id: 642021,
+          other_id: 70,
           name: "Overwhelming Power",
           namecn: "\u76DB\u6C14\u51CC\u4EBA"
         },
         {
           id: 642031,
+          other_id: 221,
           name: "Counter Move",
           namecn: "\u62C6\u62DB"
         },
         {
+          id: 642041,
+          other_id: 381,
+          name: "Spirit Feather",
+          namecn: "\u7075\u7FBD"
+        },
+        {
           id: 643011,
+          other_id: 73,
           name: "Gone Crazy",
           namecn: "\u75AF\u9B54"
         },
         {
+          id: 643021,
+          other_id: 382,
+          name: "Cyclone Palm",
+          namecn: "\u6C14\u65CB\u638C"
+        },
+        {
           id: 644011,
+          other_id: 74,
           name: "Crash Fist - Styx Night",
           namecn: "\u5D29\u62F3\xB7\u51A5\u591C",
           namealta: "Crash Fist - Stygian Night"
         },
         {
           id: 644021,
+          other_id: 81,
           name: "Meditation of Xuan",
           namecn: "\u51A5\u5FC3\u5165\u7384"
         },
         {
           id: 644031,
+          other_id: 222,
           name: "Shift Stance",
           namecn: "\u8F6C\u52BF"
         },
         {
+          id: 644041,
+          other_id: 383,
+          name: "Wind-Riding Flash",
+          namecn: "\u5FA1\u98CE\u98DE\u95EA"
+        },
+        {
           id: 645011,
+          other_id: 75,
           name: "Styx Moon's Glow",
           namecn: "\u51A5\u6708\u87FE\u5149",
           namealta: "Stygian Moon's Changuang",
@@ -17870,1317 +19495,1860 @@
         },
         {
           id: 645021,
+          other_id: 82,
           name: "Wan Xuan Demon Breaking Palm",
           namecn: "\u4E07\u7384\u7834\u9B54\u638C"
         },
         {
           id: 645031,
+          other_id: 220,
           name: "Red Gold Dragon Stick",
           namecn: "\u8D64\u91D1\u76D8\u9F99\u68CD"
         },
         {
           id: 701011,
+          other_id: 280,
           name: "Xiaoyao - Formless",
           namecn: "\u900D\u9065\xB7\u65E0\u76F8"
         },
         {
           id: 701021,
+          other_id: 281,
           name: "Xiaoyao - Seamless",
           namecn: "\u900D\u9065\xB7\u65E0\u9699"
         },
         {
           id: 701031,
+          other_id: 285,
           name: "Xiaoyao - Lawless",
           namecn: "\u900D\u9065\xB7\u65E0\u5F8B"
         },
         {
           id: 701041,
+          other_id: 284,
           name: "Xiaoyao - Irreversible",
           namecn: "\u900D\u9065\xB7\u65E0\u56DE"
         },
         {
           id: 701051,
+          other_id: 282,
           name: "Xiaoyao - Breathless",
           namecn: "\u900D\u9065\xB7\u65E0\u606F"
         },
         {
           id: 701061,
+          other_id: 283,
           name: "Xiaoyao - Imbalance",
           namecn: "\u900D\u9065\xB7\u65E0\u8861"
         },
         {
+          id: 701071,
+          other_id: 322,
+          name: "Xiaoyao - Reproduction",
+          namecn: "\u900D\u9065\xB7\u590D\u523B"
+        },
+        {
+          id: 712011,
+          other_id: 331,
+          name: "Cloud Sword - Hidden Loong",
+          namecn: "\u4E91\u5251\xB7\u6F5C\u9F99"
+        },
+        {
           id: 714011,
+          other_id: 48,
           name: "Azure Dragon Sword Formation",
           namecn: "\u9752\u9F99\u5251\u9635"
         },
         {
           id: 714021,
+          other_id: 47,
           name: "Cloud Sword - Sunset Glow",
           namecn: "\u4E91\u5251\xB7\u665A\u971E"
         },
         {
           id: 714031,
+          other_id: 260,
           name: "M - Raven Spirit Sword",
           namecn: "\u5E7B\xB7\u6697\u9E26\u7075\u5251"
         },
         {
           id: 714041,
+          other_id: 261,
           name: "M - Light Sword",
           namecn: "\u5E7B\xB7\u8F7B\u5251"
         },
         {
           id: 714051,
+          other_id: 262,
           name: "M - Spiritage Sword",
           namecn: "\u5E7B\xB7\u5F15\u6C14\u5251"
         },
         {
           id: 714061,
+          other_id: 263,
           name: "M - Flying Fang Sword",
           namecn: "\u5E7B\xB7\u98DE\u7259\u5251"
         },
         {
+          id: 714071,
+          other_id: 323,
+          name: "M - Diligent Sword",
+          namecn: "\u5E7B\xB7\u52E4\u62D9\u5251"
+        },
+        {
+          id: 714081,
+          other_id: 332,
+          name: "Exquisite Sword Formation",
+          namecn: "\u73B2\u73D1\u5251\u9635"
+        },
+        {
           id: 715011,
+          other_id: 50,
           name: "Dragon Devours Clouds",
           namecn: "\u72C2\u9F99\u541E\u4E91"
         },
         {
           id: 715021,
+          other_id: 49,
           name: "Beast Spirit Sword Formation",
           namecn: "\u767E\u517D\u7075\u5251\u9635"
         },
         {
           id: 715031,
+          other_id: 264,
           name: "M - Cloud Sword Touch Sky",
           namecn: "\u5E7B\xB7\u4E91\u5251\u63A2\u4E91"
         },
         {
           id: 715041,
+          other_id: 288,
           name: "M - Cloud Sword Conceal",
           namecn: "\u5E7B\xB7\u4E91\u5251\u65E0\u950B"
         },
         {
           id: 715051,
+          other_id: 325,
           name: "M - Consonance Sword Formation",
           namecn: "\u5E7B\xB7\u7075\u7280\u5251\u9635"
         },
         {
+          id: 715061,
+          other_id: 309,
+          name: "M - Cloud Dance Rhythm",
+          namecn: "\u5E7B\xB7\u4E91\u821E\u8BC0"
+        },
+        {
+          id: 715071,
+          other_id: 312,
+          name: "M - Unrestrained Sword Dragon Coiled",
+          namecn: "\u5E7B\xB7\u72C2\u5251\u76D8\u9F99"
+        },
+        {
           id: 724011,
+          other_id: 51,
           name: "Spiritual Divination",
           namecn: "\u7075\u5366\u672F"
         },
         {
           id: 724021,
+          other_id: 52,
           name: "Throw Petals",
           namecn: "\u6458\u82B1\u98DE\u53F6"
         },
         {
           id: 724031,
+          other_id: 265,
           name: "M - Cutting Weeds",
           namecn: "\u5E7B\xB7\u65A9\u8349\u9664\u6839"
         },
         {
           id: 724041,
+          other_id: 266,
           name: "M - Ruthless Water",
           namecn: "\u5E7B\xB7\u6D41\u6C34\u65E0\u60C5"
         },
         {
           id: 724051,
+          other_id: 307,
           name: "M - Earth Hexagram",
           namecn: "\u5E7B\xB7\u5764\u5366"
         },
         {
           id: 724061,
+          other_id: 268,
           name: "M - Dotted Around",
           namecn: "\u5E7B\xB7\u661F\u7F57\u68CB\u5E03"
         },
         {
+          id: 724071,
+          other_id: 324,
+          name: "M - Vitality Blossom",
+          namecn: "\u5E7B\xB7\u751F\u673A\u7EFD\u653E"
+        },
+        {
           id: 725011,
+          other_id: 53,
           name: "Astral Move - Twin Swallows",
           namecn: "\u661F\u5F08\xB7\u53CC\u98DE\u71D5"
         },
         {
           id: 725021,
+          other_id: 54,
           name: "Water Drop Erosion",
           namecn: "\u6EF4\u6C34\u7A7F\u77F3"
         },
         {
           id: 725031,
+          other_id: 269,
           name: "M - Shifting Stars",
           namecn: "\u5E7B\xB7\u6597\u8F6C\u661F\u79FB"
         },
         {
           id: 725041,
+          other_id: 298,
           name: "M - Incessant",
           namecn: "\u5E7B\xB7\u85D5\u65AD\u4E1D\u8FDE"
         },
         {
           id: 725051,
+          other_id: 294,
           name: "M - Astral Fleche",
           namecn: "\u5E7B\xB7\u98DE\u661F\u523A"
         },
         {
+          id: 725061,
+          other_id: 289,
+          name: "M - Flower Sentient",
+          namecn: "\u5E7B\xB7\u843D\u82B1\u6709\u610F"
+        },
+        {
+          id: 725071,
+          other_id: 320,
+          name: "M - Yin Yang Formation",
+          namecn: "\u5E7B\xB7\u4E24\u4EEA\u9635"
+        },
+        {
           id: 733011,
+          other_id: 258,
           name: "Water Spirit -  Leisurely",
           namecn: "\u6C34\u7075\xB7\u60A0\u7136"
         },
         {
+          id: 733021,
+          other_id: 371,
+          name: "Settle the Storm",
+          namecn: "\u5B9A\u98CE\u6CE2"
+        },
+        {
           id: 734011,
+          other_id: 55,
           name: "Wild Crossing Seal",
           namecn: "\u91CE\u6E21\u4E4B\u5370"
         },
         {
           id: 734021,
+          other_id: 56,
           name: "Lava Seal",
           namecn: "\u7194\u5CA9\u4E4B\u5370"
         },
         {
           id: 734031,
+          other_id: 270,
           name: "M - Fire Spirit Flame Eater",
           namecn: "\u5E7B\xB7\u706B\u7075\u805A\u708E"
         },
         {
           id: 734041,
+          other_id: 272,
           name: "M - Wood Spirit Recovery",
           namecn: "\u5E7B\xB7\u6728\u7075\u590D\u82CF"
         },
         {
           id: 734051,
+          other_id: 273,
           name: "M - Metal Spirit Needle",
           namecn: "\u5E7B\xB7\u91D1\u7075\u9488"
         },
         {
+          id: 734061,
+          other_id: 315,
+          name: "M - Fire Spirit Seal",
+          namecn: "\u5E7B\xB7\u706B\u7075\u5370"
+        },
+        {
+          id: 734071,
+          other_id: 317,
+          name: "M - Earth Spirit Formation",
+          namecn: "\u5E7B\xB7\u571F\u7075\u9635"
+        },
+        {
           id: 735011,
+          other_id: 57,
           name: "Boulder Seal",
           namecn: "\u6EDA\u77F3\u4E4B\u5370"
         },
         {
           id: 735021,
+          other_id: 58,
           name: "Wave Cutter Seal",
           namecn: "\u65A9\u6D6A\u4E4B\u5370"
         },
         {
           id: 735031,
+          other_id: 271,
           name: "M - Water Spirit Billows",
           namecn: "\u5E7B\xB7\u6C34\u7075\u6CE2\u6F9C"
         },
         {
           id: 735041,
+          other_id: 295,
           name: "M - Five Elements Circulation",
           namecn: "\u5E7B\xB7\u4E94\u884C\u6D41\u8F6C"
         },
         {
           id: 735051,
+          other_id: 274,
           name: "M - Earth Spirit Mountains",
           namecn: "\u5E7B\xB7\u571F\u7075\u7FA4\u5C71"
         },
         {
           id: 735061,
+          other_id: 292,
           name: "M - Cosmos Seal",
           namecn: "\u5E7B\xB7\u6D51\u5929\u5370"
         },
         {
+          id: 735071,
+          other_id: 316,
+          name: "M - Metal Spirit Seal",
+          namecn: "\u5E7B\xB7\u91D1\u7075\u5370"
+        },
+        {
+          id: 735081,
+          other_id: 373,
+          name: "Wood Spirit Slash",
+          namecn: "\u6728\u7075\u65A9"
+        },
+        {
+          id: 735091,
+          other_id: 374,
+          name: "Fire Spirit Slash",
+          namecn: "\u706B\u7075\u65A9"
+        },
+        {
+          id: 735101,
+          other_id: 375,
+          name: "Earth Spirit Slash",
+          namecn: "\u571F\u7075\u65A9"
+        },
+        {
+          id: 735111,
+          other_id: 376,
+          name: "Metal Spirit Slash",
+          namecn: "\u91D1\u7075\u65A9"
+        },
+        {
+          id: 735121,
+          other_id: 377,
+          name: "Water Spirit Slash",
+          namecn: "\u6C34\u7075\u65A9"
+        },
+        {
+          id: 736011,
+          other_id: 372,
+          name: "Settle the Storm - Unseal",
+          namecn: "\u5B9A\u98CE\u6CE2\xB7\u89E3\u5C01"
+        },
+        {
           id: 744011,
+          other_id: 275,
           name: "M - Youthful Vigor",
           namecn: "\u5E7B\xB7\u8840\u6C14\u65B9\u521A"
         },
         {
           id: 744021,
+          other_id: 277,
           name: "M - Exercise Bones",
           namecn: "\u5E7B\xB7\u953B\u9AA8"
         },
         {
           id: 744031,
+          other_id: 278,
           name: "M - Sinking Qi",
           namecn: "\u5E7B\xB7\u6C14\u6C89\u4E39\u7530"
         },
         {
           id: 744041,
+          other_id: 291,
           name: "M - Standing Firm",
           namecn: "\u5E7B\xB7\u5CBF\u7136\u4E0D\u52A8"
         },
         {
+          id: 744051,
+          other_id: 318,
+          name: "M - Endless Entanglement",
+          namecn: "\u5E7B\xB7\u6B7B\u7F20\u70C2\u6253"
+        },
+        {
+          id: 744061,
+          other_id: 336,
+          name: "Dark Spirit Possession",
+          namecn: "\u7384\u7075\u9644\u8EAB"
+        },
+        {
+          id: 744071,
+          other_id: 337,
+          name: "Crash Fist - Tiger Subdue",
+          namecn: "\u5D29\u62F3\xB7\u4F0F\u864E"
+        },
+        {
           id: 745011,
+          other_id: 296,
           name: "M - Double Trouble",
           namecn: "\u5E7B\xB7\u53CC\u9B3C\u62CD\u95E8"
         },
         {
           id: 745021,
+          other_id: 297,
           name: "M - Rakshasa Pouncing",
           namecn: "\u5E7B\xB7\u7F57\u5239\u6251"
         },
         {
           id: 745031,
+          other_id: 308,
           name: "M - Crash Fist Poke",
           namecn: "\u5E7B\xB7\u5D29\u62F3\u6233"
         },
         {
+          id: 745041,
+          other_id: 310,
+          name: "M - Magnanimous Righteousness",
+          namecn: "\u5E7B\xB7\u6D69\u7136\u6B63\u6C14"
+        },
+        {
+          id: 745051,
+          other_id: 319,
+          name: "M - Crash Fist Entangle",
+          namecn: "\u5E7B\xB7\u5D29\u62F3\u7F20"
+        },
+        {
+          id: 745061,
+          other_id: 338,
+          name: "Instant Shadow Strike",
+          namecn: "\u77AC\u5F71\u51FB"
+        },
+        {
+          id: 745071,
+          other_id: 339,
+          name: "Carefree Shadowless Fist",
+          namecn: "\u900D\u9065\u65E0\u5F71\u62F3"
+        },
+        {
           id: 801011,
+          other_id: 99,
           name: "Mushroom Zongzi",
           namecn: "\u9999\u83C7\u7CBD"
         },
         {
           id: 801021,
+          other_id: 85,
           name: "Honey Zongzi",
           namecn: "\u8702\u871C\u7CBD"
         },
         {
           id: 801031,
+          other_id: 98,
           name: "Salted Meat Zongzi",
           namecn: "\u54B8\u8089\u7CBD"
         },
         {
           id: 801041,
+          other_id: 83,
           name: "Red Bean Zongzi",
           namecn: "\u7EA2\u8C46\u7CBD"
         },
         {
           id: 801051,
+          other_id: 84,
           name: "Jujube Zongzi",
           namecn: "\u7EA2\u67A3\u7CBD"
         },
         {
           id: 801061,
+          other_id: 100,
           name: "Fresh Meat Zongzi",
           namecn: "\u9C9C\u8089\u7CBD"
         },
         {
           id: 801071,
+          other_id: 113,
           name: "Pure Rice Zongzi",
           namecn: "\u767D\u7CBD"
         },
         {
           id: 802011,
+          other_id: 87,
           name: "Candied Jujube Zongzi",
           namecn: "\u871C\u67A3\u7CBD"
         },
         {
           id: 802021,
+          other_id: 102,
           name: "Spicy Zongzi",
           namecn: "\u9EBB\u8FA3\u7CBD"
         },
         {
           id: 802031,
+          other_id: 101,
           name: "Roasted Meat Zongzi",
           namecn: "\u70E7\u8089\u7CBD"
         },
         {
           id: 802041,
+          other_id: 86,
           name: "Mung Bean Zongzi",
-          namecn: "\u7EFF\u8C46\u9165"
+          namecn: "\u7EFF\u8C46\u7CBD"
         },
         {
           id: 802051,
+          other_id: 103,
           name: "Preserved Meat Zongzi",
           namecn: "\u814A\u8089\u7CBD"
         },
         {
           id: 802061,
+          other_id: 88,
           name: "Jujube Paste Zongzi",
           namecn: "\u67A3\u6CE5\u7CBD"
         },
         {
           id: 803011,
+          other_id: 89,
           name: "Alkaline Water Zongzi",
           namecn: "\u78B1\u6C34\u7CBD"
         },
         {
           id: 803021,
+          other_id: 90,
           name: "Lotus Seeds Zongzi",
           namecn: "\u83B2\u5B50\u7CBD"
         },
         {
           id: 803031,
+          other_id: 91,
           name: "Bean Paste Zongzi",
           namecn: "\u8C46\u6C99\u7CBD"
         },
         {
           id: 803041,
+          other_id: 104,
           name: "Sour Bamboo Shoots Zongzi",
           namecn: "\u9178\u7B0B\u7CBD"
         },
         {
           id: 803051,
+          other_id: 105,
           name: "Chestnut Zongzi",
           namecn: "\u677F\u6817\u7CBD"
         },
         {
           id: 803061,
+          other_id: 106,
           name: "Pungent Zongzi",
           namecn: "\u9999\u8FA3\u7CBD"
         },
         {
           id: 804011,
+          other_id: 92,
           name: "Preserved Fruit Zongzi",
           namecn: "\u871C\u996F\u679C\u7CBD"
         },
         {
           id: 804021,
+          other_id: 93,
           name: "Crystal Ice Zongzi",
           namecn: "\u6C34\u6676\u51B0\u7CBD"
         },
         {
           id: 804031,
+          other_id: 94,
           name: "Fresh Fruit Zongzi",
           namecn: "\u9C9C\u679C\u5B9D\u7CBD"
         },
         {
           id: 804041,
+          other_id: 107,
           name: "Salted Egg Yolk Zongzi",
           namecn: "\u54B8\u86CB\u9EC4\u7CBD"
         },
         {
           id: 804051,
+          other_id: 108,
           name: "Seafood Zongzi",
           namecn: "\u6D77\u9C9C\u8089\u7CBD"
         },
         {
           id: 804061,
+          other_id: 109,
           name: "Pickled Mustard Zongzi",
           namecn: "\u6885\u83DC\u8089\u7CBD"
         },
         {
           id: 804071,
+          other_id: 303,
           name: "Osmanthus Zongzi",
           namecn: "\u6842\u82B1\u9999\u7CBD"
         },
         {
           id: 804081,
+          other_id: 306,
           name: "Ham Zongzi",
           namecn: "\u706B\u817F\u8089\u7CBD"
         },
         {
           id: 805011,
+          other_id: 95,
           name: "Mixed Grain Zongzi",
           namecn: "\u516B\u5B9D\u6742\u7CAE\u7CBD"
         },
         {
           id: 805021,
+          other_id: 96,
           name: "Spirit Zongzi",
           namecn: "\u4ED9\u98CE\u5F52\u7075\u7CBD"
         },
         {
           id: 805031,
+          other_id: 97,
           name: "Water Combined Zongzi",
           namecn: "\u767E\u5DDD\u7409\u7483\u7CBD"
         },
         {
           id: 805041,
+          other_id: 110,
           name: "Assorted Meat Zongzi",
           namecn: "\u79D8\u5236\u4E09\u9C9C\u7CBD"
         },
         {
           id: 805051,
+          other_id: 111,
           name: "Double Plum Zongzi",
           namecn: "\u6885\u9999\u7389\u9732\u7CBD"
         },
         {
           id: 805061,
+          other_id: 112,
           name: "Shura Zongzi",
           namecn: "\u4FEE\u7F57\u9547\u9B42\u7CBD"
         },
         {
           id: 805071,
+          other_id: 301,
           name: "Heavenly Delicacy Zongzi",
           namecn: "\u5929\u9AD3\u73CD\u9990\u7CBD"
         },
         {
           id: 805081,
+          other_id: 302,
           name: "Various Cate Zongzi",
           namecn: "\u7F24\u7EB7\u7389\u9994\u7CBD"
         },
         {
+          id: 901001,
+          other_id: 155,
+          name: "Xuanming Waters",
+          namecn: "\u7384\u51A5\u4E4B\u6C34",
+          non_playable: true
+        },
+        {
           id: 903011,
+          other_id: 162,
           name: "Xuanming Recurring",
           namecn: "\u7384\u51A5\u91CD\u73B0"
         },
         {
           id: 904011,
+          other_id: 156,
           name: "Xuanming Recover Elixir",
           namecn: "\u7384\u51A5\u5927\u8FD8\u4E39"
         },
         {
           id: 904021,
+          other_id: 158,
           name: "Xuanming Regen Tune",
           namecn: "\u7384\u51A5\u56DE\u6625\u66F2"
         },
         {
           id: 904031,
+          other_id: 159,
           name: "Xuanming Clouds",
           namecn: "\u7384\u51A5\u4E91\u70DF"
         },
         {
           id: 904041,
+          other_id: 160,
           name: "Xuanming Forceage Formation",
           namecn: "\u7384\u51A5\u805A\u529B\u9635"
         },
         {
           id: 904051,
+          other_id: 161,
           name: "Xuanming Snowdrop",
           namecn: "\u7384\u51A5\u96EA\u83B2"
         },
         {
           id: 905011,
+          other_id: 157,
           name: "Xuanming Requiem Fulu",
           namecn: "\u7384\u51A5\u9547\u9B42\u7B26"
         },
         {
           id: 906001,
-          name: "Crimson Star",
-          namecn: "\u8D64\u8D2F\u661F"
+          other_id: 182,
+          name: "Firmament Rift",
+          namecn: "\u82CD\u7A79\u88C2\u9699",
+          namealta: "Crimson Star",
+          namealtb: "\u8D64\u8D2F\u661F"
         },
         {
           id: 906011,
-          name: "N\xFCwa Stone",
-          namecn: "\u5973\u5A32\u77F3",
-          namealta: "Nuwa Stone"
+          other_id: 175,
+          name: "Sky-Mending Stone",
+          namecn: "\u4E94\u8272\u8865\u5929\u77F3",
+          namealta: "N\xFCwa Stone",
+          namealtb: "Nuwa Stone",
+          namealtc: "\u5973\u5A32\u77F3"
         },
         {
           id: 906021,
-          name: "Haotian Pagoda",
-          namecn: "\u660A\u5929\u5854"
+          other_id: 176,
+          name: "Soul-Locking Pagoda",
+          namecn: "\u7075\u589F\u9501\u9B42\u5854",
+          namealta: "Haotian Pagoda",
+          namealtb: "\u660A\u5929\u5854"
         },
         {
           id: 906031,
-          name: "Fuxi Guqin",
-          namecn: "\u4F0F\u7FB2\u7434"
+          other_id: 177,
+          name: "Heart-Commanding Zither",
+          namecn: "\u7075\u97F5\u5FA1\u5FC3\u7434",
+          namealta: "Fuxi Guqin",
+          namealtb: "\u4F0F\u7FB2\u7434"
         },
         {
           id: 906041,
-          name: "Kongtong Seal",
-          namecn: "\u5D06\u5CD2\u5370"
+          other_id: 178,
+          name: "Long-Living Seal",
+          namecn: "\u4E94\u5E1D\u957F\u751F\u5370",
+          namealta: "Kongtong Seal",
+          namealtb: "\u5D06\u5CD2\u5370"
         },
         {
           id: 906051,
-          name: "Donghuang Zhong",
-          namecn: "\u4E1C\u7687\u949F"
+          other_id: 179,
+          name: "Chaos-Suppressing Bell",
+          namecn: "\u9E3F\u8499\u9547\u5929\u949F",
+          namealta: "Donghuang Zhong",
+          namealtb: "\u4E1C\u7687\u949F"
         },
         {
           id: 906061,
-          name: "Shennong Ding",
-          namecn: "\u795E\u519C\u9F0E"
+          other_id: 180,
+          name: "Divine-Refining Cauldron",
+          namecn: "\u767E\u8349\u795E\u70BC\u9F0E",
+          namealta: "Shennong Ding",
+          namealtb: "\u795E\u519C\u9F0E"
         },
         {
           id: 906071,
-          name: "Spirit Fusion Pot",
-          namecn: "\u70BC\u5996\u58F6"
+          other_id: 181,
+          name: "Life-Transforming Vessel",
+          namecn: "\u5E7D\u51A5\u5316\u751F\u58F6",
+          namealta: "Spirit Fusion Pot",
+          namealtb: "\u70BC\u5996\u58F6"
         },
         {
           id: 913011,
+          other_id: 151,
           name: "Unrestrained Sword - Nebula Cloud",
           namecn: "\u72C2\u5251\xB7\u661F\u4E91"
         },
         {
           id: 913021,
+          other_id: 185,
           name: "Spiritstat Tune",
           namecn: "\u5FA1\u7075\u66F2"
         },
         {
           id: 914011,
+          other_id: 125,
           name: "Unrestrained Sword - Cat Claw",
           namecn: "\u72C2\u5251\xB7\u732B\u722A"
         },
         {
           id: 914021,
+          other_id: 183,
           name: "Contemplate Spirits Vitality Rhythm",
           namecn: "\u51DD\u610F\u751F\u673A\u8BC0"
         },
         {
           id: 914031,
+          other_id: 184,
           name: "Cloud Sword - Clarity",
           namecn: "\u4E91\u5251\xB7\u7A7A\u660E"
         },
         {
           id: 914041,
+          other_id: 187,
           name: "Cloud Sword - Endless",
           namecn: "\u4E91\u5251\xB7\u5468\u5929"
         },
         {
           id: 914051,
+          other_id: 188,
           name: "Sword Spirit Sunflower",
           namecn: "\u5251\u7075\u8475"
         },
         {
           id: 915011,
+          other_id: 122,
           name: "Cloud Sword - Dragon Spring",
           namecn: "\u4E91\u5251\xB7\u9F99\u6CC9"
         },
         {
           id: 915021,
+          other_id: 123,
           name: "Cloud Sword - Flying Snow Shade",
           namecn: "\u4E91\u5251\xB7\u96EA\u5F71\u98DE"
         },
         {
           id: 915031,
+          other_id: 124,
           name: "CentiBird Delicate Bracelet",
           namecn: "\u767E\u9E1F\u73B2\u73D1\u956F"
         },
         {
           id: 915041,
+          other_id: 126,
           name: "Clear Heart Sword Formation",
           namecn: "\u6F84\u5FC3\u5251\u9635"
         },
         {
           id: 915051,
+          other_id: 141,
           name: "Cloud Sword - Starry Sky",
           namecn: "\u4E91\u5251\xB7\u661F\u7A7A"
         },
         {
           id: 915061,
+          other_id: 163,
           name: "Xuanming Sword Intent Mantra",
           namecn: "\u7384\u51A5\u5251\u610F\u8BC0"
         },
         {
           id: 915071,
-          name: "Shen Jian Ao Zhou",
-          namecn: "\u795E\u5251\u50B2\u5DDE"
+          other_id: 167,
+          name: "Heavenly Edge of Ten-Thousand Calamities",
+          namecn: "\u4E07\u52AB\u5929\u950B",
+          namealta: "Shen Jian Ao Zhou",
+          namealtb: "\u795E\u5251\u50B2\u5DDE"
         },
         {
           id: 915081,
+          other_id: 186,
           name: "Unrestrained Sword  - Divine",
           namecn: "\u72C2\u5251\xB7\u964D\u795E"
         },
         {
           id: 915091,
+          other_id: 189,
           name: "Heavenly Will - Earth Evil",
           namecn: "\u5929\u673A\xB7\u5730\u715E"
         },
         {
+          id: 915101,
+          other_id: 388,
+          name: "CentiBird Swift Shadow Art",
+          namecn: "\u767E\u9E1F\u66F3\u5F71\u8BC0"
+        },
+        {
           id: 916011,
-          name: "Xuan-Yuan Sword",
-          namecn: "\u8F69\u8F95\u5251"
+          other_id: 171,
+          name: "Mountain-Splitting Sword",
+          namecn: "\u9996\u5C71\u5B9A\u5CB3\u5251",
+          namealta: "Xuan-Yuan Sword",
+          namealtb: "\u8F69\u8F95\u5251"
         },
         {
           id: 922011,
+          other_id: 142,
           name: "Astral Move - Extend",
           namecn: "\u661F\u5F08\xB7\u62C6"
         },
         {
           id: 923011,
+          other_id: 127,
           name: "Traces Revitalized",
           namecn: "\u745E\u96EA\u8FCE\u6625"
         },
         {
           id: 924011,
+          other_id: 129,
           name: "Suspicious Flame Flutter",
           namecn: "\u706F\u5F71\u8680\u7130"
         },
         {
           id: 924021,
+          other_id: 130,
           name: "Thousand Star Explosion",
           namecn: "\u5343\u661F\u5929\u7206"
         },
         {
           id: 924031,
+          other_id: 192,
           name: "Thunderbolt Tune",
           namecn: "\u6625\u96F7\u9739\u96F3\u66F2"
         },
         {
           id: 924041,
+          other_id: 193,
           name: "Fleeting Glimpse",
           namecn: "\u6D6E\u5149\u63A0\u5F71"
         },
         {
           id: 924051,
+          other_id: 194,
           name: "Yin Yang Tutelary Formation",
           namecn: "\u4E24\u4EEA\u91D1\u521A\u9635"
         },
         {
           id: 925011,
+          other_id: 128,
           name: "Ultimate Polaris Hexagram Base",
           namecn: "\u5929\u5143\u65E0\u6781\u76D8"
         },
         {
           id: 925021,
+          other_id: 131,
           name: "Star Moon Hexagram Fan",
           namecn: "\u661F\u6708\u516D\u723B\u6247"
         },
         {
           id: 925031,
+          other_id: 152,
           name: "Great Galaxy",
           namecn: "\u6C14\u541E\u661F\u6CB3"
         },
         {
           id: 925041,
+          other_id: 164,
           name: "Xuanming Thundercloud Tribulation",
           namecn: "\u7384\u51A5\u96F7\u4E91\u52AB"
         },
         {
           id: 925051,
-          name: "Die Ling Shen Ying",
-          namecn: "\u8776\u7075\u795E\u5F71"
+          other_id: 168,
+          name: "Dream Butterfly Wandering Immortal",
+          namecn: "\u68A6\u8776\u6E38\u4ED9",
+          namealta: "Die Ling Shen Ying",
+          namealtb: "\u8776\u7075\u795E\u5F71"
         },
         {
           id: 925061,
+          other_id: 190,
           name: "Spiritual Hunter",
           namecn: "\u7075\u96C0\u5728\u540E"
         },
         {
           id: 925071,
+          other_id: 191,
           name: "Hexagrams Generating Evils",
           namecn: "\u5366\u884D\u4E07\u90AA"
         },
         {
           id: 925081,
+          other_id: 195,
           name: "Entangling Thornbush",
           namecn: "\u7F1A\u4ED9\u68D8"
         },
         {
           id: 925091,
+          other_id: 196,
           name: "Astral Move - Jump",
           namecn: "\u661F\u5F08\xB7\u8DF3"
         },
         {
+          id: 925101,
+          other_id: 389,
+          name: "Astral Move - Rescue",
+          namecn: "\u661F\u5F08\xB7\u6CBB\u5B64"
+        },
+        {
           id: 926011,
-          name: "Heavenly Maiden White Jade Ring",
-          namecn: "\u5929\u5973\u767D\u7389\u8F6E"
+          other_id: 172,
+          name: "Flowing-Light Wheel",
+          namecn: "\u4E5D\u5929\u6D41\u5149\u8F6E",
+          namealta: "Heavenly Maiden White Jade Ring",
+          namealtb: "\u5929\u5973\u767D\u7389\u8F6E"
         },
         {
           id: 932011,
+          other_id: 153,
           name: "Cosmos Fleche",
           namecn: "\u6D51\u661F\u523A"
         },
         {
           id: 933011,
+          other_id: 135,
           name: "Kun Wu Molten Ring",
           namecn: "\u951F\u94FB\u7194\u706B\u73AF"
         },
         {
           id: 933021,
+          other_id: 198,
           name: "Fire Spirit - Blazing Flame",
           namecn: "\u706B\u7075\xB7\u8000\u708E"
         },
         {
           id: 934011,
+          other_id: 136,
           name: "Harmony of Water and Fire",
           namecn: "\u6C34\u706B\u4EA4\u878D"
         },
         {
           id: 934021,
+          other_id: 143,
           name: "Metal Spirit - Meteor",
           namecn: "\u91D1\u7075\xB7\u6D41\u661F"
         },
         {
           id: 934031,
+          other_id: 201,
           name: "Wood Spirit Forceage Formation",
           namecn: "\u6728\u7075\u5929\u7F61\u9635"
         },
         {
           id: 934041,
+          other_id: 203,
           name: "Water Spirit - Continuous Flow",
           namecn: "\u6C34\u7075\xB7\u5DDD\u6D41"
         },
         {
           id: 935011,
+          other_id: 132,
           name: "Heavenly Marrow Gourd",
           namecn: "\u5929\u9AD3\u846B\u82A6"
         },
         {
           id: 935021,
+          other_id: 133,
           name: "Ultimate Overcome Formation",
           namecn: "\u6DF7\u5143\u9006\u514B\u9635"
         },
         {
           id: 935031,
+          other_id: 134,
           name: "Wood Spirit - All Things Grow",
           namecn: "\u6728\u7075\xB7\u4E07\u7269\u751F"
         },
         {
           id: 935041,
+          other_id: 165,
           name: "Xuanming Heavenly Essence Destruction",
           namecn: "\u7384\u51A5\u5929\u9AD3\u706D"
         },
         {
           id: 935051,
-          name: "Pi Yun Zhui Yue",
-          namecn: "\u62AB\u4E91\u8FFD\u6708"
+          other_id: 169,
+          name: "Cloud-Piercing Wind-Rider",
+          namecn: "\u7A7F\u4E91\u5FA1\u98CE",
+          namealta: "Pi Yun Zhui Yue",
+          namealtb: "\u62AB\u4E91\u8FFD\u6708"
         },
         {
           id: 935061,
+          other_id: 197,
           name: "Five Elements Guard",
           namecn: "\u4E94\u884C\u62A4\u8EAB"
         },
         {
           id: 935071,
+          other_id: 199,
           name: "Heavenly Marrow Dance Tune",
           namecn: "\u5929\u9AD3\u72C2\u821E\u66F2"
         },
         {
           id: 935081,
+          other_id: 200,
           name: "Cosmos Brush",
           namecn: "\u6D51\u5929\u8FD0\u7B14"
         },
         {
           id: 935091,
+          other_id: 202,
           name: "Five Elements Spiritual Field",
           namecn: "\u4E94\u884C\u7075\u7530"
         },
         {
+          id: 935101,
+          other_id: 390,
+          name: "Five Elements Carefree Dream",
+          namecn: "\u4E94\u884C\u5FD8\u5FE7\u68A6"
+        },
+        {
           id: 936011,
-          name: "Kunlun Mirror",
-          namecn: "\u6606\u4ED1\u955C"
+          other_id: 173,
+          name: "Chrono-Revert Mirror",
+          namecn: "\u7476\u5149\u6EAF\u65F6\u955C",
+          namealta: "Kunlun Mirror",
+          namealtb: "\u6606\u4ED1\u955C"
         },
         {
           id: 943011,
+          other_id: 154,
           name: "Star Sky Forge Bone",
           namecn: "\u661F\u8FB0\u953B\u9AA8\u8BC0"
         },
         {
           id: 944011,
+          other_id: 139,
           name: "Styx Night Footwork",
           namecn: "\u51A5\u591C\u8FF7\u8E2A\u6B65"
         },
         {
           id: 944021,
+          other_id: 140,
           name: "Crash Fist - Return to Xuan",
           namecn: "\u5D29\u62F3\xB7\u8FD4\u7384"
         },
         {
           id: 944031,
+          other_id: 144,
           name: "Crash Fist - Star Seizing",
           namecn: "\u5D29\u62F3\xB7\u593A\u661F"
         },
         {
           id: 944041,
+          other_id: 204,
           name: "Cloud Footwork",
           namecn: "\u8E0F\u9E64\u98DE\u4E91"
         },
         {
           id: 944051,
+          other_id: 205,
           name: "Spiritage And Exercise",
           namecn: "\u7075\u6C14\u953B\u8EAB"
         },
         {
           id: 944061,
+          other_id: 206,
           name: "Continuous Tune",
           namecn: "\u900D\u9065\u8FDE\u97F3\u66F2"
         },
         {
           id: 944071,
+          other_id: 209,
           name: "Mystic Snowdrop",
           namecn: "\u7384\u57DF\u96EA\u83B2"
         },
         {
+          id: 944081,
+          other_id: 392,
+          name: "Riding the Wind",
+          namecn: "\u51AF\u865A\u5FA1\u98CE"
+        },
+        {
           id: 945011,
+          other_id: 137,
           name: "Unceasing Universe",
           namecn: "\u6D69\u8361\u4E0D\u606F"
         },
         {
           id: 945021,
+          other_id: 138,
           name: "Soul Overwhelming Palm",
           namecn: "\u7384\u5FC3\u76DB\u6C14\u638C"
         },
         {
           id: 945031,
+          other_id: 166,
           name: "Xuanming Boundary-Breaking Palms",
           namecn: "\u7384\u51A5\u7834\u5883\u638C"
         },
         {
           id: 945041,
-          name: "Jiu Qi Po Xiao",
-          namecn: "\u4E5D\u6C14\u7834\u9704"
+          other_id: 170,
+          name: "Profound Truth Shatters Illusion",
+          namecn: "\u7384\u771F\u7834\u5984",
+          namealta: "Jiu Qi Po Xiao",
+          namealtb: "\u4E5D\u6C14\u7834\u9704"
         },
         {
           id: 945051,
+          other_id: 207,
           name: "Exercise To The Utmost",
           namecn: "\u953B\u9F99\u8BC0"
         },
         {
           id: 945061,
+          other_id: 208,
           name: "Force Spiritage Formation",
           namecn: "\u52BF\u7075\u9635"
         },
         {
           id: 945071,
+          other_id: 210,
           name: "Heavenly Will - Seizing",
           namecn: "\u5929\u673A\xB7\u8FD4\u86CA"
         },
         {
+          id: 945081,
+          other_id: 391,
+          name: "Dodge and Weave",
+          namecn: "\u95EA\u8F6C\u817E\u632A"
+        },
+        {
           id: 946011,
-          name: "Pangu Axe",
-          namecn: "\u76D8\u53E4\u65A7"
+          other_id: 174,
+          name: "Heaven-Cleaving Axe",
+          namecn: "\u88C2\u7A79\u5F00\u5929\u65A7",
+          namealta: "Pangu Axe",
+          namealtb: "\u76D8\u53E4\u65A7"
         },
         {
           id: "D11011",
+          other_id: 1000067,
           name: "Dream - Qi Perfusion",
           namecn: "\u68A6\xB7\u7075\u6C14\u704C\u6CE8"
         },
         {
           id: "D11021",
+          other_id: 1000069,
           name: "Dream - Cloud Sword Pierce the Star",
           namecn: "\u68A6\xB7\u4E91\u5251\u70B9\u661F"
         },
         {
           id: "D11031",
+          other_id: 1000070,
           name: "Dream - Cloud Sword - Riddle",
           namecn: "\u68A6\xB7\u4E91\u5251\u6781\u610F"
         },
         {
           id: "D11041",
+          other_id: 1000071,
           name: "Dream - Flying Fang Sword",
           namecn: "\u68A6\xB7\u98DE\u7259\u5251"
         },
         {
           id: "D11051",
+          other_id: 1000072,
           name: "Dream - Cloud Dance Rhythm",
           namecn: "\u68A6\xB7\u4E91\u821E\u8BC0"
         },
         {
           id: "D11061",
+          other_id: 1000073,
           name: "Dream - Unrestrained Sword One",
           namecn: "\u68A6\xB7\u72C2\u5251\u4E00\u5F0F"
         },
         {
           id: "D11071",
+          other_id: 1000074,
           name: "Dream - CentiBird Spirit Sword Rhythm",
           namecn: "\u68A6\xB7\u767E\u9E1F\u7075\u5251\u8BC0"
         },
         {
           id: "D11081",
+          other_id: 1000075,
           name: "Dream - Dharma Spirit Sword",
           namecn: "\u68A6\xB7\u4E07\u6CD5\u5F52\u7075\u5251"
         },
         {
           id: "D11091",
+          other_id: 1000076,
           name: "Dream - Unrestrained Sword Zero",
           namecn: "\u68A6\xB7\u72C2\u5251\u96F6\u5F0F"
         },
         {
           id: "D11101",
+          other_id: 1000077,
           name: "Dream - Consonance Sword Formation",
           namecn: "\u68A6\xB7\u7075\u7280\u5251\u9635"
         },
         {
           id: "D11111",
+          other_id: 1000078,
           name: "Dream - Cloud Sword - Touch Earth",
           namecn: "\u68A6\xB7\u4E91\u5251\u539A\u571F"
         },
         {
           id: "D11121",
+          other_id: 1000079,
           name: "Dream - Reflexive Sword",
           namecn: "\u68A6\xB7\u53CD\u8EAB\u5251"
         },
         {
           id: "D11131",
+          other_id: 1000080,
           name: "Dream - Rule Sky Sword Formation",
           namecn: "\u68A6\xB7\u5FA1\u7A7A\u5251\u9635"
         },
         {
           id: "D11141",
+          other_id: 1000081,
           name: "Dream - Giant Roc Spirit Sword",
           namecn: "\u68A6\xB7\u5DE8\u9E4F\u7075\u5251"
         },
         {
           id: "D11151",
+          other_id: 1000082,
           name: "Dream - Earth Evil Sword",
           namecn: "\u68A6\xB7\u5730\u715E\u5251"
         },
         {
           id: "D11161",
+          other_id: 1000083,
           name: "Dream - Cloud Sword - Softheart",
           namecn: "\u68A6\xB7\u4E91\u5251\u67D4\u5FC3"
         },
         {
           id: "D11171",
+          other_id: 1000085,
           name: "Dream - Contemplate Spirits Rhythm",
           namecn: "\u68A6\xB7\u51DD\u610F\u8BC0"
         },
         {
+          id: "D11181",
+          other_id: 1000086,
+          name: "Dream - Cloud Sword - Spirit Coercion",
+          namecn: "\u68A6\xB7\u4E91\u5251\u6C47\u7075"
+        },
+        {
           id: "D11191",
+          other_id: 1000084,
           name: "Dream - Spiritage Sword",
           namecn: "\u68A6\xB7\u5F15\u6C14\u5251"
         },
         {
           id: "D11201",
+          other_id: 1000087,
           name: "Dream - Unrestrained Sword Two",
           namecn: "\u68A6\xB7\u72C2\u5251\u4E8C\u5F0F"
         },
         {
-          id: "D11181",
-          name: "Dream - Cloud Sword - Spirit Coercion",
-          namecn: "\u68A6\xB7\u4E91\u5251\u6C47\u7075"
-        },
-        {
           id: "D12011",
+          other_id: 4000069,
           name: "Dream - Astral Move - Block",
           namecn: "\u68A6\xB7\u661F\u5F08\u6321"
         },
         {
           id: "D12021",
+          other_id: 4000070,
           name: "Dream - Star Trail Divination",
           namecn: "\u68A6\xB7\u661F\u8F68\u63A8\u884D"
         },
         {
           id: "D12031",
+          other_id: 4000071,
           name: "Dream - Thunder And Lightning",
           namecn: "\u68A6\xB7\u8F70\u96F7\u63A3\u7535"
         },
         {
           id: "D12041",
+          other_id: 4000072,
           name: "Dream - Yin Yang Formation",
           namecn: "\u68A6\xB7\u4E24\u4EEA\u9635"
         },
         {
           id: "D12051",
+          other_id: 4000073,
           name: "Dream - Falling Thunder",
           namecn: "\u68A6\xB7\u843D\u96F7\u672F"
         },
         {
           id: "D12061",
+          other_id: 4000074,
           name: "Dream - Flower Sentient",
           namecn: "\u68A6\xB7\u843D\u82B1\u6709\u610F"
         },
         {
           id: "D12071",
+          other_id: 4000075,
           name: "Dream - Hunter Hunting Hunter",
           namecn: "\u68A6\xB7\u9EC4\u96C0\u5728\u540E"
         },
         {
           id: "D12081",
+          other_id: 4000076,
           name: "Dream - Drag Moon In Sea",
           namecn: "\u68A6\xB7\u6D77\u5E95\u635E\u6708"
         },
         {
           id: "D12091",
+          other_id: 4000078,
           name: "Dream - Repel Citta-Dharma",
           namecn: "\u68A6\xB7\u53CD\u9707\u5FC3\u6CD5"
         },
         {
           id: "D12101",
+          other_id: 4000079,
           name: "Dream - Shifting Stars",
           namecn: "\u68A6\xB7\u6597\u8F6C\u661F\u79FB"
         },
         {
           id: "D12111",
+          other_id: 4000080,
           name: "Dream - Flame Hexagram",
           namecn: "\u68A6\xB7\u79BB\u5366"
         },
         {
           id: "D12121",
+          other_id: 4000081,
           name: "Dream - Dance Of The Dragonfly",
           namecn: "\u68A6\xB7\u873B\u8713\u70B9\u6C34"
         },
         {
           id: "D12131",
+          other_id: 4000082,
           name: "Dream - Snake in Reflection",
           namecn: "\u68A6\xB7\u676F\u5F13\u86C7\u5F71"
         },
         {
           id: "D12141",
+          other_id: 4000083,
           name: "Dream - Qi Therapy",
           namecn: "\u68A6\xB7\u6C14\u7597\u672F"
         },
         {
           id: "D12151",
+          other_id: 4000084,
           name: "Dream - Dotted Around",
           namecn: "\u68A6\xB7\u661F\u7F57\u68CB\u5E03"
         },
         {
           id: "D12161",
+          other_id: 4000085,
           name: "Dream - White Snake",
           namecn: "\u68A6\xB7\u767D\u86C7\u5410\u4FE1"
         },
         {
           id: "D12171",
+          other_id: 4000086,
           name: "Dream - Heaven Hexagram",
           namecn: "\u68A6\xB7\u4E7E\u5366"
         },
         {
-          id: "D12191",
-          name: "Dream - Star Chess Point",
-          namecn: "\u68A6\xB7\u661F\u5F08\u70B9"
-        },
-        {
-          id: "D12201",
-          name: "Dream - Thunder Hexagram Rhythm",
-          namecn: "\u68A6\xB7\u5FA1\u96F7\u5366\u8BC0"
-        },
-        {
           id: "D12181",
+          other_id: 4000087,
           name: "Dream - Revitalized",
           namecn: "\u68A6\xB7\u67AF\u6728\u9022\u6625"
         },
         {
+          id: "D12191",
+          other_id: 4000088,
+          name: "Dream - Thunder Hexagram Rhythm",
+          namecn: "\u68A6\xB7\u5FA1\u96F7\u5366\u8BC0"
+        },
+        {
+          id: "D12201",
+          other_id: 4000089,
+          name: "Dream - Astral Move Point",
+          namecn: "\u68A6\xB7\u661F\u5F08\u70B9"
+        },
+        {
           id: "D13011",
+          other_id: 7000074,
           name: "Dream - Metal Spirit Formation",
           namecn: "\u68A6\xB7\u91D1\u7075\u9635"
         },
         {
           id: "D13021",
+          other_id: 7000075,
           name: "Dream - Cosmos Seal",
           namecn: "\u68A6\xB7\u6D51\u5929\u5370"
         },
         {
           id: "D13031",
+          other_id: 7000076,
           name: "Dream - Water Spirit Billows",
           namecn: "\u68A6\xB7\u6C34\u7075\u6CE2\u6F9C"
         },
         {
           id: "D13041",
+          other_id: 7000077,
           name: "Dream - Five Elements Fleche",
           namecn: "\u68A6\xB7\u4E94\u884C\u523A"
         },
         {
           id: "D13051",
+          other_id: 7000078,
           name: "Dream - Ultimate World Formation",
           namecn: "\u68A6\xB7\u6DF7\u5143\u65E0\u6781\u9635"
         },
         {
           id: "D13061",
+          other_id: 7000079,
           name: "Dream - Water Spirit Spring",
           namecn: "\u68A6\xB7\u6C34\u7075\u6CC9\u6D8C"
         },
         {
           id: "D13071",
+          other_id: 7000080,
           name: "Dream - Wood Spirit Willow Leaf",
           namecn: "\u68A6\xB7\u6728\u7075\u67F3\u7EB7\u98DE"
         },
         {
           id: "D13081",
+          other_id: 7000081,
           name: "Dream - Wood Spirit Formation",
           namecn: "\u68A6\xB7\u6728\u7075\u9635"
         },
         {
           id: "D13091",
+          other_id: 7000082,
           name: "Dream - Fire Spirit Heart Fire",
           namecn: "\u68A6\xB7\u706B\u7075\u707C\u5FC3"
         },
         {
           id: "D13101",
+          other_id: 7000083,
           name: "Dream - Fire Spirit Flash Fire",
           namecn: "\u68A6\xB7\u706B\u7075\u77AC\u71C3"
         },
         {
           id: "D13111",
+          other_id: 7000084,
           name: "Dream - Metal Spirit Iron Bone",
           namecn: "\u68A6\xB7\u91D1\u7075\u94C1\u9AA8"
         },
         {
           id: "D13121",
+          other_id: 7000085,
           name: "Dream - Metal Spirit Sharp",
           namecn: "\u68A6\xB7\u91D1\u7075\u950B\u8292"
         },
         {
           id: "D13131",
+          other_id: 7000086,
           name: "Dream - Earth Spirit Steep",
           namecn: "\u68A6\xB7\u571F\u7075\u7EDD\u58C1"
         },
         {
           id: "D13141",
+          other_id: 7000087,
           name: "Dream - Five Elements Heavenly Marrow Rhythm",
           namecn: "\u68A6\xB7\u4E94\u884C\u5929\u9AD3\u8BC0"
         },
         {
           id: "D13151",
+          other_id: 7000088,
           name: "Dream - Wood Spirit Bud",
           namecn: "\u68A6\xB7\u6728\u7075\u82BD"
         },
         {
           id: "D13161",
+          other_id: 7000089,
           name: "Dream - Fire Spirit Flame Eater",
           namecn: "\u68A6\xB7\u706B\u7075\u805A\u708E"
         },
         {
           id: "D13171",
+          other_id: 7000090,
           name: "Dream - Fire Spirit Formation",
           namecn: "\u68A6\xB7\u706B\u7075\u9635"
         },
         {
           id: "D13181",
+          other_id: 7000091,
           name: "Dream - Earth Spirit Cliff",
           namecn: "\u68A6\xB7\u571F\u7075\u65AD\u5D16"
         },
         {
           id: "D13191",
+          other_id: 7000093,
+          name: "Dream - World Smash",
+          namecn: "\u68A6\xB7\u6DF7\u5143\u788E\u51FB"
+        },
+        {
+          id: "D13201",
+          other_id: 7000103,
           name: "Dream - Water Spirit Turbulent",
           namecn: "\u68A6\xB7\u6C34\u7075\u6C79\u6D8C"
         },
         {
-          id: "D13201",
-          name: "Dream - Mixed Origin Smash",
-          namecn: "\u68A6\xB7\u6DF7\u5143\u788E\u51FB"
-        },
-        {
           id: "D14011",
+          other_id: 10000069,
           name: "Dream - Elusive Footwork",
           namecn: "\u68A6\xB7\u7075\u7384\u8FF7\u8E2A\u6B65"
         },
         {
           id: "D14021",
+          other_id: 10000070,
           name: "Dream - Shura Roar",
           namecn: "\u68A6\xB7\u4FEE\u7F57\u543C"
         },
         {
           id: "D14031",
+          other_id: 10000071,
           name: "Dream - Crash Fist Block",
           namecn: "\u68A6\xB7\u5D29\u62F3\u5C01"
         },
         {
           id: "D14041",
+          other_id: 10000072,
           name: "Dream - Exercise Soul",
           namecn: "\u68A6\xB7\u953B\u795E\u5F00\u6D77"
         },
         {
           id: "D14051",
+          other_id: 10000073,
           name: "Dream - Surging Waves",
           namecn: "\u68A6\xB7\u51B2\u9704\u7834\u6D6A"
         },
         {
           id: "D14061",
+          other_id: 10000074,
           name: "Dream - Crash Fist Blitz",
           namecn: "\u68A6\xB7\u5D29\u62F3\u7A81"
         },
         {
           id: "D14071",
+          other_id: 10000075,
           name: "Dream - Exercise Tendons",
           namecn: "\u68A6\xB7\u953B\u7B4B"
         },
         {
           id: "D14081",
+          other_id: 10000076,
           name: "Dream - Crash Fist Bounce",
           namecn: "\u68A6\xB7\u5D29\u62F3\u5F39"
         },
         {
           id: "D14091",
+          other_id: 10000077,
           name: "Dream - Styx Agility",
           namecn: "\u68A6\xB7\u51A5\u5F71\u8EAB\u6CD5"
         },
         {
           id: "D14101",
+          other_id: 10000078,
           name: "Dream - Vigorous Force",
           namecn: "\u68A6\xB7\u671D\u6C14\u84EC\u52C3"
         },
         {
           id: "D14111",
+          other_id: 10000079,
           name: "Dream - Mountain-Cleaving Palms",
           namecn: "\u68A6\xB7\u5288\u5C71\u638C"
         },
         {
           id: "D14121",
+          other_id: 10000080,
           name: "Dream - Crash Footwork",
           namecn: "\u68A6\xB7\u5D29\u5929\u6B65"
         },
         {
           id: "D14131",
+          other_id: 10000081,
           name: "Dream - Windward Palms",
           namecn: "\u68A6\xB7\u8FCE\u98CE\u638C"
         },
         {
           id: "D14141",
+          other_id: 10000089,
           name: "Dream - Crash Fist Continue",
           namecn: "\u68A6\xB7\u5D29\u62F3\u8FDE\u5D29"
         },
         {
           id: "D14151",
+          other_id: 10000083,
           name: "Dream - Bearing the Load",
           namecn: "\u68A6\xB7\u8377\u91CD\u524D\u884C"
         },
         {
           id: "D14161",
+          other_id: 10000084,
           name: "Dream - Gather Intense Force",
           namecn: "\u68A6\xB7\u5A01\u9707\u56DB\u65B9"
         },
         {
           id: "D14171",
+          other_id: 10000085,
           name: "Dream - Majestic Qi",
           namecn: "\u68A6\xB7\u6C14\u82E5\u60AC\u6CB3"
         },
         {
           id: "D14181",
+          other_id: 10000086,
           name: "Dream - Overwhelming Force",
           namecn: "\u68A6\xB7\u78C5\u7934\u4E4B\u52BF"
         },
         {
           id: "D14191",
-          name: "Dream - Crash Fist Exercise",
+          other_id: 10000087,
+          name: "Dream - Exercise Fist",
           namecn: "\u68A6\xB7\u953B\u62F3"
         },
         {
           id: "D14201",
-          name: "Dream - Stand Firm",
+          other_id: 10000088,
+          name: "Dream - Standing Firm",
           namecn: "\u68A6\xB7\u5CBF\u7136\u4E0D\u52A8"
         },
-        { id: "D15011", name: "Dream - Immovable Diamond Formation", namecn: "\u68A6\xB7\u4E0D\u52A8\u91D1\u521A\u9635" },
-        { id: "D15021", name: "Dream - Nine Evils Spirit Breaker", namecn: "\u68A6\xB7\u4E5D\u715E\u7834\u7075\u66F2" },
-        { id: "D15031", name: "Dream - Frozen Snow Lotus", namecn: "\u68A6\xB7\u51B0\u5C01\u96EA\u83B2" },
-        { id: "D15041", name: "Dream - Calamity Entangled", namecn: "\u68A6\xB7\u5384\u52AB\u7F20\u8EAB" },
-        { id: "D15051", name: "Dream - Echo Pattern", namecn: "\u68A6\xB7\u56DE\u54CD\u9635\u7EB9" },
-        { id: "D15061", name: "Dream - Great Rejuvenation Pill", namecn: "\u68A6\xB7\u5927\u8FD8\u4E39" },
-        { id: "D15071", name: "Dream - Destiny Reappear", namecn: "\u68A6\xB7\u5929\u547D\u91CD\u73B0" },
-        { id: "D15081", name: "Dream - Heavenly Sound Trap Immortal", namecn: "\u68A6\xB7\u5929\u97F3\u56F0\u4ED9\u66F2" },
-        { id: "D15091", name: "Dream - Sky-Horse Free", namecn: "\u68A6\xB7\u5929\u9A6C\u884C\u7A7A" },
-        { id: "D15101", name: "Dream - Frost Spell", namecn: "\u68A6\xB7\u5BD2\u51B0\u5492" },
-        { id: "D15111", name: "Dream - Weakness Talisman", namecn: "\u68A6\xB7\u5F31\u4F53\u7B26" },
-        { id: "D15121", name: "Dream - Clear Heart Spell", namecn: "\u68A6\xB7\u6E05\u5FC3\u5492" },
-        { id: "D15131", name: "Dream - Frenzy Dance", namecn: "\u68A6\xB7\u72C2\u821E\u66F2" },
-        { id: "D15141", name: "Dream - Divine Pen", namecn: "\u68A6\xB7\u795E\u6765\u4E4B\u7B14" },
-        { id: "D15151", name: "Dream - Binding Ancient Vine", namecn: "\u68A6\xB7\u7F1A\u4ED9\u53E4\u85E4" },
-        { id: "D15161", name: "Dream - Transpose Harmony", namecn: "\u68A6\xB7\u8F6C\u5F26\u5408\u8C03" },
-        { id: "D15171", name: "Dream - Sharp Metal Talisman", namecn: "\u68A6\xB7\u9510\u91D1\u7B26" },
-        { id: "D15181", name: "Dream - Flying Cloud Pill", namecn: "\u68A6\xB7\u98DE\u4E91\u4E39" },
-        { id: 160001, name: "Spirit Feather", namecn: "\u7075\u7FBD" },
-        { id: 160011, name: "Ultimate Raven Spirit Sword", namecn: "\u6781\u2022\u6697\u9E26\u7075\u5251" },
-        { id: 160021, name: "Star-Gazing Incantation", namecn: "\u671B\u661F\u8BC0" },
-        { id: 160031, name: "Ultimate Yin Yang Formation", namecn: "\u6781\u2022\u4E24\u4EEA\u9635" },
-        { id: 160041, name: "Wind-Riding Flash", namecn: "\u5FA1\u98CE\u98DE\u95EA" },
-        { id: 160051, name: "Cyclone Palm", namecn: "\u6C14\u65CB\u638C" },
-        { id: 160061, name: "Spirit Pivot Sword Formation", namecn: "\u7075\u67A2\u5251\u9635" },
-        { id: 160071, name: "Ultimate Wind-Greeting Palm", namecn: "\u6781\u2022\u8FCE\u98CE\u638C" },
-        { id: 160081, name: "Forging Spirit Finger", namecn: "\u953B\u7075\u6307" },
-        { id: 160091, name: "Star Chess - Long", namecn: "\u661F\u5F08\u2022\u957F" },
-        { id: 160101, name: "Star Chess - Robbery", namecn: "\u661F\u5F08\u2022\u52AB\u4E89" },
-        { id: 160111, name: "Spirit Snake Coil Pillar", namecn: "\u7075\u86C7\u7ED5\u67F1" },
-        { id: 160121, name: "Vermilion Sparrow Spirit Sword", namecn: "\u4E39\u96C0\u7075\u5251" },
-        { id: 160131, name: "Vajra Pestle", namecn: "\u91D1\u521A\u6363\u7893" },
-        { id: 160141, name: "Sky-Sweeping Strike", namecn: "\u51CC\u7A7A\u98DE\u626B" },
-        { id: 160151, name: "Sword Shadow Barrier", namecn: "\u5251\u5F71\u7ED3\u754C" },
-        { id: 160161, name: "Bend Bow Shoot Tiger", namecn: "\u5F2F\u5F13\u5C04\u864E" },
-        { id: 160171, name: "Pluck Branch Pressure Point", namecn: "\u6298\u679D\u70B9\u7A74" },
-        { id: 160181, name: "Rhino Gazing Moon", namecn: "\u7280\u725B\u671B\u6708" },
-        { id: 160191, name: "Flying Leopard Spirit Sword", namecn: "\u98DE\u8C79\u7075\u5251" },
-        { id: 160201, name: "Water Spirit - Ride Wind Wave", namecn: "\u6C34\u7075\u2022\u4E58\u98CE\u6D6A" },
-        { id: 160211, name: "Mystic Spirit Body Heal", namecn: "\u7384\u7075\u6108\u4F53" },
-        { id: 160221, name: "Wounded Soul Curse Formation", namecn: "\u4F24\u9B42\u5492\u9635" },
-        { id: 160231, name: "Ultimate Cloud Sword Soft-Heart", namecn: "\u6781\u2022\u4E91\u5251\u67D4\u5FC3" },
-        { id: 160241, name: "Ultimate Water Spirit Formation", namecn: "\u6781\u2022\u6C34\u7075\u9635" },
-        { id: 160251, name: "Ultimate Crash Sky Step", namecn: "\u6781\u2022\u5D29\u5929\u6B65" },
-        { id: 160261, name: "Guard Spirit Heart Method", namecn: "\u5FA1\u7075\u5FC3\u6CD5" },
-        { id: 160271, name: "Ultimate Stillness Heart Method", namecn: "\u6781\u2022\u9759\u6C14\u5FC3\u6CD5" },
-        { id: 160281, name: "Hundred Birds Shadow Decree", namecn: "\u767E\u9E1F\u66F3\u5F71\u8BC0" },
-        { id: 160291, name: "Nimble Footwork", namecn: "\u95EA\u8F6C\u817E\u632A" },
-        { id: 160301, name: "Soaring With The Wind", namecn: "\u51AF\u865A\u5FA1\u98CE" },
-        { id: 160311, name: "Drunken Fist Stance", namecn: "\u9189\u62F3\u67B6\u52BF" },
-        { id: 160321, name: "Suppress Seal Heart Method", namecn: "\u9547\u5370\u5FC3\u6CD5" },
-        { id: 160331, name: "Myriad Souls Break Army", namecn: "\u4E07\u9B42\u7834\u519B" },
-        { id: 160341, name: "Cloud Sword - Sky Rend", namecn: "\u4E91\u5251\u2022\u88C2\u7A7A" },
-        { id: 160351, name: "Lightning Shadow Flying Sword", namecn: "\u8FC5\u5F71\u98DE\u5251" },
-        { id: 160361, name: "Five Elements Spirit Strike", namecn: "\u4E94\u884C\u7075\u51FB" },
-        { id: 160371, name: "Cloud Sword - Pursuing Wind", namecn: "\u4E91\u5251\u2022\u8FFD\u98CE" },
-        { id: 160381, name: "Earth Spirit - Burrow", namecn: "\u571F\u7075\u2022\u9041\u5730" },
-        { id: 160391, name: "Wood Spirit - Spring Breeze", namecn: "\u6728\u7075\u2022\u6625\u98CE\u62C2" },
-        { id: 160401, name: "Fire Spirit - Burn Vein", namecn: "\u706B\u7075\u2022\u711A\u8109\u8BC0" },
-        { id: 160411, name: "Ultimate Wood Spirit Forest Patrol", namecn: "\u6781\u2022\u6728\u7075\u5DE1\u6797" },
-        { id: 160421, name: "Cosmic Transformation", namecn: "\u6DF7\u5143\u5316\u7075" },
-        { id: 160431, name: "Crash Fist - Shattered Bone", namecn: "\u5D29\u62F3\u2022\u788E\u9AA8" },
-        { id: 160441, name: "Blood Shadow Escape", namecn: "\u8840\u5F71\u9041\u672F" },
-        { id: 160451, name: "Metal Spirit - Return Edge", namecn: "\u91D1\u7075\u2022\u56DE\u950B\u5203" }
+        {
+          id: "D21014",
+          other_id: 344,
+          name: "Dream - Cloud Elixir",
+          namecn: "\u68A6\xB7\u98DE\u4E91\u4E39"
+        },
+        {
+          id: "D21024",
+          other_id: 345,
+          name: "Dream - Great Recover Elixir",
+          namecn: "\u68A6\xB7\u5927\u8FD8\u4E39"
+        },
+        {
+          id: "D22015",
+          other_id: 342,
+          name: "Dream - Calm Incantation",
+          namecn: "\u68A6\xB7\u6E05\u5FC3\u5492"
+        },
+        {
+          id: "D22024",
+          other_id: 351,
+          name: "Dream - Ice Incantation",
+          namecn: "\u68A6\xB7\u5BD2\u51B0\u5492"
+        },
+        {
+          id: "D22034",
+          other_id: 379,
+          name: "Dream - Sharp Metal Fulu",
+          namecn: "\u68A6\xB7\u9510\u91D1\u7B26"
+        },
+        {
+          id: "D22045",
+          other_id: 387,
+          name: "Dream - Weaken Fulu",
+          namecn: "\u68A6\xB7\u5F31\u4F53\u7B26"
+        },
+        {
+          id: "D23015",
+          other_id: 340,
+          name: "Dream - Craze Dance Tune",
+          namecn: "\u68A6\xB7\u72C2\u821E\u66F2"
+        },
+        {
+          id: "D23024",
+          other_id: 346,
+          name: "Dream - Chord In Tune",
+          namecn: "\u68A6\xB7\u8F6C\u5F26\u5408\u8C03"
+        },
+        {
+          id: "D23035",
+          other_id: 348,
+          name: "Dream - Predicament for Immortals",
+          namecn: "\u68A6\xB7\u5929\u97F3\u56F0\u4ED9\u66F2"
+        },
+        {
+          id: "D23045",
+          other_id: 378,
+          name: "Dream - Nine Evil Ruptsprite",
+          namecn: "\u68A6\xB7\u4E5D\u715E\u7834\u7075\u66F2"
+        },
+        {
+          id: "D24014",
+          other_id: 341,
+          name: "Dream - Divine Brush",
+          namecn: "\u68A6\xB7\u795E\u6765\u4E4B\u7B14"
+        },
+        {
+          id: "D24025",
+          other_id: 384,
+          name: "Dream - Finishing Touch",
+          namecn: "\u68A6\xB7\u753B\u9F99\u70B9\u775B",
+          non_playable: true
+        },
+        {
+          id: "D24034",
+          other_id: 386,
+          name: "Dream - Wonderful Strokes",
+          namecn: "\u68A6\xB7\u5999\u7B14\u751F\u82B1",
+          non_playable: true
+        },
+        {
+          id: "D25015",
+          other_id: 334,
+          name: "Dream - Motionless Tutelary Formation",
+          namecn: "\u68A6\xB7\u4E0D\u52A8\u91D1\u521A\u9635"
+        },
+        {
+          id: "D25024",
+          other_id: 349,
+          name: "Dream - Echo Formation",
+          namecn: "\u68A6\xB7\u56DE\u54CD\u9635\u7EB9"
+        },
+        {
+          id: "D26014",
+          other_id: 333,
+          name: "Dream - Frozen Snow Lotus",
+          namecn: "\u68A6\xB7\u51B0\u5C01\u96EA\u83B2"
+        },
+        {
+          id: "D26024",
+          other_id: 343,
+          name: "Dream - Entangling Ancient Vine",
+          namecn: "\u68A6\xB7\u7F1A\u4ED9\u53E4\u85E4"
+        },
+        {
+          id: "D26035",
+          other_id: 350,
+          name: "Dream - Space Spiritual Field",
+          namecn: "\u68A6\xB7\u7A7A\u95F4\u7075\u7530"
+        },
+        {
+          id: "D26045",
+          other_id: 385,
+          name: "Dream - Flying Owl Reishi",
+          namecn: "\u68A6\xB7\u98DE\u67AD\u7075\u829D",
+          non_playable: true
+        },
+        {
+          id: "D27015",
+          other_id: 335,
+          name: "Dream - Heavenly Time Recurring",
+          namecn: "\u68A6\xB7\u5929\u547D\u91CD\u73B0"
+        },
+        {
+          id: "D27024",
+          other_id: 369,
+          name: "Dream - Envelop In Disaster",
+          namecn: "\u68A6\xB7\u5384\u52AB\u7F20\u8EAB"
+        },
+        {
+          id: "D30015",
+          other_id: 347,
+          name: "Dream - At Own Pace",
+          namecn: "\u68A6\xB7\u81EA\u5728\u968F\u5FC3",
+          non_playable: true
+        }
       ];
     }
   });
 
-  // vendor/yisim/card_json_web.js
+  // vendor/yisim-master/card_json_web.js
   var card_json_web_exports = {};
   __export(card_json_web_exports, {
     names_json: () => names_default,
     swogi: () => swogi_default
   });
   var init_card_json_web = __esm({
-    "vendor/yisim/card_json_web.js"() {
+    "vendor/yisim-master/card_json_web.js"() {
       init_swogi();
       init_names();
     }
   });
 
-  // vendor/yisim/card_actions.js
+  // vendor/yisim-master/card_actions.js
   var card_actions = {};
   card_actions["111011"] = (game) => {
     game.atk(6);
@@ -19658,15 +21826,21 @@
   };
   card_actions["113101"] = (game) => {
     game.increase_idx_def(0, 3);
-    game.atk(game.players[0].def);
+    if (game.players[0].def > 0) {
+      game.atk(game.players[0].def);
+    }
   };
   card_actions["113102"] = (game) => {
     game.increase_idx_def(0, 5);
-    game.atk(game.players[0].def);
+    if (game.players[0].def > 0) {
+      game.atk(game.players[0].def);
+    }
   };
   card_actions["113103"] = (game) => {
     game.increase_idx_def(0, 8);
-    game.atk(game.players[0].def);
+    if (game.players[0].def > 0) {
+      game.atk(game.players[0].def);
+    }
   };
   card_actions["113111"] = (game) => {
     for (let i = 0; i < 3; i++) {
@@ -19681,6 +21855,27 @@
   card_actions["113113"] = (game) => {
     for (let i = 0; i < 3; i++) {
       game.atk(5);
+    }
+  };
+  card_actions["113121"] = (game) => {
+    game.atk(6);
+    game.atk(6);
+    if (game.if_cost_x_qi(1)) {
+      game.atk(6);
+    }
+  };
+  card_actions["113122"] = (game) => {
+    game.atk(8);
+    game.atk(8);
+    if (game.if_cost_x_qi(1)) {
+      game.atk(6);
+    }
+  };
+  card_actions["113123"] = (game) => {
+    game.atk(10);
+    game.atk(10);
+    if (game.if_cost_x_qi(1)) {
+      game.atk(6);
     }
   };
   card_actions["114011"] = (game) => {
@@ -19723,6 +21918,7 @@
     game.increase_idx_qi(0, 1);
     game.continuous();
     game.add_c_of_x(1, "spirit_gather_citta_dharma_stacks");
+    game.players[0].spirit_gather_citta_dharma_odd_gives_qi = true;
   };
   card_actions["114032"] = (game) => {
     game.increase_idx_qi(0, 1);
@@ -19811,6 +22007,84 @@
     for (let i = 0; i < 6; i++) {
       game.atk(2);
     }
+  };
+  card_actions["114111"] = (game) => {
+    game.atk(2);
+    game.add_c_of_x(2, "sword_qi");
+    game.add_c_of_x(Math.min((game.players[0].qi + game.players[0].sword_qi) * 2, 10), "agility");
+  };
+  card_actions["114112"] = (game) => {
+    game.atk(3);
+    game.add_c_of_x(3, "sword_qi");
+    game.add_c_of_x(Math.min((game.players[0].qi + game.players[0].sword_qi) * 2, 10), "agility");
+  };
+  card_actions["114113"] = (game) => {
+    game.atk(4);
+    game.add_c_of_x(4, "sword_qi");
+    game.add_c_of_x(Math.min((game.players[0].qi + game.players[0].sword_qi) * 2, 10), "agility");
+  };
+  card_actions["114121"] = (game) => {
+    let atk_amt = 3;
+    let smash_def = false;
+    if (game.if_cloud_hit()) {
+      atk_amt += 1;
+      smash_def = true;
+    }
+    atk_amt += game.players[0].sword_intent || 0;
+    atk_amt += game.players[0].increase_atk || 0;
+    for (let i = 0; i < 2; i++) {
+      game.atk(atk_amt, false, smash_def);
+    }
+  };
+  card_actions["114122"] = (game) => {
+    let atk_amt = 4;
+    let smash_def = false;
+    if (game.if_cloud_hit()) {
+      atk_amt += 2;
+      smash_def = true;
+    }
+    atk_amt += game.players[0].sword_intent || 0;
+    atk_amt += game.players[0].increase_atk || 0;
+    for (let i = 0; i < 2; i++) {
+      game.atk(atk_amt, false, smash_def);
+    }
+  };
+  card_actions["114123"] = (game) => {
+    let atk_amt = 5;
+    let smash_def = false;
+    if (game.if_cloud_hit()) {
+      atk_amt += 3;
+      smash_def = true;
+    }
+    atk_amt += game.players[0].sword_intent || 0;
+    atk_amt += game.players[0].increase_atk || 0;
+    for (let i = 0; i < 2; i++) {
+      game.atk(atk_amt, false, smash_def);
+    }
+  };
+  card_actions["115111"] = (game) => {
+    const me = game.players[0];
+    for (let i = 0; i < 2; i++) {
+      game.atk(3);
+    }
+    game.increase_idx_def(0, 2);
+    game.increase_idx_def(0, me.attack_count * 2);
+  };
+  card_actions["115112"] = (game) => {
+    const me = game.players[0];
+    for (let i = 0; i < 3; i++) {
+      game.atk(3);
+    }
+    game.increase_idx_def(0, 2);
+    game.increase_idx_def(0, me.attack_count * 2);
+  };
+  card_actions["115113"] = (game) => {
+    const me = game.players[0];
+    for (let i = 0; i < 4; i++) {
+      game.atk(3);
+    }
+    game.increase_idx_def(0, 2);
+    game.increase_idx_def(0, me.attack_count * 2);
   };
   card_actions["114091"] = (game) => {
     game.increase_idx_def(0, 10);
@@ -20000,6 +22274,75 @@
   card_actions["115083"] = (game) => {
     game.continuous();
     game.add_c_of_x(70, "unrestrained_sword_zero_stacks");
+  };
+  card_actions["115091"] = (game) => {
+    game.increase_idx_qi(0, 1);
+    game.increase_idx_def(0, 1);
+    game.atk(1 + game.players[0].qi);
+    game.atk(1 + game.players[0].def);
+  };
+  card_actions["115092"] = (game) => {
+    game.increase_idx_qi(0, 2);
+    game.increase_idx_def(0, 2);
+    game.atk(1 + game.players[0].qi);
+    game.atk(1 + game.players[0].def);
+  };
+  card_actions["115093"] = (game) => {
+    game.increase_idx_qi(0, 3);
+    game.increase_idx_def(0, 3);
+    game.atk(1 + game.players[0].qi);
+    game.atk(1 + game.players[0].def);
+  };
+  card_actions["115101"] = (game) => {
+    const me = game.players[0];
+    me.ignore_sword_intent = true;
+    game.atk(4);
+    if (!me.can_post_action[me.currently_playing_card_idx]) {
+      game.add_c_of_x(1, "sword_intent");
+    }
+    if (me.sword_intent > 0) {
+      game.add_c_of_x(1, "this_card_chases");
+    }
+  };
+  card_actions["115102"] = (game) => {
+    const me = game.players[0];
+    me.ignore_sword_intent = true;
+    game.atk(5);
+    if (!me.can_post_action[me.currently_playing_card_idx]) {
+      game.add_c_of_x(2, "sword_intent");
+    }
+    if (me.sword_intent > 0) {
+      game.add_c_of_x(1, "this_card_chases");
+    }
+  };
+  card_actions["115103"] = (game) => {
+    const me = game.players[0];
+    me.ignore_sword_intent = true;
+    game.atk(6);
+    if (!me.can_post_action[me.currently_playing_card_idx]) {
+      game.add_c_of_x(3, "sword_intent");
+    }
+    if (me.sword_intent > 0) {
+      game.add_c_of_x(1, "this_card_chases");
+    }
+  };
+  card_actions["115121"] = (game) => {
+    game.increase_idx_def(0, 4);
+    game.add_c_of_x(2, "cloud_sea");
+    game.increase_idx_x_by_c(0, "cloud_sword_chain_count", 1);
+    game.chase();
+  };
+  card_actions["115122"] = (game) => {
+    game.increase_idx_def(0, 8);
+    game.add_c_of_x(2, "cloud_sea");
+    game.increase_idx_x_by_c(0, "cloud_sword_chain_count", 2);
+    game.chase();
+  };
+  card_actions["115123"] = (game) => {
+    game.increase_idx_def(0, 12);
+    game.add_c_of_x(2, "cloud_sea");
+    game.increase_idx_x_by_c(0, "cloud_sword_chain_count", 3);
+    game.chase();
   };
   card_actions["121011"] = (game) => {
     game.atk(5);
@@ -20379,6 +22722,21 @@
       game.increase_idx_hp(0, 12);
     }
   };
+  card_actions["122121"] = (game) => {
+    game.increase_idx_qi(0, 2);
+    game.increase_idx_def(0, 2);
+    game.become_star_point(2);
+  };
+  card_actions["122122"] = (game) => {
+    game.increase_idx_qi(0, 2);
+    game.increase_idx_def(0, 4);
+    game.become_star_point(3);
+  };
+  card_actions["122123"] = (game) => {
+    game.increase_idx_qi(0, 2);
+    game.increase_idx_def(0, 6);
+    game.become_star_point(4);
+  };
   card_actions["123011"] = (game) => {
     game.add_c_of_x(2, "star_power");
     game.become_star_point(2);
@@ -20457,6 +22815,57 @@
     }
     game.atk(6);
   };
+  card_actions["123121"] = (game) => {
+    const me = game.players[0];
+    let return_hexagram = 0;
+    if (me.hexagram > 0) {
+      return_hexagram += 1;
+    }
+    game.atk_rand_range(1, 7);
+    if (me.hexagram > 0) {
+      return_hexagram += 1;
+    }
+    const add_hp = game.rand_range(1, 7);
+    game.increase_idx_max_hp(0, add_hp);
+    game.increase_idx_hp(0, add_hp);
+    if (return_hexagram > 0) {
+      game.add_c_of_x(return_hexagram, "hexagram");
+    }
+  };
+  card_actions["123122"] = (game) => {
+    const me = game.players[0];
+    let return_hexagram = 0;
+    if (me.hexagram > 0) {
+      return_hexagram += 1;
+    }
+    game.atk_rand_range(1, 9);
+    if (me.hexagram > 0) {
+      return_hexagram += 1;
+    }
+    const add_hp = game.rand_range(1, 9);
+    game.increase_idx_max_hp(0, add_hp);
+    game.increase_idx_hp(0, add_hp);
+    if (return_hexagram > 0) {
+      game.add_c_of_x(return_hexagram, "hexagram");
+    }
+  };
+  card_actions["123123"] = (game) => {
+    const me = game.players[0];
+    let return_hexagram = 0;
+    if (me.hexagram > 0) {
+      return_hexagram += 1;
+    }
+    game.atk_rand_range(1, 11);
+    if (me.hexagram > 0) {
+      return_hexagram += 1;
+    }
+    const add_hp = game.rand_range(1, 11);
+    game.increase_idx_max_hp(0, add_hp);
+    game.increase_idx_hp(0, add_hp);
+    if (return_hexagram > 0) {
+      game.add_c_of_x(return_hexagram, "hexagram");
+    }
+  };
   card_actions["123051"] = (game) => {
     game.atk_rand_range(1, 9);
     game.for_each_x_up_to_c_add_y("triggered_hexagram_count", 3, "hexagram");
@@ -20468,6 +22877,36 @@
   card_actions["123053"] = (game) => {
     game.atk_rand_range(1, 11);
     game.for_each_x_up_to_c_add_y("triggered_hexagram_count", 5, "hexagram");
+  };
+  card_actions["124111"] = (game) => {
+    game.increase_idx_qi(0, 2);
+    game.continuous();
+    game.add_c_of_x(3, "soul_wound_curse_formation_stacks");
+  };
+  card_actions["124112"] = (game) => {
+    game.increase_idx_qi(0, 2);
+    game.continuous();
+    game.add_c_of_x(5, "soul_wound_curse_formation_stacks");
+  };
+  card_actions["124113"] = (game) => {
+    game.increase_idx_qi(0, 2);
+    game.continuous();
+    game.add_c_of_x(7, "soul_wound_curse_formation_stacks");
+  };
+  card_actions["112121"] = (game) => {
+    game.continuous();
+    game.add_c_of_x(2, "spirit_command_citta_dharma_qi_gain_def_stacks");
+    game.add_c_of_x(1, "spirit_command_citta_dharma_qi_loss_def_stacks");
+  };
+  card_actions["112122"] = (game) => {
+    game.continuous();
+    game.add_c_of_x(2, "spirit_command_citta_dharma_qi_gain_def_stacks");
+    game.add_c_of_x(2, "spirit_command_citta_dharma_qi_loss_def_stacks");
+  };
+  card_actions["112123"] = (game) => {
+    game.continuous();
+    game.add_c_of_x(3, "spirit_command_citta_dharma_qi_gain_def_stacks");
+    game.add_c_of_x(2, "spirit_command_citta_dharma_qi_loss_def_stacks");
   };
   card_actions["123061"] = (game) => {
     game.increase_idx_qi(0, 2);
@@ -20593,6 +23032,33 @@
     }
     if (game.if_star_point()) {
       game.chase();
+    }
+  };
+  card_actions["124121"] = (game) => {
+    game.atk(2);
+    game.add_c_of_x(1, "star_power");
+    if (game.if_star_point()) {
+      const add_hp = 4 + game.players[0].star_power * 2;
+      game.increase_idx_max_hp(0, add_hp);
+      game.increase_idx_hp(0, add_hp);
+    }
+  };
+  card_actions["124122"] = (game) => {
+    game.atk(2);
+    game.add_c_of_x(1, "star_power");
+    if (game.if_star_point()) {
+      const add_hp = 6 + game.players[0].star_power * 3;
+      game.increase_idx_max_hp(0, add_hp);
+      game.increase_idx_hp(0, add_hp);
+    }
+  };
+  card_actions["124123"] = (game) => {
+    game.atk(2);
+    game.add_c_of_x(1, "star_power");
+    if (game.if_star_point()) {
+      const add_hp = 8 + game.players[0].star_power * 4;
+      game.increase_idx_max_hp(0, add_hp);
+      game.increase_idx_hp(0, add_hp);
     }
   };
   card_actions["124021"] = (game) => {
@@ -20870,6 +23336,135 @@
   card_actions["125083"] = (game) => {
     game.increase_idx_qi(0, 2);
     game.do_propitious_omen(7);
+  };
+  card_actions["125091"] = (game) => {
+    game.atk(1);
+    game.increase_idx_qi(0, 1);
+    if (game.players[0].qi > game.players[1].qi) {
+      game.add_enemy_c_of_x(1, "flaw");
+    }
+    if (game.if_star_point()) {
+      game.chase();
+    }
+  };
+  card_actions["125092"] = (game) => {
+    game.atk(3);
+    game.increase_idx_qi(0, 2);
+    if (game.players[0].qi > game.players[1].qi) {
+      game.add_enemy_c_of_x(1, "flaw");
+    }
+    if (game.if_star_point()) {
+      game.chase();
+    }
+  };
+  card_actions["125093"] = (game) => {
+    game.atk(5);
+    game.increase_idx_qi(0, 3);
+    if (game.players[0].qi > game.players[1].qi) {
+      game.add_enemy_c_of_x(1, "flaw");
+    }
+    if (game.if_star_point()) {
+      game.chase();
+    }
+  };
+  card_actions["125101"] = (game) => {
+    game.add_enemy_c_of_x(1, "internal_injury");
+    game.increase_idx_def(0, 1 + game.get_debuff_count(1));
+    if (game.players[0].def >= 5) {
+      game.chase();
+    }
+  };
+  card_actions["125102"] = (game) => {
+    game.add_enemy_c_of_x(2, "internal_injury");
+    game.increase_idx_def(0, 2 + game.get_debuff_count(1));
+    if (game.players[0].def >= 5) {
+      game.chase();
+    }
+  };
+  card_actions["125103"] = (game) => {
+    game.add_enemy_c_of_x(3, "internal_injury");
+    game.increase_idx_def(0, 3 + game.get_debuff_count(1));
+    if (game.players[0].def >= 5) {
+      game.chase();
+    }
+  };
+  card_actions["125111"] = (game) => {
+    game.add_c_of_x(2, "branch_break_acupressure_turns");
+    for (let i = 0; i < 2; i++) {
+      game.atk(2);
+    }
+    if (game.if_c_pct(10)) {
+      game.atk(2);
+    }
+    if (game.if_c_pct(10)) {
+      game.add_enemy_c_of_x(1, "decrease_atk");
+    }
+  };
+  card_actions["125112"] = (game) => {
+    game.add_c_of_x(2, "branch_break_acupressure_turns");
+    for (let i = 0; i < 3; i++) {
+      game.atk(2);
+    }
+    if (game.if_c_pct(10)) {
+      game.atk(2);
+    }
+    if (game.if_c_pct(10)) {
+      game.add_enemy_c_of_x(1, "decrease_atk");
+    }
+  };
+  card_actions["125113"] = (game) => {
+    game.add_c_of_x(2, "branch_break_acupressure_turns");
+    for (let i = 0; i < 4; i++) {
+      game.atk(2);
+    }
+    if (game.if_c_pct(10)) {
+      game.atk(2);
+    }
+    if (game.if_c_pct(10)) {
+      game.add_enemy_c_of_x(1, "decrease_atk");
+    }
+  };
+  card_actions["125121"] = (game) => {
+    const me = game.players[0];
+    const first_use = !me.can_post_action[me.currently_playing_card_idx];
+    if (first_use) {
+      game.add_c_of_x(16, "max_hp");
+      game.increase_idx_hp(0, 16);
+    }
+    if (me.hp_gained > 0 && game.if_post_action()) {
+      game.atk(8 + Math.floor(me.hp_gained / 4));
+    }
+    if (game.if_c_pct(10)) {
+      game.chase();
+    }
+  };
+  card_actions["125122"] = (game) => {
+    const me = game.players[0];
+    const first_use = !me.can_post_action[me.currently_playing_card_idx];
+    if (first_use) {
+      game.add_c_of_x(24, "max_hp");
+      game.increase_idx_hp(0, 24);
+    }
+    if (me.hp_gained > 0 && game.if_post_action()) {
+      game.atk(8 + Math.floor(me.hp_gained / 4));
+    }
+    if (game.if_c_pct(10)) {
+      game.chase();
+    }
+  };
+  card_actions["125123"] = (game) => {
+    const me = game.players[0];
+    const first_use = !me.can_post_action[me.currently_playing_card_idx];
+    if (first_use) {
+      game.add_c_of_x(32, "max_hp");
+      game.increase_idx_hp(0, 32);
+    }
+    if (me.hp_gained > 0 && game.if_post_action()) {
+      game.atk(8 + Math.floor(me.hp_gained / 4));
+    }
+    if (game.if_c_pct(10)) {
+      game.chase();
+    }
   };
   card_actions["131011"] = (game) => {
     game.increase_idx_qi(0, 1);
@@ -21276,6 +23871,21 @@
     game.increase_idx_qi(0, 1);
     game.add_c_of_x(1, "cosmos_seal_stacks");
   };
+  card_actions["132121"] = (game) => {
+    game.deal_damage(3);
+    game.continuous();
+    game.add_c_of_x(3, "seal_suppression_citta_dharma_stacks");
+  };
+  card_actions["132122"] = (game) => {
+    game.deal_damage(4);
+    game.continuous();
+    game.add_c_of_x(4, "seal_suppression_citta_dharma_stacks");
+  };
+  card_actions["132123"] = (game) => {
+    game.deal_damage(5);
+    game.continuous();
+    game.add_c_of_x(5, "seal_suppression_citta_dharma_stacks");
+  };
   card_actions["133011"] = (game) => {
     game.add_c_of_x(10, "max_hp");
     game.continuous();
@@ -21293,8 +23903,7 @@
   };
   card_actions["133021"] = (game) => {
     for (let i = 0; i < 2; i++) {
-      game.add_c_of_x(1, "smash_def");
-      game.atk(1);
+      game.atk(1, false, true);
     }
     if (game.if_wood_spirit()) {
       game.add_c_of_x(1, "chase_if_hp_gained");
@@ -21302,8 +23911,7 @@
   };
   card_actions["133022"] = (game) => {
     for (let i = 0; i < 2; i++) {
-      game.add_c_of_x(1, "smash_def");
-      game.atk(2);
+      game.atk(2, false, true);
     }
     if (game.if_wood_spirit()) {
       game.add_c_of_x(1, "chase_if_hp_gained");
@@ -21311,8 +23919,7 @@
   };
   card_actions["133023"] = (game) => {
     for (let i = 0; i < 2; i++) {
-      game.add_c_of_x(1, "smash_def");
-      game.atk(3);
+      game.atk(3, false, true);
     }
     if (game.if_wood_spirit()) {
       game.add_c_of_x(1, "chase_if_hp_gained");
@@ -21480,6 +24087,15 @@
   card_actions["133113"] = (game) => {
     game.do_five_elements_circulation(3);
   };
+  card_actions["133121"] = (game) => {
+    game.atk(15 + game.players[0].qi);
+  };
+  card_actions["133122"] = (game) => {
+    game.atk(19 + game.players[0].qi);
+  };
+  card_actions["133123"] = (game) => {
+    game.atk(23 + game.players[0].qi);
+  };
   card_actions["134011"] = (game) => {
     game.increase_idx_qi(0, 2);
     game.increase_idx_hp(0, 2);
@@ -21630,6 +24246,7 @@
   card_actions["134071"] = (game) => {
     game.add_c_of_x(1, "disable_penetrate_stacks");
     game.atk(4);
+    game.set_idx_c_of_x(0, 0, "disable_penetrate_stacks");
     if (game.if_metal_spirit()) {
       game.chase();
     }
@@ -21637,6 +24254,7 @@
   card_actions["134072"] = (game) => {
     game.add_c_of_x(1, "disable_penetrate_stacks");
     game.atk(8);
+    game.set_idx_c_of_x(0, 0, "disable_penetrate_stacks");
     if (game.if_metal_spirit()) {
       game.chase();
     }
@@ -21644,6 +24262,7 @@
   card_actions["134073"] = (game) => {
     game.add_c_of_x(1, "disable_penetrate_stacks");
     game.atk(12);
+    game.set_idx_c_of_x(0, 0, "disable_penetrate_stacks");
     if (game.if_metal_spirit()) {
       game.chase();
     }
@@ -21711,20 +24330,35 @@
   card_actions["134111"] = (game) => {
     let atk_amt = 4;
     atk_amt += game.get_n_different_five_elements(0) * 4;
-    game.add_c_of_x(1, "smash_def");
-    game.atk(atk_amt);
+    game.atk(atk_amt, false, true);
   };
   card_actions["134112"] = (game) => {
     let atk_amt = 7;
     atk_amt += game.get_n_different_five_elements(0) * 5;
-    game.add_c_of_x(1, "smash_def");
-    game.atk(atk_amt);
+    game.atk(atk_amt, false, true);
   };
   card_actions["134113"] = (game) => {
     let atk_amt = 10;
     atk_amt += game.get_n_different_five_elements(0) * 6;
-    game.add_c_of_x(1, "smash_def");
-    game.atk(atk_amt);
+    game.atk(atk_amt, false, true);
+  };
+  card_actions["134121"] = (game) => {
+    game.increase_idx_def(0, 4);
+    if (game.if_earth_spirit()) {
+      game.chase();
+    }
+  };
+  card_actions["134122"] = (game) => {
+    game.increase_idx_def(0, 8);
+    if (game.if_earth_spirit()) {
+      game.chase();
+    }
+  };
+  card_actions["134123"] = (game) => {
+    game.increase_idx_def(0, 12);
+    if (game.if_earth_spirit()) {
+      game.chase();
+    }
   };
   card_actions["135011"] = (game) => {
     game.add_c_of_x(1, "increase_atk");
@@ -21794,18 +24428,102 @@
       game.add_c_of_x(1, "metal_spirit_giant_tripod_stacks");
     }
     game.atk(7);
+    game.set_idx_c_of_x(0, 0, "metal_spirit_giant_tripod_stacks");
   };
   card_actions["135042"] = (game) => {
     if (game.if_metal_spirit()) {
       game.add_c_of_x(1, "metal_spirit_giant_tripod_stacks");
     }
     game.atk(11);
+    game.set_idx_c_of_x(0, 0, "metal_spirit_giant_tripod_stacks");
   };
   card_actions["135043"] = (game) => {
     if (game.if_metal_spirit()) {
       game.add_c_of_x(1, "metal_spirit_giant_tripod_stacks");
     }
     game.atk(15);
+    game.set_idx_c_of_x(0, 0, "metal_spirit_giant_tripod_stacks");
+  };
+  card_actions["135081"] = (game) => {
+    if (game.if_wood_spirit()) {
+      game.add_c_of_x(3, "wood_spirit_spring_breeze_stacks");
+    }
+    game.atk(1);
+    game.atk(1);
+    game.increase_idx_qi(0, 2);
+  };
+  card_actions["135082"] = (game) => {
+    if (game.if_wood_spirit()) {
+      game.add_c_of_x(3, "wood_spirit_spring_breeze_stacks");
+    }
+    game.atk(1);
+    game.atk(1);
+    game.atk(1);
+    game.increase_idx_qi(0, 3);
+  };
+  card_actions["135083"] = (game) => {
+    if (game.if_wood_spirit()) {
+      game.add_c_of_x(3, "wood_spirit_spring_breeze_stacks");
+    }
+    game.atk(1);
+    game.atk(1);
+    game.atk(1);
+    game.atk(1);
+    game.increase_idx_qi(0, 4);
+  };
+  card_actions["135091"] = (game) => {
+    const me = game.players[0];
+    game.increase_idx_qi(0, 3);
+    const gained = 2 - me.increase_atk;
+    if (gained > 0) {
+      game.add_c_of_x(gained, "increase_atk");
+      game.reduce_idx_max_hp(0, gained * 6);
+    }
+    if (game.if_fire_spirit()) {
+      game.reduce_enemy_hp(me.increase_atk * 2);
+      game.reduce_enemy_c_of_x(me.increase_atk * 2, "max_hp");
+    }
+  };
+  card_actions["135092"] = (game) => {
+    const me = game.players[0];
+    game.increase_idx_qi(0, 3);
+    const gained = 3 - me.increase_atk;
+    if (gained > 0) {
+      game.add_c_of_x(gained, "increase_atk");
+      game.reduce_idx_max_hp(0, gained * 6);
+    }
+    if (game.if_fire_spirit()) {
+      game.reduce_enemy_hp(me.increase_atk * 2);
+      game.reduce_enemy_c_of_x(me.increase_atk * 2, "max_hp");
+    }
+  };
+  card_actions["135093"] = (game) => {
+    const me = game.players[0];
+    game.increase_idx_qi(0, 3);
+    const gained = 4 - me.increase_atk;
+    if (gained > 0) {
+      game.add_c_of_x(gained, "increase_atk");
+      game.reduce_idx_max_hp(0, gained * 6);
+    }
+    if (game.if_fire_spirit()) {
+      game.reduce_enemy_hp(me.increase_atk * 2);
+      game.reduce_enemy_c_of_x(me.increase_atk * 2, "max_hp");
+    }
+  };
+  card_actions["135101"] = (game) => {
+    for (let i = 0; i < 2; i++) {
+      game.atk(6);
+    }
+  };
+  card_actions["135102"] = (game) => {
+    for (let i = 0; i < 3; i++) {
+      game.atk(5);
+    }
+  };
+  card_actions["135103"] = (game) => {
+    for (let i = 0; i < 4; i++) {
+      game.atk(4);
+    }
   };
   card_actions["135051"] = (game) => {
     game.add_c_of_x(3, "force_of_water");
@@ -21862,6 +24580,51 @@
     if (game.get_n_different_five_elements(0) <= 1) {
       game.add_c_of_x(3, "five_elements_heavenly_marrow_rhythm_stacks");
     }
+  };
+  card_actions["135111"] = (game) => {
+    game.add_c_of_x(1, "force_of_water");
+    game.add_c_of_x(2, "max_hp");
+    game.increase_idx_hp(0, 2);
+    if (game.if_water_spirit()) {
+      game.add_c_of_x(Math.min((game.players[0].force_of_water + game.players[0].qi) * 2, 10), "agility");
+    }
+  };
+  card_actions["135112"] = (game) => {
+    game.add_c_of_x(2, "force_of_water");
+    game.add_c_of_x(3, "max_hp");
+    game.increase_idx_hp(0, 3);
+    if (game.if_water_spirit()) {
+      game.add_c_of_x(Math.min((game.players[0].force_of_water + game.players[0].qi) * 2, 10), "agility");
+    }
+  };
+  card_actions["135113"] = (game) => {
+    game.add_c_of_x(3, "force_of_water");
+    game.add_c_of_x(4, "max_hp");
+    game.increase_idx_hp(0, 4);
+    if (game.if_water_spirit()) {
+      game.add_c_of_x(Math.min((game.players[0].force_of_water + game.players[0].qi) * 2, 10), "agility");
+    }
+  };
+  card_actions["135121"] = (game) => {
+    const me = game.players[0];
+    const idx = me.currently_playing_card_idx;
+    game.increase_idx_qi(0, 1 + game.get_n_different_five_elements(0));
+    game.activate_element_of_card(me.cards[game.get_prev_idx(idx)]);
+    game.activate_element_of_card(me.cards[game.get_next_idx(idx)]);
+  };
+  card_actions["135122"] = (game) => {
+    const me = game.players[0];
+    const idx = me.currently_playing_card_idx;
+    game.increase_idx_qi(0, 3 + game.get_n_different_five_elements(0));
+    game.activate_element_of_card(me.cards[game.get_prev_idx(idx)]);
+    game.activate_element_of_card(me.cards[game.get_next_idx(idx)]);
+  };
+  card_actions["135123"] = (game) => {
+    const me = game.players[0];
+    const idx = me.currently_playing_card_idx;
+    game.increase_idx_qi(0, 5 + game.get_n_different_five_elements(0));
+    game.activate_element_of_card(me.cards[game.get_prev_idx(idx)]);
+    game.activate_element_of_card(me.cards[game.get_next_idx(idx)]);
   };
   card_actions["141011"] = (game) => {
     game.atk(9);
@@ -22034,6 +24797,30 @@
       game.atk(8);
     }
   };
+  card_actions["142121"] = (game) => {
+    const qi_cost = Math.min(game.players[0].qi, 2);
+    if (qi_cost > 0) {
+      game.reduce_idx_x_by_c(0, "qi", qi_cost);
+    }
+    game.atk(7 + qi_cost * 3);
+    game.increase_idx_def(0, 4 + qi_cost * 3);
+  };
+  card_actions["142122"] = (game) => {
+    const qi_cost = Math.min(game.players[0].qi, 2);
+    if (qi_cost > 0) {
+      game.reduce_idx_x_by_c(0, "qi", qi_cost);
+    }
+    game.atk(11 + qi_cost * 3);
+    game.increase_idx_def(0, 4 + qi_cost * 3);
+  };
+  card_actions["142123"] = (game) => {
+    const qi_cost = Math.min(game.players[0].qi, 2);
+    if (qi_cost > 0) {
+      game.reduce_idx_x_by_c(0, "qi", qi_cost);
+    }
+    game.atk(15 + qi_cost * 3);
+    game.increase_idx_def(0, 4 + qi_cost * 3);
+  };
   card_actions["142011"] = (game) => {
     game.atk(10);
     game.add_c_of_x(2, "crash_fist_shake_stacks");
@@ -22059,17 +24846,17 @@
     game.add_c_of_x(3, "crash_fist_entangle_stacks");
   };
   card_actions["142031"] = (game) => {
-    game.add_c_of_x(1, "smash_def");
+    game.add_c_of_x(1, "this_card_crash_fist_blitz_stacks");
     game.atk(10);
     game.add_c_of_x(1, "crash_fist_blitz_stacks");
   };
   card_actions["142032"] = (game) => {
-    game.add_c_of_x(1, "smash_def");
+    game.add_c_of_x(1, "this_card_crash_fist_blitz_stacks");
     game.atk(14);
     game.add_c_of_x(1, "crash_fist_blitz_stacks");
   };
   card_actions["142033"] = (game) => {
-    game.add_c_of_x(1, "smash_def");
+    game.add_c_of_x(1, "this_card_crash_fist_blitz_stacks");
     game.atk(18);
     game.add_c_of_x(1, "crash_fist_blitz_stacks");
   };
@@ -22168,30 +24955,33 @@
   };
   card_actions["142091"] = (game) => {
     let atk_amt = 9;
+    let do_smash_def = false;
     if (game.players[0].qi >= 1) {
       game.reduce_c_of_x(1, "qi");
-      game.add_c_of_x(1, "smash_def");
+      do_smash_def = true;
       atk_amt += 4;
     }
-    game.atk(atk_amt);
+    game.atk(atk_amt, false, do_smash_def);
   };
   card_actions["142092"] = (game) => {
     let atk_amt = 12;
+    let do_smash_def = false;
     if (game.players[0].qi >= 1) {
       game.reduce_c_of_x(1, "qi");
-      game.add_c_of_x(1, "smash_def");
+      do_smash_def = true;
       atk_amt += 5;
     }
-    game.atk(atk_amt);
+    game.atk(atk_amt, false, do_smash_def);
   };
   card_actions["142093"] = (game) => {
     let atk_amt = 15;
+    let do_smash_def = false;
     if (game.players[0].qi >= 1) {
       game.reduce_c_of_x(1, "qi");
-      game.add_c_of_x(1, "smash_def");
+      do_smash_def = true;
       atk_amt += 6;
     }
-    game.atk(atk_amt);
+    game.atk(atk_amt, false, do_smash_def);
   };
   card_actions["142101"] = (game) => {
     game.increase_idx_qi(0, 2);
@@ -22329,28 +25119,28 @@
     game.atk(26);
   };
   card_actions["143081"] = (game) => {
-    game.add_enemy_c_of_x(1, "internal_injury");
-    game.add_enemy_c_of_x(1, "wound");
     game.add_c_of_x(1, "internal_injury");
+    game.add_enemy_c_of_x(1, "internal_injury");
     game.add_c_of_x(1, "wound");
+    game.add_enemy_c_of_x(1, "wound");
     for (let i = 0; i < 2; i++) {
       game.atk(6);
     }
   };
   card_actions["143082"] = (game) => {
-    game.add_enemy_c_of_x(2, "internal_injury");
-    game.add_enemy_c_of_x(1, "wound");
     game.add_c_of_x(2, "internal_injury");
+    game.add_enemy_c_of_x(2, "internal_injury");
     game.add_c_of_x(1, "wound");
+    game.add_enemy_c_of_x(1, "wound");
     for (let i = 0; i < 2; i++) {
       game.atk(7);
     }
   };
   card_actions["143083"] = (game) => {
-    game.add_enemy_c_of_x(2, "internal_injury");
-    game.add_enemy_c_of_x(2, "wound");
     game.add_c_of_x(2, "internal_injury");
+    game.add_enemy_c_of_x(2, "internal_injury");
     game.add_c_of_x(2, "wound");
+    game.add_enemy_c_of_x(2, "wound");
     for (let i = 0; i < 2; i++) {
       game.atk(8);
     }
@@ -22405,6 +25195,27 @@
     game.increase_idx_force(0, qi_amt);
     const atk_amt = 12 + qi_amt * 3;
     game.atk(atk_amt);
+  };
+  card_actions["143121"] = (game) => {
+    game.continuous();
+    game.increase_idx_physique(0, 2);
+    game.increase_idx_hp(0, 2);
+    game.add_c_of_x(2, "flaw");
+    game.add_c_of_x(1, "drunken_fist_stance_stacks");
+  };
+  card_actions["143122"] = (game) => {
+    game.continuous();
+    game.increase_idx_physique(0, 3);
+    game.increase_idx_hp(0, 5);
+    game.add_c_of_x(2, "flaw");
+    game.add_c_of_x(1, "drunken_fist_stance_stacks");
+  };
+  card_actions["143123"] = (game) => {
+    game.continuous();
+    game.increase_idx_physique(0, 4);
+    game.increase_idx_hp(0, 8);
+    game.add_c_of_x(2, "flaw");
+    game.add_c_of_x(1, "drunken_fist_stance_stacks");
   };
   card_actions["144011"] = (game) => {
     game.add_c_of_x(2, "force");
@@ -22531,30 +25342,81 @@
   };
   card_actions["144101"] = (game) => {
     const me = game.players[0];
-    let def_amt = me.force * 4;
-    let dmg_amt = me.force * 3;
-    game.reduce_c_of_x(me.force, "force");
-    game.increase_idx_def(0, def_amt);
-    game.deal_damage(dmg_amt);
+    const force = me.force;
+    game.reduce_c_of_x(force, "force");
+    if (force > 0) {
+      game.increase_idx_def(0, force * 4);
+      game.deal_damage(force * 3);
+    }
     game.add_c_of_x(5, "agility");
   };
   card_actions["144102"] = (game) => {
     const me = game.players[0];
-    let def_amt = me.force * 4;
-    let dmg_amt = me.force * 4;
-    game.reduce_c_of_x(me.force, "force");
-    game.increase_idx_def(0, def_amt);
-    game.deal_damage(dmg_amt);
+    const force = me.force;
+    game.reduce_c_of_x(force, "force");
+    if (force > 0) {
+      game.increase_idx_def(0, force * 4);
+      game.deal_damage(force * 4);
+    }
     game.add_c_of_x(6, "agility");
   };
   card_actions["144103"] = (game) => {
     const me = game.players[0];
-    let def_amt = me.force * 4;
-    let dmg_amt = me.force * 5;
-    game.reduce_c_of_x(me.force, "force");
-    game.increase_idx_def(0, def_amt);
-    game.deal_damage(dmg_amt);
+    const force = me.force;
+    game.reduce_c_of_x(force, "force");
+    if (force > 0) {
+      game.increase_idx_def(0, force * 4);
+      game.deal_damage(force * 5);
+    }
     game.add_c_of_x(7, "agility");
+  };
+  card_actions["144111"] = (game) => {
+    game.increase_idx_qi(0, 3);
+    game.add_c_of_x(2, "internal_injury");
+    const amt = game.players[0].qi + game.get_debuff_count(0);
+    game.increase_idx_max_hp(0, amt);
+    game.increase_idx_hp(0, amt);
+  };
+  card_actions["144112"] = (game) => {
+    game.increase_idx_qi(0, 5);
+    game.add_c_of_x(3, "internal_injury");
+    const amt = game.players[0].qi + game.get_debuff_count(0);
+    game.increase_idx_max_hp(0, amt);
+    game.increase_idx_hp(0, amt);
+  };
+  card_actions["144113"] = (game) => {
+    game.increase_idx_qi(0, 7);
+    game.add_c_of_x(4, "internal_injury");
+    const amt = game.players[0].qi + game.get_debuff_count(0);
+    game.increase_idx_max_hp(0, amt);
+    game.increase_idx_hp(0, amt);
+  };
+  card_actions["144121"] = (game) => {
+    game.atk(7 + game.players[0].qi);
+    const qi_cost = Math.min(game.players[0].qi, 2);
+    if (qi_cost > 0) {
+      game.reduce_idx_x_by_c(0, "qi", qi_cost);
+      game.add_c_of_x(qi_cost * 3, "agility");
+      game.reduce_random_debuff_by_c_n_times(1, qi_cost);
+    }
+  };
+  card_actions["144122"] = (game) => {
+    game.atk(12 + game.players[0].qi);
+    const qi_cost = Math.min(game.players[0].qi, 2);
+    if (qi_cost > 0) {
+      game.reduce_idx_x_by_c(0, "qi", qi_cost);
+      game.add_c_of_x(qi_cost * 3, "agility");
+      game.reduce_random_debuff_by_c_n_times(1, qi_cost);
+    }
+  };
+  card_actions["144123"] = (game) => {
+    game.atk(17 + game.players[0].qi);
+    const qi_cost = Math.min(game.players[0].qi, 2);
+    if (qi_cost > 0) {
+      game.reduce_idx_x_by_c(0, "qi", qi_cost);
+      game.add_c_of_x(qi_cost * 3, "agility");
+      game.reduce_random_debuff_by_c_n_times(1, qi_cost);
+    }
   };
   card_actions["145011"] = (game) => {
     game.atk(5);
@@ -22637,20 +25499,23 @@
   card_actions["145051"] = (game) => {
     game.add_c_of_x(4, "internal_injury");
     game.add_enemy_c_of_x(4, "internal_injury");
-    game.for_each_x_add_c_pct_y("debuff", 50, "qi");
-    game.for_each_x_add_c_pct_y("debuff", 50, "hp");
+    const add_amt = Math.floor(game.get_debuff_count(0) * 50 / 100);
+    game.increase_idx_qi(0, add_amt);
+    game.increase_idx_hp(0, add_amt);
   };
   card_actions["145052"] = (game) => {
     game.add_c_of_x(6, "internal_injury");
     game.add_enemy_c_of_x(6, "internal_injury");
-    game.for_each_x_add_c_pct_y("debuff", 50, "qi");
-    game.for_each_x_add_c_pct_y("debuff", 50, "hp");
+    const add_amt = Math.floor(game.get_debuff_count(0) * 50 / 100);
+    game.increase_idx_qi(0, add_amt);
+    game.increase_idx_hp(0, add_amt);
   };
   card_actions["145053"] = (game) => {
     game.add_c_of_x(8, "internal_injury");
     game.add_enemy_c_of_x(8, "internal_injury");
-    game.for_each_x_add_c_pct_y("debuff", 50, "qi");
-    game.for_each_x_add_c_pct_y("debuff", 50, "hp");
+    const add_amt = Math.floor(game.get_debuff_count(0) * 50 / 100);
+    game.increase_idx_qi(0, add_amt);
+    game.increase_idx_hp(0, add_amt);
   };
   card_actions["145061"] = (game) => {
     if (game.players[0].internal_injury >= 1) {
@@ -22674,7 +25539,7 @@
     if (game.players[0].styx >= 1) {
       game.add_enemy_c_of_x(2, "styx");
     }
-    game.for_each_x_add_y("debuff", "bonus_force_amt");
+    game.players[0].debuffs_count_as_force = true;
     game.ignore_weaken();
     game.ignore_decrease_atk();
     game.atk(8);
@@ -22701,7 +25566,7 @@
     if (game.players[0].styx >= 1) {
       game.add_enemy_c_of_x(2, "styx");
     }
-    game.for_each_x_add_y("debuff", "bonus_force_amt");
+    game.players[0].debuffs_count_as_force = true;
     game.ignore_weaken();
     game.ignore_decrease_atk();
     game.atk(14);
@@ -22728,7 +25593,7 @@
     if (game.players[0].styx >= 1) {
       game.add_enemy_c_of_x(2, "styx");
     }
-    game.for_each_x_add_y("debuff", "bonus_force_amt");
+    game.players[0].debuffs_count_as_force = true;
     game.ignore_weaken();
     game.ignore_decrease_atk();
     game.atk(20);
@@ -22762,6 +25627,72 @@
     game.atk(14);
     game.increase_idx_hp(0, 8);
     game.add_c_of_x(6 + game.players[0].force * 2, "agility");
+  };
+  card_actions["145091"] = (game) => {
+    for (let i = 0; i < 2; i++) {
+      game.atk(4, false, true);
+    }
+    game.add_c_of_x(1, "crash_fist_shatter_stacks");
+  };
+  card_actions["145092"] = (game) => {
+    for (let i = 0; i < 3; i++) {
+      game.atk(4, false, true);
+    }
+    game.add_c_of_x(1, "crash_fist_shatter_stacks");
+  };
+  card_actions["145093"] = (game) => {
+    for (let i = 0; i < 4; i++) {
+      game.atk(4, false, true);
+    }
+    game.add_c_of_x(1, "crash_fist_shatter_stacks");
+  };
+  card_actions["145101"] = (game) => {
+    game.add_c_of_x(game.players[0].hp_cost_card_count, "force");
+    game.atk(10 + game.players[0].force);
+  };
+  card_actions["145102"] = (game) => {
+    game.add_c_of_x(game.players[0].hp_cost_card_count, "force");
+    game.atk(16 + game.players[0].force);
+  };
+  card_actions["145103"] = (game) => {
+    game.add_c_of_x(game.players[0].hp_cost_card_count, "force");
+    game.atk(22 + game.players[0].force);
+  };
+  card_actions["145111"] = (game) => {
+    game.increase_idx_hp(0, 4);
+    game.add_c_of_x(8, "agility");
+    game.add_c_of_x(1, "blood_shadow_escape_stacks");
+  };
+  card_actions["145112"] = (game) => {
+    game.increase_idx_hp(0, 10);
+    game.add_c_of_x(8, "agility");
+    game.add_c_of_x(1, "blood_shadow_escape_stacks");
+  };
+  card_actions["145113"] = (game) => {
+    game.increase_idx_hp(0, 16);
+    game.add_c_of_x(8, "agility");
+    game.add_c_of_x(1, "blood_shadow_escape_stacks");
+  };
+  card_actions["145121"] = (game) => {
+    for (let i = 0; i < 3; i++) {
+      game.atk(1);
+    }
+    game.increase_idx_qi(0, 2);
+    game.increase_idx_physique(0, 2 + Math.floor(game.players[0].qi / 2));
+  };
+  card_actions["145122"] = (game) => {
+    for (let i = 0; i < 4; i++) {
+      game.atk(1);
+    }
+    game.increase_idx_qi(0, 3);
+    game.increase_idx_physique(0, 3 + Math.floor(game.players[0].qi / 2));
+  };
+  card_actions["145123"] = (game) => {
+    for (let i = 0; i < 5; i++) {
+      game.atk(1);
+    }
+    game.increase_idx_qi(0, 4);
+    game.increase_idx_physique(0, 4 + Math.floor(game.players[0].qi / 2));
   };
   card_actions["211011"] = (game) => {
     game.atk(4);
@@ -22931,13 +25862,16 @@
     game.add_c_of_x(1, "unrestrained_sword_twin_dragons_stacks");
   };
   card_actions["216011"] = (game) => {
-    game.atk(8 + 8 * game.players[0].cloud_sword_hand_count);
+    const extra = game.remnant_cloud_sky_sealing_sword_extra_atk(8 * game.players[0].cloud_sword_hand_count);
+    game.atk(8 + extra);
   };
   card_actions["216012"] = (game) => {
-    game.atk(10 + 10 * game.players[0].cloud_sword_hand_count);
+    const extra = game.remnant_cloud_sky_sealing_sword_extra_atk(10 * game.players[0].cloud_sword_hand_count);
+    game.atk(10 + extra);
   };
   card_actions["216013"] = (game) => {
-    game.atk(12 + 12 * game.players[0].cloud_sword_hand_count);
+    const extra = game.remnant_cloud_sky_sealing_sword_extra_atk(12 * game.players[0].cloud_sword_hand_count);
+    game.atk(12 + extra);
   };
   card_actions["216021"] = (game) => {
     let atk_amt = 4;
@@ -23129,6 +26063,9 @@
     if (game.if_c_pct(1)) {
       game.add_c_of_x(4, "max_hp");
       game.increase_idx_hp(0, 30);
+    } else {
+      game.add_c_of_x(2, "max_hp");
+      game.increase_idx_hp(0, 15);
     }
     game.consumption();
   };
@@ -23136,6 +26073,9 @@
     if (game.if_c_pct(1)) {
       game.add_c_of_x(6, "max_hp");
       game.increase_idx_hp(0, 40);
+    } else {
+      game.add_c_of_x(3, "max_hp");
+      game.increase_idx_hp(0, 20);
     }
     game.consumption();
   };
@@ -23143,6 +26083,9 @@
     if (game.if_c_pct(1)) {
       game.add_c_of_x(8, "max_hp");
       game.increase_idx_hp(0, 50);
+    } else {
+      game.add_c_of_x(4, "max_hp");
+      game.increase_idx_hp(0, 25);
     }
     game.consumption();
   };
@@ -23182,21 +26125,21 @@
   card_actions["226011"] = (game) => {
     if (game.players[0].hexagram >= 8) {
       if (game.players[0].hexagram <= 8) {
-        game.set_enemy_c_of_x(8, "hp");
+        game.players[1].hp = Math.min(8, game.players[1].max_hp);
       }
     }
   };
   card_actions["226012"] = (game) => {
     if (game.players[0].hexagram >= 8) {
       if (game.players[0].hexagram <= 8) {
-        game.set_enemy_c_of_x(4, "hp");
+        game.players[1].hp = Math.min(4, game.players[1].max_hp);
       }
     }
   };
   card_actions["226013"] = (game) => {
     if (game.players[0].hexagram >= 8) {
       if (game.players[0].hexagram <= 8) {
-        game.set_enemy_c_of_x(1, "hp");
+        game.players[1].hp = Math.min(1, game.players[1].max_hp);
       }
     }
   };
@@ -23820,18 +26763,18 @@
     game.consumption();
   };
   card_actions["313011"] = (game) => {
-    game.increase_idx_hp(0, 7);
-    game.for_each_x_add_c_y("qi", 2, "hp");
+    const me = game.players[0];
+    game.increase_idx_hp(0, 7 + me.qi * 2);
     game.consumption();
   };
   card_actions["313012"] = (game) => {
-    game.increase_idx_hp(0, 12);
-    game.for_each_x_add_c_y("qi", 2, "hp");
+    const me = game.players[0];
+    game.increase_idx_hp(0, 12 + me.qi * 2);
     game.consumption();
   };
   card_actions["313013"] = (game) => {
-    game.increase_idx_hp(0, 17);
-    game.for_each_x_add_c_y("qi", 2, "hp");
+    const me = game.players[0];
+    game.increase_idx_hp(0, 17 + me.qi * 2);
     game.consumption();
   };
   card_actions["313021"] = (game) => {
@@ -24163,18 +27106,30 @@
   };
   card_actions["332011"] = (game) => {
     game.continuous();
-    game.set_c_up_to_x(4, "kindness_tune_stacks");
-    game.set_enemy_c_up_to_x(4, "kindness_tune_stacks");
+    if (game.players[0].kindness_tune_stacks <= 0) {
+      game.add_c_of_x(4, "kindness_tune_stacks");
+    }
+    if (game.players[1].kindness_tune_stacks <= 0) {
+      game.add_enemy_c_of_x(4, "kindness_tune_stacks");
+    }
   };
   card_actions["332012"] = (game) => {
     game.continuous();
-    game.set_c_up_to_x(6, "kindness_tune_stacks");
-    game.set_enemy_c_up_to_x(6, "kindness_tune_stacks");
+    if (game.players[0].kindness_tune_stacks <= 0) {
+      game.add_c_of_x(6, "kindness_tune_stacks");
+    }
+    if (game.players[1].kindness_tune_stacks <= 0) {
+      game.add_enemy_c_of_x(6, "kindness_tune_stacks");
+    }
   };
   card_actions["332013"] = (game) => {
     game.continuous();
-    game.set_c_up_to_x(8, "kindness_tune_stacks");
-    game.set_enemy_c_up_to_x(8, "kindness_tune_stacks");
+    if (game.players[0].kindness_tune_stacks <= 0) {
+      game.add_c_of_x(8, "kindness_tune_stacks");
+    }
+    if (game.players[1].kindness_tune_stacks <= 0) {
+      game.add_enemy_c_of_x(8, "kindness_tune_stacks");
+    }
   };
   card_actions["332021"] = (game) => {
     game.continuous();
@@ -24426,70 +27381,16 @@
     game.add_enemy_c_of_x(8, "def");
   };
   card_actions["343011"] = (game) => {
-    switch (game.random_int(6)) {
-      case 0:
-        game.add_enemy_c_of_x(2, "internal_injury");
-        break;
-      case 1:
-        game.add_enemy_c_of_x(2, "weaken");
-        break;
-      case 2:
-        game.add_enemy_c_of_x(2, "flaw");
-        break;
-      case 3:
-        game.add_enemy_c_of_x(2, "decrease_atk");
-        break;
-      case 4:
-        game.add_enemy_c_of_x(2, "entangle");
-        break;
-      case 5:
-        game.add_enemy_c_of_x(2, "wound");
-        break;
-    }
+    const debuffs = ["internal_injury", "weaken", "flaw", "decrease_atk", "entangle", "wound"];
+    game.add_enemy_random_debuff_from_pool(2, debuffs);
   };
   card_actions["343012"] = (game) => {
-    switch (game.random_int(6)) {
-      case 0:
-        game.add_enemy_c_of_x(3, "internal_injury");
-        break;
-      case 1:
-        game.add_enemy_c_of_x(3, "weaken");
-        break;
-      case 2:
-        game.add_enemy_c_of_x(3, "flaw");
-        break;
-      case 3:
-        game.add_enemy_c_of_x(3, "decrease_atk");
-        break;
-      case 4:
-        game.add_enemy_c_of_x(3, "entangle");
-        break;
-      case 5:
-        game.add_enemy_c_of_x(3, "wound");
-        break;
-    }
+    const debuffs = ["internal_injury", "weaken", "flaw", "decrease_atk", "entangle", "wound"];
+    game.add_enemy_random_debuff_from_pool(3, debuffs);
   };
   card_actions["343013"] = (game) => {
-    switch (game.random_int(6)) {
-      case 0:
-        game.add_enemy_c_of_x(4, "internal_injury");
-        break;
-      case 1:
-        game.add_enemy_c_of_x(4, "weaken");
-        break;
-      case 2:
-        game.add_enemy_c_of_x(4, "flaw");
-        break;
-      case 3:
-        game.add_enemy_c_of_x(4, "decrease_atk");
-        break;
-      case 4:
-        game.add_enemy_c_of_x(4, "entangle");
-        break;
-      case 5:
-        game.add_enemy_c_of_x(4, "wound");
-        break;
-    }
+    const debuffs = ["internal_injury", "weaken", "flaw", "decrease_atk", "entangle", "wound"];
+    game.add_enemy_random_debuff_from_pool(4, debuffs);
   };
   card_actions["343021"] = (game) => {
     game.increase_idx_qi(0, 2);
@@ -24795,13 +27696,13 @@
       game.atk(3);
     }
   };
-  card_actions["361021"] = (game) => {
+  card_actions["362081"] = (game) => {
     game.increase_idx_def(0, 4);
   };
-  card_actions["361022"] = (game) => {
+  card_actions["362082"] = (game) => {
     game.increase_idx_def(0, 6);
   };
-  card_actions["361023"] = (game) => {
+  card_actions["362083"] = (game) => {
     game.increase_idx_def(0, 8);
     game.continuous();
     game.add_c_of_x(1, "hard_bamboo_stacks");
@@ -25028,17 +27929,17 @@
   };
   card_actions["373021"] = (game) => {
     game.increase_idx_hp(0, 4);
-    game.add_c_of_x(1, "skip_to_previous_card_stacks");
+    game.move_cursor_to_previous_card();
     game.consumption();
   };
   card_actions["373022"] = (game) => {
     game.increase_idx_hp(0, 8);
-    game.add_c_of_x(1, "skip_to_previous_card_stacks");
+    game.move_cursor_to_previous_card();
     game.consumption();
   };
   card_actions["373023"] = (game) => {
     game.increase_idx_hp(0, 12);
-    game.add_c_of_x(1, "skip_to_previous_card_stacks");
+    game.move_cursor_to_previous_card();
     game.consumption();
   };
   card_actions["373031"] = (game) => {
@@ -25243,15 +28144,30 @@
     game.add_c_of_x(3, "regen");
   };
   card_actions["403031"] = (game) => {
-    game.for_each_x_reduce_c_pct_y("hp", 15, "hp");
+    const hp_loss = Math.ceil(game.players[0].hp * 15 / 100);
+    if (hp_loss < 0) {
+      game.increase_idx_hp(0, -hp_loss);
+    } else {
+      game.reduce_idx_hp(0, hp_loss);
+    }
     game.add_c_of_x(4, "increase_atk");
   };
   card_actions["403032"] = (game) => {
-    game.for_each_x_reduce_c_pct_y("hp", 15, "hp");
+    const hp_loss = Math.ceil(game.players[0].hp * 15 / 100);
+    if (hp_loss < 0) {
+      game.increase_idx_hp(0, -hp_loss);
+    } else {
+      game.reduce_idx_hp(0, hp_loss);
+    }
     game.add_c_of_x(5, "increase_atk");
   };
   card_actions["403033"] = (game) => {
-    game.for_each_x_reduce_c_pct_y("hp", 15, "hp");
+    const hp_loss = Math.ceil(game.players[0].hp * 15 / 100);
+    if (hp_loss < 0) {
+      game.increase_idx_hp(0, -hp_loss);
+    } else {
+      game.reduce_idx_hp(0, hp_loss);
+    }
     game.add_c_of_x(6, "increase_atk");
   };
   card_actions["404011"] = (game) => {
@@ -25346,29 +28262,50 @@
   };
   card_actions["406011"] = (game) => {
     game.atk(30);
-    game.reduce_enemy_c_of_x(4, "destiny");
     const enemy = game.players[1];
+    enemy.destiny -= 4;
+    enemy.direct_destiny_lost += 4;
     if (enemy.destiny <= 0) {
-      enemy.hp = 0;
+      if (enemy.hp > 0) {
+        enemy.hp = 0;
+      }
       enemy.got_void_split_speared = true;
+      if (enemy.is_mirror) {
+        game.destiny_damage = game.calculate_destiny_damage(0, 1);
+        game.destiny_damage_loser = 1;
+      }
     }
   };
   card_actions["406012"] = (game) => {
     game.atk(35);
-    game.reduce_enemy_c_of_x(7, "destiny");
     const enemy = game.players[1];
+    enemy.destiny -= 7;
+    enemy.direct_destiny_lost += 7;
     if (enemy.destiny <= 0) {
-      enemy.hp = 0;
+      if (enemy.hp > 0) {
+        enemy.hp = 0;
+      }
       enemy.got_void_split_speared = true;
+      if (enemy.is_mirror) {
+        game.destiny_damage = game.calculate_destiny_damage(0, 1);
+        game.destiny_damage_loser = 1;
+      }
     }
   };
   card_actions["406013"] = (game) => {
     game.atk(40);
-    game.reduce_enemy_c_of_x(10, "destiny");
     const enemy = game.players[1];
+    enemy.destiny -= 10;
+    enemy.direct_destiny_lost += 10;
     if (enemy.destiny <= 0) {
-      enemy.hp = 0;
+      if (enemy.hp > 0) {
+        enemy.hp = 0;
+      }
       enemy.got_void_split_speared = true;
+      if (enemy.is_mirror) {
+        game.destiny_damage = game.calculate_destiny_damage(0, 1);
+        game.destiny_damage_loser = 1;
+      }
     }
   };
   card_actions["406021"] = (game) => {
@@ -25382,6 +28319,57 @@
   card_actions["406023"] = (game) => {
     game.deal_damage(32);
     game.add_enemy_c_of_x(2, "cannot_act_stacks");
+  };
+  card_actions["406031"] = (game) => {
+    const me = game.players[0];
+    const phases = /* @__PURE__ */ new Set();
+    for (let i = 0; i < me.cards.length; i++) {
+      if (i === me.currently_playing_card_idx) {
+        continue;
+      }
+      const card_id = me.cards[i];
+      const phase = Number(card_id.startsWith("D") ? card_id.slice(-1) : card_id[2]);
+      if (phase >= 1 && phase <= 5) {
+        phases.add(phase);
+      }
+    }
+    for (let i = 0; i < phases.size + 2; i++) {
+      game.atk(10);
+    }
+  };
+  card_actions["406032"] = (game) => {
+    const me = game.players[0];
+    const phases = /* @__PURE__ */ new Set();
+    for (let i = 0; i < me.cards.length; i++) {
+      if (i === me.currently_playing_card_idx) {
+        continue;
+      }
+      const card_id = me.cards[i];
+      const phase = Number(card_id.startsWith("D") ? card_id.slice(-1) : card_id[2]);
+      if (phase >= 1 && phase <= 5) {
+        phases.add(phase);
+      }
+    }
+    for (let i = 0; i < phases.size + 2; i++) {
+      game.atk(13);
+    }
+  };
+  card_actions["406033"] = (game) => {
+    const me = game.players[0];
+    const phases = /* @__PURE__ */ new Set();
+    for (let i = 0; i < me.cards.length; i++) {
+      if (i === me.currently_playing_card_idx) {
+        continue;
+      }
+      const card_id = me.cards[i];
+      const phase = Number(card_id.startsWith("D") ? card_id.slice(-1) : card_id[2]);
+      if (phase >= 1 && phase <= 5) {
+        phases.add(phase);
+      }
+    }
+    for (let i = 0; i < phases.size + 2; i++) {
+      game.atk(16);
+    }
   };
   card_actions["501011"] = (game) => {
     game.deal_damage(4);
@@ -25522,15 +28510,15 @@
   };
   card_actions["505021"] = (game) => {
     game.continuous();
-    game.add_c_of_x(10, "shadow_owl_rabbit_stacks");
+    game.set_c_of_x(10, "shadow_owl_rabbit_stacks");
   };
   card_actions["505022"] = (game) => {
     game.continuous();
-    game.add_c_of_x(8, "shadow_owl_rabbit_stacks");
+    game.set_c_of_x(8, "shadow_owl_rabbit_stacks");
   };
   card_actions["505023"] = (game) => {
     game.continuous();
-    game.add_c_of_x(6, "shadow_owl_rabbit_stacks");
+    game.set_c_of_x(6, "shadow_owl_rabbit_stacks");
   };
   card_actions["506011"] = (game) => {
     game.continuous();
@@ -25558,6 +28546,15 @@
     game.deal_damage(9);
     game.continuous();
     game.add_enemy_c_of_x(1, "nether_void_canine_stacks");
+  };
+  card_actions["506031"] = (game) => {
+    game.increase_idx_qi(0, 2);
+  };
+  card_actions["506032"] = (game) => {
+    game.increase_idx_qi(0, 4);
+  };
+  card_actions["506033"] = (game) => {
+    game.increase_idx_qi(0, 6);
   };
   card_actions["601011"] = (game) => {
     game.do_normal_attack(3);
@@ -25937,21 +28934,15 @@
   };
   card_actions["614031"] = (game) => {
     game.for_each_x_up_to_c_add_y("hand_count", 3, "bonus_rep_amt");
-    for (let i = 0; i < 2 + game.players[0].bonus_rep_amt; i++) {
-      game.atk(2);
-    }
+    game.atk_replay_count_or_default(2, 2 + game.players[0].bonus_rep_amt);
   };
   card_actions["614032"] = (game) => {
     game.for_each_x_up_to_c_add_y("hand_count", 3, "bonus_rep_amt");
-    for (let i = 0; i < 3 + game.players[0].bonus_rep_amt; i++) {
-      game.atk(2);
-    }
+    game.atk_replay_count_or_default(2, 3 + game.players[0].bonus_rep_amt);
   };
   card_actions["614033"] = (game) => {
     game.for_each_x_up_to_c_add_y("hand_count", 3, "bonus_rep_amt");
-    for (let i = 0; i < 4 + game.players[0].bonus_rep_amt; i++) {
-      game.atk(2);
-    }
+    game.atk_replay_count_or_default(2, 4 + game.players[0].bonus_rep_amt);
   };
   card_actions["615011"] = (game) => {
     game.atk(2);
@@ -26055,6 +29046,7 @@
   };
   card_actions["622012"] = (game) => {
     game.increase_idx_qi(0, 3);
+    game.reduce_idx_hp(0, 4);
     game.chase();
     if (game.if_post_action()) {
       game.increase_idx_hp(0, 1);
@@ -26062,6 +29054,7 @@
   };
   card_actions["622013"] = (game) => {
     game.increase_idx_qi(0, 4);
+    game.reduce_idx_hp(0, 4);
     game.chase();
     if (game.if_post_action()) {
       game.increase_idx_hp(0, 1);
@@ -26355,77 +29348,32 @@
       game.chase();
     }
   };
-  card_actions["633031"] = (game) => {
-    game.increase_idx_qi(0, 2);
-    game.increase_idx_max_hp(0, 3);
-    game.increase_idx_hp(0, 3);
-    if (game.players[0].activate_wood_spirit_stacks >= 1) {
-      game.chase();
-    }
-    if (game.players[0].activate_fire_spirit_stacks >= 1) {
-      game.chase();
-    }
-    if (game.players[0].activate_earth_spirit_stacks >= 1) {
-      game.chase();
-    }
-    if (game.players[0].activate_metal_spirit_stacks >= 1) {
-      game.chase();
-    }
-    if (game.players[0].activate_water_spirit_stacks >= 1) {
-      game.chase();
-    }
-  };
-  card_actions["633032"] = (game) => {
-    game.increase_idx_qi(0, 3);
-    game.increase_idx_max_hp(0, 6);
-    game.increase_idx_hp(0, 6);
-    if (game.players[0].activate_wood_spirit_stacks >= 1) {
-      game.chase();
-    }
-    if (game.players[0].activate_fire_spirit_stacks >= 1) {
-      game.chase();
-    }
-    if (game.players[0].activate_earth_spirit_stacks >= 1) {
-      game.chase();
-    }
-    if (game.players[0].activate_metal_spirit_stacks >= 1) {
-      game.chase();
-    }
-    if (game.players[0].activate_water_spirit_stacks >= 1) {
-      game.chase();
-    }
-  };
-  card_actions["633033"] = (game) => {
-    game.increase_idx_qi(0, 4);
-    game.increase_idx_max_hp(0, 9);
-    game.increase_idx_hp(0, 9);
-    if (game.players[0].activate_wood_spirit_stacks >= 1) {
-      game.chase();
-    }
-    if (game.players[0].activate_fire_spirit_stacks >= 1) {
-      game.chase();
-    }
-    if (game.players[0].activate_earth_spirit_stacks >= 1) {
-      game.chase();
-    }
-    if (game.players[0].activate_metal_spirit_stacks >= 1) {
-      game.chase();
-    }
-    if (game.players[0].activate_water_spirit_stacks >= 1) {
-      game.chase();
-    }
-  };
   card_actions["634011"] = (game) => {
-    game.add_c_of_x(1, "disable_penetrate_stacks");
-    game.atk(5 + game.players[0].penetrate);
+    if (game.if_metal_spirit()) {
+      game.add_c_of_x(1, "disable_penetrate_stacks");
+      game.atk(5 + game.players[0].penetrate);
+      game.set_idx_c_of_x(0, 0, "disable_penetrate_stacks");
+    } else {
+      game.atk(5);
+    }
   };
   card_actions["634012"] = (game) => {
-    game.add_c_of_x(1, "disable_penetrate_stacks");
-    game.atk(10 + game.players[0].penetrate);
+    if (game.if_metal_spirit()) {
+      game.add_c_of_x(1, "disable_penetrate_stacks");
+      game.atk(10 + game.players[0].penetrate);
+      game.set_idx_c_of_x(0, 0, "disable_penetrate_stacks");
+    } else {
+      game.atk(10);
+    }
   };
   card_actions["634013"] = (game) => {
-    game.add_c_of_x(1, "disable_penetrate_stacks");
-    game.atk(15 + game.players[0].penetrate);
+    if (game.if_metal_spirit()) {
+      game.add_c_of_x(1, "disable_penetrate_stacks");
+      game.atk(15 + game.players[0].penetrate);
+      game.set_idx_c_of_x(0, 0, "disable_penetrate_stacks");
+    } else {
+      game.atk(15);
+    }
   };
   card_actions["634021"] = (game) => {
     game.do_overcome_with_each_other(1, 3);
@@ -26619,52 +29567,14 @@
   card_actions["643011"] = (game) => {
     game.add_c_of_x(2, "styx");
     for (let i = 0; i < 2; i++) {
-      switch (game.random_int(6)) {
-        case 0:
-          game.add_c_of_x(1, "internal_injury");
-          break;
-        case 1:
-          game.add_c_of_x(1, "weaken");
-          break;
-        case 2:
-          game.add_c_of_x(1, "flaw");
-          break;
-        case 3:
-          game.add_c_of_x(1, "decrease_atk");
-          break;
-        case 4:
-          game.add_c_of_x(1, "entangle");
-          break;
-        case 5:
-          game.add_c_of_x(1, "wound");
-          break;
-      }
+      game.add_random_debuff(1);
     }
     const physique_amt = Math.min(10, game.get_debuff_count(0) + 1);
     game.increase_idx_physique(0, physique_amt);
   };
   card_actions["643012"] = (game) => {
     game.add_c_of_x(3, "styx");
-    switch (game.random_int(6)) {
-      case 0:
-        game.add_c_of_x(1, "internal_injury");
-        break;
-      case 1:
-        game.add_c_of_x(1, "weaken");
-        break;
-      case 2:
-        game.add_c_of_x(1, "flaw");
-        break;
-      case 3:
-        game.add_c_of_x(1, "decrease_atk");
-        break;
-      case 4:
-        game.add_c_of_x(1, "entangle");
-        break;
-      case 5:
-        game.add_c_of_x(1, "wound");
-        break;
-    }
+    game.add_random_debuff(1);
     const physique_amt = Math.min(15, game.get_debuff_count(0) + 1);
     game.increase_idx_physique(0, physique_amt);
   };
@@ -26750,21 +29660,21 @@
   };
   card_actions["645021"] = (game) => {
     game.physique(2);
-    game.for_each_x_convert_c_pct_debuff_to_y("physique", 5, "increase_atk");
+    game.convert_random_debuffs_to_increase_atk(Math.floor(game.players[0].physique / 20));
     for (let i = 0; i < 3; i++) {
       game.atk(3);
     }
   };
   card_actions["645022"] = (game) => {
     game.physique(3);
-    game.for_each_x_convert_c_pct_debuff_to_y("physique", 5, "increase_atk");
+    game.convert_random_debuffs_to_increase_atk(Math.floor(game.players[0].physique / 20));
     for (let i = 0; i < 4; i++) {
       game.atk(3);
     }
   };
   card_actions["645023"] = (game) => {
     game.physique(4);
-    game.for_each_x_convert_c_pct_debuff_to_y("physique", 5, "increase_atk");
+    game.convert_random_debuffs_to_increase_atk(Math.floor(game.players[0].physique / 20));
     for (let i = 0; i < 5; i++) {
       game.atk(3);
     }
@@ -26925,17 +29835,17 @@
     }
   };
   card_actions["714041"] = (game) => {
-    game.set_c_up_to_x(2, "m_light_sword_stacks");
+    game.set_c_up_to_x(1, "m_light_sword_stacks");
     game.atk(8);
     game.increase_idx_qi(0, 1);
   };
   card_actions["714042"] = (game) => {
-    game.set_c_up_to_x(2, "m_light_sword_stacks");
+    game.set_c_up_to_x(1, "m_light_sword_stacks");
     game.atk(10);
     game.increase_idx_qi(0, 2);
   };
   card_actions["714043"] = (game) => {
-    game.set_c_up_to_x(2, "m_light_sword_stacks");
+    game.set_c_up_to_x(1, "m_light_sword_stacks");
     game.atk(12);
     game.increase_idx_qi(0, 3);
   };
@@ -27393,6 +30303,66 @@
     game.reduce_c_of_x(hexagram, "hexagram");
     game.add_c_of_x(qi, "hexagram");
     game.add_c_of_x(hexagram, "qi");
+  };
+  card_actions["733011"] = (game) => {
+    game.increase_idx_qi(0, 2);
+    game.increase_idx_max_hp(0, 3);
+    game.increase_idx_hp(0, 3);
+    if (game.players[0].activate_wood_spirit_stacks >= 1) {
+      game.chase();
+    }
+    if (game.players[0].activate_fire_spirit_stacks >= 1) {
+      game.chase();
+    }
+    if (game.players[0].activate_earth_spirit_stacks >= 1) {
+      game.chase();
+    }
+    if (game.players[0].activate_metal_spirit_stacks >= 1) {
+      game.chase();
+    }
+    if (game.players[0].activate_water_spirit_stacks >= 1) {
+      game.chase();
+    }
+  };
+  card_actions["733012"] = (game) => {
+    game.increase_idx_qi(0, 3);
+    game.increase_idx_max_hp(0, 6);
+    game.increase_idx_hp(0, 6);
+    if (game.players[0].activate_wood_spirit_stacks >= 1) {
+      game.chase();
+    }
+    if (game.players[0].activate_fire_spirit_stacks >= 1) {
+      game.chase();
+    }
+    if (game.players[0].activate_earth_spirit_stacks >= 1) {
+      game.chase();
+    }
+    if (game.players[0].activate_metal_spirit_stacks >= 1) {
+      game.chase();
+    }
+    if (game.players[0].activate_water_spirit_stacks >= 1) {
+      game.chase();
+    }
+  };
+  card_actions["733013"] = (game) => {
+    game.increase_idx_qi(0, 4);
+    game.increase_idx_max_hp(0, 9);
+    game.increase_idx_hp(0, 9);
+    if (game.players[0].activate_wood_spirit_stacks >= 1) {
+      game.chase();
+    }
+    if (game.players[0].activate_fire_spirit_stacks >= 1) {
+      game.chase();
+    }
+    if (game.players[0].activate_earth_spirit_stacks >= 1) {
+      game.chase();
+    }
+    if (game.players[0].activate_metal_spirit_stacks >= 1) {
+      game.chase();
+    }
+    if (game.players[0].activate_water_spirit_stacks >= 1) {
+      game.chase();
+    }
   };
   card_actions["734011"] = (game) => {
     game.increase_idx_qi(0, 2);
@@ -28384,17 +31354,17 @@
   };
   card_actions["903011"] = (game) => {
     game.do_xuanming_recurring(0);
-    game.add_c_of_x(1, "skip_to_previous_card_stacks");
+    game.move_cursor_to_previous_card();
     game.consumption();
   };
   card_actions["903012"] = (game) => {
     game.do_xuanming_recurring(5);
-    game.add_c_of_x(1, "skip_to_previous_card_stacks");
+    game.move_cursor_to_previous_card();
     game.consumption();
   };
   card_actions["903013"] = (game) => {
     game.do_xuanming_recurring(10);
-    game.add_c_of_x(1, "skip_to_previous_card_stacks");
+    game.move_cursor_to_previous_card();
     game.consumption();
   };
   card_actions["904011"] = (game) => {
@@ -28528,7 +31498,7 @@
   };
   card_actions["906001"] = (game) => {
   };
-  card_actions["906002"] = (game) => {
+  card_actions["901001"] = (game) => {
   };
   card_actions["906003"] = (game) => {
   };
@@ -28815,8 +31785,7 @@
   };
   card_actions["915071"] = (game) => {
     const me = game.players[0];
-    game.add_c_of_x(1, "smash_def");
-    game.atk(12 + me.sword_intent * 5 + me.increase_atk * 3);
+    game.atk(12 + me.sword_intent * 5 + me.increase_atk * 3, false, true);
   };
   card_actions["915072"] = (game) => {
   };
@@ -28957,9 +31926,7 @@
     const debuffs = ["internal_injury", "decrease_atk", "weaken", "flaw", "entangle", "wound"];
     const amt = game.rand_range(0, 2);
     for (let i = 0; i < amt; i++) {
-      game.used_randomness = true;
-      const debuff_name = debuffs[Math.floor(game.rng() * debuffs.length)];
-      game.add_enemy_c_of_x(1, debuff_name);
+      game.add_enemy_random_debuff_from_pool(1, debuffs);
     }
     if (game.get_debuff_count(1) >= 3) {
       game.chase();
@@ -28969,9 +31936,7 @@
     const debuffs = ["internal_injury", "decrease_atk", "weaken", "flaw", "entangle", "wound"];
     const amt = game.rand_range(1, 3);
     for (let i = 0; i < amt; i++) {
-      game.used_randomness = true;
-      const debuff_name = debuffs[Math.floor(game.rng() * debuffs.length)];
-      game.add_enemy_c_of_x(1, debuff_name);
+      game.add_enemy_random_debuff_from_pool(1, debuffs);
     }
     if (game.get_debuff_count(1) >= 3) {
       game.chase();
@@ -28981,9 +31946,7 @@
     const debuffs = ["internal_injury", "decrease_atk", "weaken", "flaw", "entangle", "wound"];
     const amt = game.rand_range(2, 4);
     for (let i = 0; i < amt; i++) {
-      game.used_randomness = true;
-      const debuff_name = debuffs[Math.floor(game.rng() * debuffs.length)];
-      game.add_enemy_c_of_x(1, debuff_name);
+      game.add_enemy_random_debuff_from_pool(1, debuffs);
     }
     if (game.get_debuff_count(1) >= 3) {
       game.chase();
@@ -29801,11 +32764,11 @@
     game.add_c_of_x(10, "next_attack_deals_extra");
   };
   card_actions["D11014"] = (game) => {
-    game.increase_idx_qi(0, 1);
+    game.increase_idx_qi(0, 2);
     game.add_c_of_x(2, "increase_atk");
   };
   card_actions["D11015"] = (game) => {
-    game.increase_idx_qi(0, 2);
+    game.increase_idx_qi(0, 3);
     game.add_c_of_x(3, "increase_atk");
   };
   card_actions["D11021"] = (game) => {
@@ -29852,9 +32815,9 @@
     }
   };
   card_actions["D11035"] = (game) => {
-    game.atk(8);
+    game.atk(4);
     game.add_c_of_x(2, "cloud_sea");
-    const add_sword_intent = 2 * game.players[0].cloud_sword_used_count;
+    const add_sword_intent = 2 + 2 * game.players[0].cloud_sword_used_count;
     if (add_sword_intent > 0) {
       game.increase_idx_x_by_c(0, "sword_intent", add_sword_intent);
     }
@@ -29964,11 +32927,11 @@
   };
   card_actions["D11074"] = (game) => {
     game.increase_idx_qi(0, 3);
-    game.increase_idx_x_by_c(0, "sword_qi", Math.floor(game.players[0].total_qi_gained * 0.33333334));
+    game.increase_idx_x_by_c(0, "sword_qi", Math.floor(game.players[0].total_qi_gained / 3));
   };
   card_actions["D11075"] = (game) => {
     game.increase_idx_qi(0, 3);
-    game.increase_idx_x_by_c(0, "sword_qi", Math.floor(game.players[0].total_qi_gained * 0.5));
+    game.increase_idx_x_by_c(0, "sword_qi", Math.floor(game.players[0].total_qi_gained / 2));
   };
   card_actions["D11081"] = (game) => {
     game.atk(3);
@@ -30034,8 +32997,33 @@
       game.increase_idx_x_by_c(0, "sword_intent", usc);
     }
   };
+  card_actions["D11201"] = (game) => {
+    game.atk(4);
+    game.increase_idx_hp(0, 2);
+    game.increase_idx_x_by_c(0, "unrestrained_sword_count", 1);
+  };
+  card_actions["D11202"] = (game) => {
+    game.atk(4);
+    game.increase_idx_hp(0, 4);
+    game.increase_idx_x_by_c(0, "unrestrained_sword_count", 1);
+  };
+  card_actions["D11203"] = (game) => {
+    game.atk(4);
+    game.increase_idx_hp(0, 6);
+    game.increase_idx_x_by_c(0, "unrestrained_sword_count", 1);
+  };
+  card_actions["D11204"] = (game) => {
+    game.atk(2);
+    game.continuous();
+    game.increase_idx_x_by_c(0, "dream_unrestrained_sword_two_stacks", 1);
+  };
+  card_actions["D11205"] = (game) => {
+    game.atk(7);
+    game.continuous();
+    game.increase_idx_x_by_c(0, "dream_unrestrained_sword_two_stacks", 1);
+  };
   card_actions["D11101"] = (game) => {
-    game.increase_idx_def(0, 4);
+    game.increase_idx_def(0, 6);
     game.continuous();
     game.increase_idx_x_by_c(0, "dream_consonance_qi_gives_def_stacks", 1);
   };
@@ -30122,11 +33110,11 @@
   };
   card_actions["D11131"] = (game) => {
     const deck_count = game.sword_formation_deck_count(99, -1);
-    game.deal_damage(5 + 1 * deck_count);
+    game.deal_damage(6 + 1 * deck_count);
   };
   card_actions["D11132"] = (game) => {
     const deck_count = game.sword_formation_deck_count(99, -1);
-    game.deal_damage(5 + 2 * deck_count);
+    game.deal_damage(6 + 2 * deck_count);
   };
   card_actions["D11133"] = (game) => {
     const deck_count = game.sword_formation_deck_count(99, -1);
@@ -30164,14 +33152,14 @@
     game.atk(2);
     game.increase_idx_qi(0, 1);
     if (game.players[0].qi > 1) {
-      game.chase();
+      game.increase_idx_x_by_c(0, "agility", 10);
     }
   };
   card_actions["D11145"] = (game) => {
     game.atk(2);
     game.increase_idx_qi(0, 2);
     if (game.players[0].qi > 2) {
-      game.chase();
+      game.increase_idx_x_by_c(0, "agility", 10);
     }
   };
   card_actions["D11151"] = (game) => {
@@ -30201,7 +33189,7 @@
     }
     const dmg = game.players[0].damage_dealt_to_hp_by_this_card_atk;
     if (dmg > 0) {
-      game.add_enemy_c_of_x(Math.min(dmg, 5), "internal_injury");
+      game.add_enemy_c_of_x(Math.min(dmg, 6), "internal_injury");
     }
   };
   card_actions["D11155"] = (game) => {
@@ -30236,6 +33224,7 @@
   };
   card_actions["D11165"] = (game) => {
     game.increase_idx_def(0, 4);
+    game.add_c_of_x(2, "moon_water_sword_formation_stacks");
     game.continuous();
     game.increase_idx_x_by_c(0, "dream_cloud_sword_softheart_gain_def", 5);
     game.increase_idx_x_by_c(0, "dream_cloud_sword_softheart_sword_formation_gives_cloud_sea", 1);
@@ -30264,56 +33253,6 @@
       game.chase();
     }
   };
-  card_actions["D11191"] = (game) => {
-    game.increase_idx_qi(0, 2);
-    game.increase_idx_x_by_c(0, "sword_qi", 1);
-    game.consumption();
-  };
-  card_actions["D11192"] = (game) => {
-    game.increase_idx_qi(0, 2);
-    game.increase_idx_x_by_c(0, "sword_qi", 2);
-    game.consumption();
-  };
-  card_actions["D11193"] = (game) => {
-    game.increase_idx_qi(0, 2);
-    game.increase_idx_x_by_c(0, "sword_qi", 3);
-    game.consumption();
-  };
-  card_actions["D11194"] = (game) => {
-    game.increase_idx_qi(0, 1);
-    game.continuous();
-    game.players[0].later_dream_spiritage_sword_on_sword_qi += 1;
-  };
-  card_actions["D11195"] = (game) => {
-    game.increase_idx_qi(0, 3);
-    game.continuous();
-    game.players[0].later_dream_spiritage_sword_on_sword_qi += 1;
-  };
-  card_actions["D11201"] = (game) => {
-    game.atk(4);
-    game.increase_idx_max_hp(0, 2);
-    game.increase_idx_hp(0, 2);
-  };
-  card_actions["D11202"] = (game) => {
-    game.atk(4);
-    game.increase_idx_max_hp(0, 4);
-    game.increase_idx_hp(0, 4);
-  };
-  card_actions["D11203"] = (game) => {
-    game.atk(4);
-    game.increase_idx_max_hp(0, 6);
-    game.increase_idx_hp(0, 6);
-  };
-  card_actions["D11204"] = (game) => {
-    game.atk(2);
-    game.continuous();
-    game.players[0].later_dream_unrestrained_sword_two_end_turn += 1;
-  };
-  card_actions["D11205"] = (game) => {
-    game.atk(7);
-    game.continuous();
-    game.players[0].later_dream_unrestrained_sword_two_end_turn += 1;
-  };
   card_actions["D11181"] = (game) => {
     const hits = 1 + (game.players[0].qi > 0 ? 1 : 0);
     for (let i = 0; i < hits; i++) {
@@ -30334,17 +33273,44 @@
   };
   card_actions["D11184"] = (game) => {
     const me = game.players[0];
-    const hits = 1 + Math.floor(me.qi * 0.5);
+    const divisor = game.if_cloud_hit() ? 2 : 3;
+    const hits = 1 + Math.floor(me.qi / divisor);
     for (let i = 0; i < hits; i++) {
-      game.atk(3);
+      game.atk(4);
     }
   };
   card_actions["D11185"] = (game) => {
     const me = game.players[0];
-    const hits = 1 + Math.floor(me.qi * 0.5);
+    const divisor = game.if_cloud_hit() ? 2 : 3;
+    const hits = 1 + Math.floor(me.qi / divisor);
     for (let i = 0; i < hits; i++) {
-      game.atk(4);
+      game.atk(5);
     }
+  };
+  card_actions["D11191"] = (game) => {
+    game.increase_idx_qi(0, 2);
+    game.increase_idx_x_by_c(0, "sword_qi", 1);
+    game.consumption();
+  };
+  card_actions["D11192"] = (game) => {
+    game.increase_idx_qi(0, 2);
+    game.increase_idx_x_by_c(0, "sword_qi", 2);
+    game.consumption();
+  };
+  card_actions["D11193"] = (game) => {
+    game.increase_idx_qi(0, 2);
+    game.increase_idx_x_by_c(0, "sword_qi", 3);
+    game.consumption();
+  };
+  card_actions["D11194"] = (game) => {
+    game.increase_idx_qi(0, 1);
+    game.continuous();
+    game.increase_idx_x_by_c(0, "dream_spiritage_sword_sword_qi_stacks", 1);
+  };
+  card_actions["D11195"] = (game) => {
+    game.increase_idx_qi(0, 3);
+    game.continuous();
+    game.increase_idx_x_by_c(0, "dream_spiritage_sword_sword_qi_stacks", 1);
   };
   card_actions["D12011"] = (game) => {
     game.atk(6);
@@ -30405,16 +33371,13 @@
   };
   card_actions["D12024"] = (game) => {
     game.increase_idx_qi(0, 2);
-    game.increase_idx_max_hp(0, 4);
-    game.increase_idx_hp(0, 4);
     const exhausted = game.exhaust_x("hexagram");
     game.add_c_of_x(exhausted, "star_power");
     game.become_star_point(Math.min(exhausted, game.players[0].cards.length));
   };
   card_actions["D12025"] = (game) => {
-    game.increase_idx_qi(0, 4);
-    game.increase_idx_max_hp(0, 4);
-    game.increase_idx_hp(0, 4);
+    game.increase_idx_qi(0, 2);
+    game.add_c_of_x(1, "hexagram");
     const exhausted = game.exhaust_x("hexagram");
     game.add_c_of_x(exhausted, "star_power");
     game.become_star_point(Math.min(exhausted, game.players[0].cards.length));
@@ -30461,46 +33424,75 @@
   };
   card_actions["D12044"] = (game) => {
     game.continuous();
-    game.increase_idx_x_by_c(0, "dream_yin_yang_formation_def_stacks", 2);
+    game.increase_idx_x_by_c(0, "dream_yin_yang_formation_def_stacks", 1);
     game.increase_idx_x_by_c(0, "dream_yin_yang_formation_hp_stacks", 2);
   };
   card_actions["D12045"] = (game) => {
-    game.increase_idx_max_hp(0, 10);
     game.continuous();
     game.increase_idx_x_by_c(0, "dream_yin_yang_formation_def_stacks", 2);
     game.increase_idx_x_by_c(0, "dream_yin_yang_formation_hp_stacks", 3);
   };
   card_actions["D12051"] = (game) => {
     const me = game.players[0];
-    const bonus = me.cards.filter((id) => swogi[id].is_thunder || swogi[id].is_explanatory_hexagram).length;
-    game.atk(6 + bonus);
+    let thunder_hexagram_count = 1;
+    for (let i = 0; i < me.cards.length; i++) {
+      const chinese_name = swogi[me.cards[i]].names?.[1] || "";
+      if (i !== me.currently_playing_card_idx && (chinese_name.includes("\u96F7") || chinese_name.includes("\u5366"))) {
+        thunder_hexagram_count += 1;
+      }
+    }
+    game.atk(6 + thunder_hexagram_count);
   };
   card_actions["D12052"] = (game) => {
     const me = game.players[0];
-    const bonus = me.cards.filter((id) => swogi[id].is_thunder || swogi[id].is_explanatory_hexagram).length;
-    game.atk(8 + bonus);
+    let thunder_hexagram_count = 1;
+    for (let i = 0; i < me.cards.length; i++) {
+      const chinese_name = swogi[me.cards[i]].names?.[1] || "";
+      if (i !== me.currently_playing_card_idx && (chinese_name.includes("\u96F7") || chinese_name.includes("\u5366"))) {
+        thunder_hexagram_count += 1;
+      }
+    }
+    game.atk(8 + thunder_hexagram_count);
   };
   card_actions["D12053"] = (game) => {
     const me = game.players[0];
-    const bonus = me.cards.filter((id) => swogi[id].is_thunder || swogi[id].is_explanatory_hexagram).length;
-    game.atk(10 + bonus);
+    let thunder_hexagram_count = 1;
+    for (let i = 0; i < me.cards.length; i++) {
+      const chinese_name = swogi[me.cards[i]].names?.[1] || "";
+      if (i !== me.currently_playing_card_idx && (chinese_name.includes("\u96F7") || chinese_name.includes("\u5366"))) {
+        thunder_hexagram_count += 1;
+      }
+    }
+    game.atk(10 + thunder_hexagram_count);
   };
   card_actions["D12054"] = (game) => {
     const me = game.players[0];
-    const bonus = me.cards.filter((id) => swogi[id].is_thunder || swogi[id].is_explanatory_hexagram).length;
-    game.atk(8 + bonus);
-    game.used_randomness = true;
-    if (game.rng() < 0.1) {
-      game.atk(8 + bonus);
+    let thunder_hexagram_count = 1;
+    for (let i = 0; i < me.cards.length; i++) {
+      const chinese_name = swogi[me.cards[i]].names?.[1] || "";
+      if (i !== me.currently_playing_card_idx && (chinese_name.includes("\u96F7") || chinese_name.includes("\u5366"))) {
+        thunder_hexagram_count += 1;
+      }
+    }
+    const atk_amt = 8 + thunder_hexagram_count;
+    game.atk(atk_amt);
+    if (game.if_c_pct(10)) {
+      game.atk(atk_amt);
     }
   };
   card_actions["D12055"] = (game) => {
     const me = game.players[0];
-    const bonus = me.cards.filter((id) => swogi[id].is_thunder || swogi[id].is_explanatory_hexagram).length;
-    game.atk(8 + bonus * 2);
-    game.used_randomness = true;
-    if (game.rng() < 0.1) {
-      game.atk(8 + bonus * 2);
+    let thunder_hexagram_count = 1;
+    for (let i = 0; i < me.cards.length; i++) {
+      const chinese_name = swogi[me.cards[i]].names?.[1] || "";
+      if (i !== me.currently_playing_card_idx && (chinese_name.includes("\u96F7") || chinese_name.includes("\u5366"))) {
+        thunder_hexagram_count += 1;
+      }
+    }
+    const atk_amt = 8 + thunder_hexagram_count * 2;
+    game.atk(atk_amt);
+    if (game.if_c_pct(10)) {
+      game.atk(atk_amt);
     }
   };
   card_actions["D12061"] = (game) => {
@@ -30747,7 +33739,7 @@
     game.increase_idx_hp(0, 4);
     game.add_enemy_c_of_x(1, "snake_shadow");
     if (game.players[0].snake_card_used > 0) {
-      game.chase();
+      game.add_c_of_x(10, "agility");
     }
   };
   card_actions["D12135"] = (game) => {
@@ -30755,7 +33747,7 @@
     game.increase_idx_hp(0, 8);
     game.add_enemy_c_of_x(1, "snake_shadow");
     if (game.players[0].snake_card_used > 0) {
-      game.chase();
+      game.add_c_of_x(10, "agility");
     }
   };
   card_actions["D12141"] = (game) => {
@@ -30813,10 +33805,8 @@
     if (game.if_post_action()) {
       times += 1;
     }
-    game.used_randomness = true;
     for (let i = 0; i < times; i++) {
-      const debuff = pool[Math.floor(game.rng() * pool.length)];
-      game.add_enemy_c_of_x(1, debuff);
+      game.add_enemy_random_debuff_from_pool(1, pool);
     }
   };
   card_actions["D12162"] = (game) => {
@@ -30826,10 +33816,8 @@
     if (game.if_post_action()) {
       times += 1;
     }
-    game.used_randomness = true;
     for (let i = 0; i < times; i++) {
-      const debuff = pool[Math.floor(game.rng() * pool.length)];
-      game.add_enemy_c_of_x(1, debuff);
+      game.add_enemy_random_debuff_from_pool(1, pool);
     }
   };
   card_actions["D12163"] = (game) => {
@@ -30839,10 +33827,8 @@
     if (game.if_post_action()) {
       times += 2;
     }
-    game.used_randomness = true;
     for (let i = 0; i < times; i++) {
-      const debuff = pool[Math.floor(game.rng() * pool.length)];
-      game.add_enemy_c_of_x(1, debuff);
+      game.add_enemy_random_debuff_from_pool(1, pool);
     }
   };
   card_actions["D12164"] = (game) => {
@@ -30852,10 +33838,8 @@
     if (game.if_post_action()) {
       times += 2;
     }
-    game.used_randomness = true;
     for (let i = 0; i < times; i++) {
-      const debuff = pool[Math.floor(game.rng() * pool.length)];
-      game.add_enemy_c_of_x(1, debuff);
+      game.add_enemy_random_debuff_from_pool(1, pool);
     }
   };
   card_actions["D12165"] = (game) => {
@@ -30865,10 +33849,8 @@
     if (game.if_post_action()) {
       times += 2;
     }
-    game.used_randomness = true;
     for (let i = 0; i < times; i++) {
-      const debuff = pool[Math.floor(game.rng() * pool.length)];
-      game.add_enemy_c_of_x(1, debuff);
+      game.add_enemy_random_debuff_from_pool(1, pool);
     }
   };
   card_actions["D12171"] = (game) => {
@@ -30892,69 +33874,6 @@
     game.add_c_of_x(2, "hexagram");
     game.chase();
     game.consumption();
-  };
-  card_actions["D12191"] = (game) => {
-    game.atk(5);
-    if (game.if_star_point()) {
-      game.add_enemy_c_of_x(1, "internal_injury");
-    }
-  };
-  card_actions["D12192"] = (game) => {
-    game.atk(5);
-    if (game.if_star_point()) {
-      game.add_enemy_c_of_x(2, "internal_injury");
-    }
-  };
-  card_actions["D12193"] = (game) => {
-    game.atk(5);
-    if (game.if_star_point()) {
-      game.add_enemy_c_of_x(3, "internal_injury");
-    }
-  };
-  card_actions["D12194"] = (game) => {
-    game.atk(5);
-    game.increase_idx_star_power(0, 1);
-    game.continuous();
-    game.players[0].later_dream_star_point_internal_injury = 1;
-  };
-  card_actions["D12195"] = (game) => {
-    game.atk(5);
-    game.increase_idx_star_power(0, 2);
-    game.continuous();
-    game.players[0].later_dream_star_point_internal_injury = 1;
-  };
-  card_actions["D12201"] = (game) => {
-    game.atk(game.rand_range(1, 10));
-    if (game.players[0].hexagram_lost > 0) {
-      game.increase_idx_hexagram(0, game.players[0].hexagram_lost);
-    }
-    game.consumption();
-  };
-  card_actions["D12202"] = (game) => {
-    game.atk(game.rand_range(3, 12));
-    if (game.players[0].hexagram_lost > 0) {
-      game.increase_idx_hexagram(0, game.players[0].hexagram_lost);
-    }
-    game.consumption();
-  };
-  card_actions["D12203"] = (game) => {
-    game.atk(game.rand_range(5, 14));
-    if (game.players[0].hexagram_lost > 0) {
-      game.increase_idx_hexagram(0, game.players[0].hexagram_lost);
-    }
-    game.consumption();
-  };
-  card_actions["D12204"] = (game) => {
-    game.atk(game.rand_range(9, 18));
-    if (game.players[0].hexagram_lost > 0) {
-      game.increase_idx_hexagram(0, game.players[0].hexagram_lost);
-    }
-    game.consumption();
-  };
-  card_actions["D12205"] = (game) => {
-    game.atk(game.rand_range(1, 8));
-    game.continuous();
-    game.players[0].later_dream_thunder_hexagram_regain_on_first_loss += 1;
   };
   card_actions["D12181"] = (game) => {
     const me = game.players[0];
@@ -30985,6 +33904,57 @@
     me.dream_revitalized_doublings = me.dream_revitalized_played_count;
     game.atk(12);
     me.dream_revitalized_played_count += 1;
+  };
+  card_actions["D12191"] = (game) => {
+    game.atk_rand_range(1, 10);
+    game.for_each_x_add_y("dream_lost_hexagram_count", "hexagram");
+    game.consumption();
+  };
+  card_actions["D12192"] = (game) => {
+    game.atk_rand_range(3, 12);
+    game.for_each_x_add_y("dream_lost_hexagram_count", "hexagram");
+    game.consumption();
+  };
+  card_actions["D12193"] = (game) => {
+    game.atk_rand_range(5, 14);
+    game.for_each_x_add_y("dream_lost_hexagram_count", "hexagram");
+    game.consumption();
+  };
+  card_actions["D12194"] = (game) => {
+    game.atk_rand_range(9, 18);
+    game.for_each_x_add_y("dream_lost_hexagram_count", "hexagram");
+    game.consumption();
+  };
+  card_actions["D12195"] = (game) => {
+    game.atk_rand_range(1, 8);
+    game.continuous();
+    game.add_c_of_x(1, "dream_thunder_hexagram_rhythm_stacks");
+  };
+  card_actions["D12201"] = (game) => {
+    game.atk(5);
+    if (game.if_star_point()) {
+      game.add_enemy_c_of_x(1, "internal_injury");
+    }
+  };
+  card_actions["D12202"] = (game) => {
+    game.atk(3);
+    if (game.if_star_point()) {
+      game.add_enemy_c_of_x(2, "internal_injury");
+    }
+  };
+  card_actions["D12203"] = (game) => {
+    game.atk(3);
+    if (game.if_star_point()) {
+      game.add_enemy_c_of_x(3, "internal_injury");
+    }
+  };
+  card_actions["D12204"] = (game) => {
+    game.atk(5);
+    game.increase_idx_star_power(0, 1);
+  };
+  card_actions["D12205"] = (game) => {
+    game.atk(5);
+    game.increase_idx_star_power(0, 2);
   };
   card_actions["D13011"] = (game) => {
     game.activate_metal_spirit();
@@ -31027,8 +33997,7 @@
     game.deal_damage(10);
   };
   card_actions["D13025"] = (game) => {
-    game.increase_idx_qi(0, 3);
-    game.deal_damage(12);
+    game.trigger_replay_card_from_next_random_outcome();
   };
   card_actions["D13031"] = (game) => {
     game.increase_idx_qi(0, 1);
@@ -31069,119 +34038,27 @@
     game.increase_idx_def(0, game.get_n_different_five_elements(0) * 3);
   };
   card_actions["D13044"] = (game) => {
-    game.increase_idx_def(0, game.players[0].played_five_element_card_count * 1);
     game.chase();
+    game.increase_idx_def(0, game.players[0].played_five_elements_count * 1);
   };
   card_actions["D13045"] = (game) => {
-    game.increase_idx_def(0, game.players[0].played_five_element_card_count * 3);
     game.chase();
+    game.increase_idx_def(0, game.players[0].played_five_elements_count * 2);
   };
   card_actions["D13051"] = (game) => {
-    const me = game.players[0];
-    const next_idx = game.get_next_idx(me.currently_playing_card_idx);
-    const next_id = me.cards[next_idx];
-    const card = swogi[next_id];
-    if (card.is_wood_spirit) {
-      game.trigger_card_by_id("131011");
-    }
-    if (card.is_fire_spirit) {
-      game.trigger_card_by_id("131031");
-    }
-    if (card.is_earth_spirit) {
-      game.trigger_card_by_id("131051");
-    }
-    if (card.is_metal_spirit) {
-      game.trigger_card_by_id("131071");
-    }
-    if (card.is_water_spirit) {
-      game.trigger_card_by_id("131091");
-    }
+    game.do_dream_ultimate_world_formation("131011", "131031", "131051", "131071", "131091", false);
   };
   card_actions["D13052"] = (game) => {
-    const me = game.players[0];
-    const next_idx = game.get_next_idx(me.currently_playing_card_idx);
-    const next_id = me.cards[next_idx];
-    const card = swogi[next_id];
-    if (card.is_wood_spirit) {
-      game.trigger_card_by_id("131012");
-    }
-    if (card.is_fire_spirit) {
-      game.trigger_card_by_id("131032");
-    }
-    if (card.is_earth_spirit) {
-      game.trigger_card_by_id("131052");
-    }
-    if (card.is_metal_spirit) {
-      game.trigger_card_by_id("131072");
-    }
-    if (card.is_water_spirit) {
-      game.trigger_card_by_id("131092");
-    }
+    game.do_dream_ultimate_world_formation("131012", "131032", "131052", "131072", "131092", false);
   };
   card_actions["D13053"] = (game) => {
-    const me = game.players[0];
-    const next_idx = game.get_next_idx(me.currently_playing_card_idx);
-    const next_id = me.cards[next_idx];
-    const card = swogi[next_id];
-    if (card.is_wood_spirit) {
-      game.trigger_card_by_id("131013");
-    }
-    if (card.is_fire_spirit) {
-      game.trigger_card_by_id("131033");
-    }
-    if (card.is_earth_spirit) {
-      game.trigger_card_by_id("131053");
-    }
-    if (card.is_metal_spirit) {
-      game.trigger_card_by_id("131073");
-    }
-    if (card.is_water_spirit) {
-      game.trigger_card_by_id("131093");
-    }
+    game.do_dream_ultimate_world_formation("131013", "131033", "131053", "131073", "131093", false);
   };
   card_actions["D13054"] = (game) => {
-    const me = game.players[0];
-    const next_idx = game.get_next_idx(me.currently_playing_card_idx);
-    const next_id = me.cards[next_idx];
-    const card = swogi[next_id];
-    game.activate_element_of_card(next_id);
-    if (card.is_wood_spirit) {
-      game.trigger_card_by_id("133012");
-    }
-    if (card.is_fire_spirit) {
-      game.trigger_card_by_id("133032");
-    }
-    if (card.is_earth_spirit) {
-      game.trigger_card_by_id("132052");
-    }
-    if (card.is_metal_spirit) {
-      game.trigger_card_by_id("132072");
-    }
-    if (card.is_water_spirit) {
-      game.trigger_card_by_id("133092");
-    }
+    game.do_dream_ultimate_world_formation("133012", "133032", "132052", "132072", "133092", true);
   };
   card_actions["D13055"] = (game) => {
-    const me = game.players[0];
-    const next_idx = game.get_next_idx(me.currently_playing_card_idx);
-    const next_id = me.cards[next_idx];
-    const card = swogi[next_id];
-    game.activate_element_of_card(next_id);
-    if (card.is_wood_spirit) {
-      game.trigger_card_by_id("133013");
-    }
-    if (card.is_fire_spirit) {
-      game.trigger_card_by_id("133033");
-    }
-    if (card.is_earth_spirit) {
-      game.trigger_card_by_id("132053");
-    }
-    if (card.is_metal_spirit) {
-      game.trigger_card_by_id("132073");
-    }
-    if (card.is_water_spirit) {
-      game.trigger_card_by_id("133093");
-    }
+    game.do_dream_ultimate_world_formation("133013", "133033", "132053", "132073", "133093", true);
   };
   card_actions["D13061"] = (game) => {
     const me = game.players[0];
@@ -31230,7 +34107,7 @@
   };
   card_actions["D13075"] = (game) => {
     game.increase_idx_hp(0, 2);
-    game.for_each_x_add_c_pct_y_up_to_d("force_of_water", 50, "increase_atk", 3);
+    game.for_each_x_add_c_pct_y_up_to_d("force_of_water", 50, "increase_atk", 4);
     if (game.players[0].force_of_water > 0 || game.players[0].increase_atk > 0) {
       game.chase();
     }
@@ -31264,9 +34141,9 @@
     game.activate_wood_spirit();
     game.increase_idx_qi(0, 1);
     game.add_c_of_x(1, "wood_thorn");
+    game.increase_idx_max_hp(0, 25);
     game.continuous();
-    game.add_c_of_x(3, "convert_increase_atk_to_wood_thorn");
-    game.increase_idx_max_hp(0, 15);
+    game.add_c_of_x(4, "convert_increase_atk_to_wood_thorn");
   };
   card_actions["D13091"] = (game) => {
     game.atk(6 + game.players[1].times_max_hp_reduced * 1);
@@ -31419,7 +34296,7 @@
   };
   card_actions["D13144"] = (game) => {
     game.continuous();
-    game.increase_idx_x_by_c(0, "dream_heavenly_marrow_unlimited_stacks", 1);
+    game.increase_idx_x_by_c(0, "dream_heavenly_marrow_limited_stacks", 3);
   };
   card_actions["D13145"] = (game) => {
     game.continuous();
@@ -31516,13 +34393,13 @@
   };
   card_actions["D13172"] = (game) => {
     game.activate_fire_spirit();
-    game.add_c_of_x(3, "def");
+    game.add_c_of_x(2, "def");
     game.reduce_enemy_c_of_x(8, "hp");
     game.reduce_enemy_c_of_x(8, "max_hp");
   };
   card_actions["D13173"] = (game) => {
     game.activate_fire_spirit();
-    game.add_c_of_x(4, "def");
+    game.add_c_of_x(2, "def");
     game.reduce_enemy_c_of_x(10, "hp");
     game.reduce_enemy_c_of_x(10, "max_hp");
   };
@@ -31582,71 +34459,75 @@
     game.increase_idx_hp(0, lose_def);
   };
   card_actions["D13191"] = (game) => {
-    const me = game.players[0];
-    game.atk(5 + me.qi + me.force_of_water);
+    game.increase_idx_qi(0, 1);
+    game.atk(2);
+    const n = Math.min(game.get_n_different_five_elements(0), 3);
+    for (let i = 0; i < n; i++) {
+      game.atk(2);
+    }
   };
   card_actions["D13192"] = (game) => {
-    const me = game.players[0];
-    game.atk(7 + me.qi + me.force_of_water);
+    game.increase_idx_qi(0, 1);
+    game.atk(4);
+    const n = Math.min(game.get_n_different_five_elements(0), 3);
+    for (let i = 0; i < n; i++) {
+      game.atk(2);
+    }
   };
   card_actions["D13193"] = (game) => {
-    const me = game.players[0];
-    game.atk(9 + me.qi + me.force_of_water);
+    game.increase_idx_qi(0, 1);
+    game.atk(6);
+    const n = Math.min(game.get_n_different_five_elements(0), 3);
+    for (let i = 0; i < n; i++) {
+      game.atk(2);
+    }
   };
   card_actions["D13194"] = (game) => {
-    const me = game.players[0];
-    game.atk(5 + me.qi + me.force_of_water);
-    const gain = Math.floor(me.damage_dealt_to_hp_by_this_card_atk / 3);
-    if (gain > 0) {
-      game.increase_idx_max_hp(0, gain);
-      game.increase_idx_hp(0, gain);
+    game.increase_idx_qi(0, 1);
+    game.atk(8);
+    const n = Math.min(game.get_n_different_five_elements(0), 4);
+    for (let i = 0; i < n; i++) {
+      game.atk(2);
     }
   };
   card_actions["D13195"] = (game) => {
     const me = game.players[0];
-    game.atk(10 + me.qi + me.force_of_water);
-    const gain = Math.floor(me.damage_dealt_to_hp_by_this_card_atk / 3);
-    if (gain > 0) {
-      game.increase_idx_max_hp(0, gain);
-      game.increase_idx_hp(0, gain);
+    game.increase_idx_qi(0, 1);
+    const atk_amt = 1 + me.played_five_elements_count;
+    const n = 1 + game.get_n_different_five_elements(0);
+    for (let i = 0; i < n; i++) {
+      game.atk(atk_amt);
     }
   };
   card_actions["D13201"] = (game) => {
-    game.increase_idx_qi(0, 1);
-    const hits = 1 + Math.min(game.get_n_different_five_elements(0), 3);
-    for (let i = 0; i < hits; i++) {
-      game.atk(2);
-    }
+    const me = game.players[0];
+    game.atk(5 + me.qi + me.force_of_water);
   };
   card_actions["D13202"] = (game) => {
-    game.increase_idx_qi(0, 1);
-    const hits = 1 + Math.min(game.get_n_different_five_elements(0), 3);
-    for (let i = 0; i < hits; i++) {
-      game.atk(4);
-    }
+    const me = game.players[0];
+    game.atk(7 + me.qi + me.force_of_water);
   };
   card_actions["D13203"] = (game) => {
-    game.increase_idx_qi(0, 1);
-    const hits = 1 + Math.min(game.get_n_different_five_elements(0), 3);
-    for (let i = 0; i < hits; i++) {
-      game.atk(6);
-    }
+    const me = game.players[0];
+    game.atk(9 + me.qi + me.force_of_water);
   };
   card_actions["D13204"] = (game) => {
-    game.increase_idx_qi(0, 1);
-    const hits = 1 + Math.min(game.get_n_different_five_elements(0), 4);
-    for (let i = 0; i < hits; i++) {
-      game.atk(8);
-    }
+    const me = game.players[0];
+    game.atk(5 + me.qi + me.force_of_water);
+    const hp = Math.floor(
+      me.damage_dealt_to_hp_by_this_card_atk * 33.333334 / 100
+    );
+    game.increase_idx_max_hp(0, hp);
+    game.increase_idx_hp(0, hp);
   };
   card_actions["D13205"] = (game) => {
     const me = game.players[0];
-    game.increase_idx_qi(0, 1);
-    const hits = 1 + game.get_n_different_five_elements(0);
-    const atk = 1 + me.played_five_element_card_count;
-    for (let i = 0; i < hits; i++) {
-      game.atk(atk);
-    }
+    game.atk(10 + me.qi + me.force_of_water);
+    const hp = Math.floor(
+      me.damage_dealt_to_hp_by_this_card_atk * 33.333334 / 100
+    );
+    game.increase_idx_max_hp(0, hp);
+    game.increase_idx_hp(0, hp);
   };
   card_actions["D14011"] = (game) => {
     game.add_c_of_x(1, "qi");
@@ -31687,15 +34568,15 @@
   };
   card_actions["D14022"] = (game) => {
     game.physique(2);
-    game.increase_idx_hp(0, 5);
-    game.add_c_of_x(3, "internal_injury");
-    game.add_enemy_c_of_x(3, "internal_injury");
+    game.increase_idx_hp(0, 6);
+    game.add_c_of_x(2, "internal_injury");
+    game.add_enemy_c_of_x(2, "internal_injury");
   };
   card_actions["D14023"] = (game) => {
     game.physique(3);
     game.increase_idx_hp(0, 7);
-    game.add_c_of_x(3, "internal_injury");
-    game.add_enemy_c_of_x(3, "internal_injury");
+    game.add_c_of_x(2, "internal_injury");
+    game.add_enemy_c_of_x(2, "internal_injury");
   };
   card_actions["D14024"] = (game) => {
     game.physique(3);
@@ -31707,7 +34588,7 @@
     }
   };
   card_actions["D14025"] = (game) => {
-    game.physique(4);
+    game.physique(3);
     game.increase_idx_hp(0, 4);
     const t = Math.floor(game.players[0].physique * 0.10000001);
     if (t > 0) {
@@ -31745,25 +34626,25 @@
   };
   card_actions["D14042"] = (game) => {
     game.atk(6);
-    game.increase_idx_def(0, 3);
+    game.increase_idx_def(0, 2);
     game.physique(3);
   };
   card_actions["D14043"] = (game) => {
     game.atk(7);
-    game.increase_idx_def(0, 4);
+    game.increase_idx_def(0, 2);
     game.physique(4);
   };
   card_actions["D14044"] = (game) => {
     const qi = game.players[0].qi;
     game.atk(2 + qi);
     game.increase_idx_def(0, 2 + qi);
-    game.physique(2 + qi);
+    game.physique(1 + qi);
   };
   card_actions["D14045"] = (game) => {
     const qi = game.players[0].qi;
-    game.atk(4 + qi);
-    game.increase_idx_def(0, 4 + qi);
-    game.physique(4 + qi);
+    game.atk(5 + qi);
+    game.increase_idx_def(0, 5 + qi);
+    game.physique(2 + qi);
   };
   card_actions["D14051"] = (game) => {
     game.increase_idx_qi(0, 2);
@@ -31845,7 +34726,7 @@
   };
   card_actions["D14073"] = (game) => {
     game.physique(3);
-    game.increase_idx_def(0, Math.floor(game.players[0].max_hp * 0.08000001));
+    game.increase_idx_def(0, 13);
   };
   card_actions["D14074"] = (game) => {
     game.physique(3);
@@ -31915,24 +34796,31 @@
     game.add_c_of_x(12, "agility");
   };
   card_actions["D14101"] = (game) => {
-    const bonus = game.players[0].total_force_lost + game.players[0].total_debuff_lost;
+    const bonus = game.players[0].total_force_gained;
     game.atk(6 + bonus);
   };
   card_actions["D14102"] = (game) => {
-    const bonus = game.players[0].total_force_lost + game.players[0].total_debuff_lost;
+    const bonus = game.players[0].total_force_gained;
     game.atk(8 + bonus);
   };
   card_actions["D14103"] = (game) => {
-    const bonus = game.players[0].total_force_lost + game.players[0].total_debuff_lost;
+    const bonus = game.players[0].total_force_gained;
     game.atk(10 + bonus);
   };
   card_actions["D14104"] = (game) => {
-    const bonus = (game.players[0].total_force_lost + game.players[0].total_debuff_lost) * 2;
-    game.atk(7 + bonus);
+    if (game.get_debuff_count(0) > 0) {
+      game.increase_idx_force(0, 1);
+    }
+    game.atk(12 + game.players[0].total_force_gained);
   };
   card_actions["D14105"] = (game) => {
-    const bonus = (game.players[0].total_force_lost + game.players[0].total_debuff_lost) * 2;
-    game.atk(12 + bonus);
+    if (game.get_debuff_count(0) > 0) {
+      game.increase_idx_force(0, 1);
+    }
+    const atk = 1 + game.players[0].total_force_gained;
+    for (let i = 0; i < 2; i++) {
+      game.atk(atk);
+    }
   };
   card_actions["D14111"] = (game) => {
     const bonus = Math.floor(game.players[0].physique_gained * 0.5);
@@ -32019,27 +34907,29 @@
   card_actions["D14141"] = (game) => {
     game.atk(3);
     game.atk(3);
-    game.players[0].dream_crash_fist_continue_bonus_atk += 2;
+    game.players[0].dream_crash_fist_continue_count += 2;
   };
   card_actions["D14142"] = (game) => {
     game.atk(4);
     game.atk(4);
-    game.players[0].dream_crash_fist_continue_bonus_atk += 2;
+    game.players[0].dream_crash_fist_continue_count += 2;
   };
   card_actions["D14143"] = (game) => {
     game.atk(5);
     game.atk(5);
-    game.players[0].dream_crash_fist_continue_bonus_atk += 2;
+    game.players[0].dream_crash_fist_continue_count += 2;
   };
   card_actions["D14144"] = (game) => {
     game.atk(6);
     game.atk(6);
-    game.players[0].dream_crash_fist_continue_bonus_atk += 2;
+    const count = game.dream_crash_fist_continue_extra_count(Math.min(2, game.count_crash_fists_in_hand()));
+    game.players[0].dream_crash_fist_continue_count += 2 + count;
   };
   card_actions["D14145"] = (game) => {
     game.atk(9);
     game.atk(9);
-    game.players[0].dream_crash_fist_continue_bonus_atk += 2;
+    const count = game.dream_crash_fist_continue_extra_count(Math.min(2, game.count_crash_fists_in_hand()));
+    game.players[0].dream_crash_fist_continue_count += 2 + count;
   };
   card_actions["D14151"] = (game) => {
     const def_amt = 7 + game.get_debuff_count(0);
@@ -32155,1115 +35045,215 @@
   card_actions["D14191"] = (game) => {
     game.atk(6);
     game.physique(2);
-    game.players[0].later_dream_exercise_fist_next_flat_physique += 2;
+    game.add_c_of_x(2, "later_dream_exercise_fist_physique_stacks");
   };
   card_actions["D14192"] = (game) => {
     game.atk(8);
     game.physique(2);
-    game.players[0].later_dream_exercise_fist_next_flat_physique += 2;
+    game.add_c_of_x(2, "later_dream_exercise_fist_physique_stacks");
   };
   card_actions["D14193"] = (game) => {
     game.atk(10);
     game.physique(2);
-    game.players[0].later_dream_exercise_fist_next_flat_physique += 2;
+    game.add_c_of_x(2, "later_dream_exercise_fist_physique_stacks");
   };
   card_actions["D14194"] = (game) => {
-    const me = game.players[0];
-    game.atk(10);
-    const gain = Math.floor(me.damage_dealt_to_hp_by_this_card_atk * 0.4);
-    if (gain > 0) {
-      game.physique(gain);
-    }
-    game.players[0].later_dream_exercise_fist_next_pct_physique += 40;
+    game.atk(5);
+    game.atk(5);
+    game.add_c_of_x(40, "later_dream_exercise_fist_atk_physique_pct");
   };
   card_actions["D14195"] = (game) => {
-    const me = game.players[0];
-    game.atk(15);
-    const gain = Math.floor(me.damage_dealt_to_hp_by_this_card_atk * 0.4);
-    if (gain > 0) {
-      game.physique(gain);
-    }
-    game.players[0].later_dream_exercise_fist_next_pct_physique += 40;
+    game.atk(7);
+    game.atk(7);
+    game.add_c_of_x(40, "later_dream_exercise_fist_atk_physique_pct");
   };
   card_actions["D14201"] = (game) => {
     game.increase_idx_def(0, 3);
     game.continuous();
-    game.players[0].later_dream_motionless_flat_damage += 2;
+    game.add_c_of_x(2, "dream_standing_firm_def_damage");
   };
   card_actions["D14202"] = (game) => {
     game.increase_idx_def(0, 6);
     game.continuous();
-    game.players[0].later_dream_motionless_flat_damage += 2;
+    game.add_c_of_x(2, "dream_standing_firm_def_damage");
   };
   card_actions["D14203"] = (game) => {
     game.increase_idx_def(0, 9);
     game.continuous();
-    game.players[0].later_dream_motionless_flat_damage += 2;
+    game.add_c_of_x(2, "dream_standing_firm_def_damage");
   };
   card_actions["D14204"] = (game) => {
     game.increase_idx_def(0, 9);
     game.continuous();
-    game.players[0].later_dream_motionless_gain_damage_pct += 40;
+    game.add_c_of_x(40, "dream_standing_firm_def_hp_damage_pct");
   };
   card_actions["D14205"] = (game) => {
-    game.increase_idx_def(0, 9);
+    game.increase_idx_def(0, 12);
     game.continuous();
-    game.players[0].later_dream_motionless_gain_damage_pct += 50;
+    game.add_c_of_x(50, "dream_standing_firm_def_hp_damage_pct");
   };
-  card_actions["D15174"] = (game) => {
-    if ((game.players[1].hp ?? 0) <= 17) game.reduce_enemy_hp(99999);
-    else game.deal_damage(7);
+  card_actions["D21014"] = (game) => {
+    game.increase_idx_qi(0, 1);
+    game.continuous();
+    game.add_c_of_x(1, "dream_cloud_elixir_stacks");
   };
-  card_actions["D15175"] = (game) => {
-    if ((game.players[1].hp ?? 0) <= 22) game.reduce_enemy_hp(99999);
-    else game.deal_damage(10);
+  card_actions["D21015"] = (game) => {
+    game.increase_idx_qi(0, 3);
+    game.continuous();
+    game.add_c_of_x(1, "dream_cloud_elixir_stacks");
   };
-  var dream_destiny_body = (game) => {
-    game.reduce_c_of_x(3, "hp");
-    if ((game.players[1].played_card_count ?? 0) > 0) game.chase();
+  card_actions["D21024"] = (game) => {
+    game.increase_idx_max_hp(0, 10);
+    game.increase_idx_hp(0, 10);
+    game.continuous();
+    game.add_c_of_x(4, "dream_great_recover_elixir_stacks");
   };
-  card_actions["D15074"] = dream_destiny_body;
-  card_actions["D15075"] = dream_destiny_body;
-  card_actions["D15164"] = (game) => {
-    game.increase_idx_qi(0, 4);
-    if ((game.players[0].played_card_count ?? 0) > 0) game.chase();
+  card_actions["D21025"] = (game) => {
+    game.increase_idx_max_hp(0, 15);
+    game.increase_idx_hp(0, 15);
+    game.continuous();
+    game.add_c_of_x(8, "dream_great_recover_elixir_stacks");
   };
-  card_actions["D15165"] = (game) => {
-    game.increase_idx_qi(0, 5);
-    if ((game.players[0].played_card_count ?? 0) > 0) game.chase();
-  };
-  {
-    const body = (g) => {
-      g.increase_idx_max_hp(0, 20);
-      g.increase_idx_hp(0, 20);
-      g.add_c_of_x(1, "cannot_act_stacks");
-      g.add_c_of_x(4, "metal_spirit_iron_bone_stacks");
-    };
-    card_actions["D15014"] = body;
-    card_actions["D15015"] = body;
-  }
-  {
-    const body = (g) => {
-      g.reduce_c_of_x(5, "qi");
-      g.reduce_enemy_c_of_x(5, "qi");
-    };
-    card_actions["D15024"] = body;
-    card_actions["D15025"] = body;
-  }
-  {
-    const body = (g) => {
-      g.reduce_c_of_x(2, "hp");
-    };
-    card_actions["D15084"] = body;
-    card_actions["D15085"] = body;
-  }
-  {
-    const body = (g) => {
-      g.atk(12);
-    };
-    card_actions["D15094"] = body;
-    card_actions["D15095"] = body;
-  }
-  {
-    const body = (g) => {
-      g.add_enemy_c_of_x(5, "weaken");
-      g.chase();
-      g.consumption();
-    };
-    card_actions["D15114"] = body;
-    card_actions["D15115"] = body;
-  }
-  {
-    const body = (g) => {
-      g.increase_idx_qi(0, 4);
-      g.add_c_of_x(2, "guard_up");
-    };
-    card_actions["D15124"] = body;
-    card_actions["D15125"] = body;
-  }
-  {
-    const body = (g) => {
-      g.chase();
-      g.chase();
-    };
-    card_actions["D15134"] = body;
-    card_actions["D15135"] = body;
-  }
-  card_actions["D15034"] = (g) => {
-    g.increase_idx_def(0, 12);
-    g.add_c_of_x(2, "guard_up");
-  };
-  card_actions["D15035"] = (g) => {
-    g.increase_idx_def(0, 15);
-    g.add_c_of_x(3, "guard_up");
-  };
-  card_actions["D15044"] = (g) => {
-    g.add_enemy_c_of_x(5, "internal_injury");
-  };
-  card_actions["D15045"] = (g) => {
-    g.add_enemy_c_of_x(6, "internal_injury");
-  };
-  card_actions["D15054"] = (g) => {
-    g.increase_idx_max_hp(0, 10);
-    g.increase_idx_hp(0, 10);
-  };
-  card_actions["D15055"] = (g) => {
-    g.increase_idx_max_hp(0, 14);
-    g.increase_idx_hp(0, 14);
-  };
-  card_actions["D15064"] = (g) => {
-    g.increase_idx_max_hp(0, 16);
-    g.increase_idx_hp(0, 16);
-    g.continuous();
-    g.add_c_of_x(2, "dream_great_pill_stacks");
-  };
-  card_actions["D15065"] = (g) => {
-    g.increase_idx_max_hp(0, 20);
-    g.increase_idx_hp(0, 20);
-    g.continuous();
-    g.add_c_of_x(3, "dream_great_pill_stacks");
-  };
-  card_actions["D15104"] = (g) => {
-    for (let i = 0; i < 3; i++) g.reduce_enemy_hp(5);
-  };
-  card_actions["D15105"] = (g) => {
-    for (let i = 0; i < 4; i++) g.reduce_enemy_hp(5);
-  };
-  card_actions["D15144"] = (g) => {
-    g.increase_idx_def(0, 15);
-    g.trigger_random_sect_card(1);
-  };
-  card_actions["D15145"] = (g) => {
-    g.increase_idx_def(0, 18);
-    g.trigger_random_sect_card(2);
-  };
-  card_actions["D15154"] = (g) => {
-    g.add_enemy_c_of_x(3, "wound");
-    g.add_c_of_x(2, "smash_def");
-    g.add_enemy_c_of_x(2, "entangle");
-    g.atk(4);
-  };
-  card_actions["D15155"] = (g) => {
-    g.add_enemy_c_of_x(4, "wound");
-    g.add_c_of_x(3, "smash_def");
-    g.add_enemy_c_of_x(3, "entangle");
-    g.atk(5);
-  };
-  card_actions["D15184"] = (g) => {
-    g.increase_idx_qi(0, 4);
-    g.continuous();
-    g.add_c_of_x(2, "dream_flying_cloud_stacks");
-  };
-  card_actions["D15185"] = (g) => {
-    g.increase_idx_qi(0, 5);
-    g.continuous();
-    g.add_c_of_x(3, "dream_flying_cloud_stacks");
-  };
-  card_actions["160001"] = (g) => {
-    g.atk(2);
-    g.increase_idx_qi(0, 1);
-    g.physique(1);
-    g.add_c_of_x(2, "agility");
-  };
-  card_actions["160002"] = (g) => {
-    g.atk(3);
-    g.increase_idx_qi(0, 1);
-    g.physique(1);
-    g.add_c_of_x(3, "agility");
-  };
-  card_actions["160003"] = (g) => {
-    g.atk(4);
-    g.increase_idx_qi(0, 2);
-    g.physique(2);
-    g.add_c_of_x(4, "agility");
-  };
-  card_actions["160011"] = (g) => {
-    g.atk(3);
-    g.increase_idx_qi(0, 1);
-    g.for_each_x_add_c_y("qi", 1, "def");
-  };
-  card_actions["160012"] = (g) => {
-    g.atk(4);
-    g.increase_idx_qi(0, 1);
-    g.for_each_x_add_c_y("qi", 2, "def");
-  };
-  card_actions["160013"] = (g) => {
-    g.atk(5);
-    g.increase_idx_qi(0, 2);
-    g.for_each_x_add_c_y("qi", 2, "def");
-  };
-  card_actions["160021"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    g.increase_idx_def(0, 2);
-    g.become_star_point(1);
-  };
-  card_actions["160022"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    g.increase_idx_def(0, 3);
-    g.become_star_point(2);
-  };
-  card_actions["160023"] = (g) => {
-    g.increase_idx_qi(0, 2);
-    g.increase_idx_def(0, 4);
-    g.become_star_point(2);
-  };
-  card_actions["160031"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    g.add_c_of_x(1, "hexagram");
-    g.for_each_x_add_c_y("hexagram", 1, "def");
-    g.for_each_x_add_c_y("hexagram", 1, "hp");
-  };
-  card_actions["160032"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    g.add_c_of_x(2, "hexagram");
-    g.for_each_x_add_c_y("hexagram", 1, "def");
-    g.for_each_x_add_c_y("hexagram", 1, "hp");
-  };
-  card_actions["160033"] = (g) => {
-    g.increase_idx_qi(0, 2);
-    g.add_c_of_x(2, "hexagram");
-    g.for_each_x_add_c_y("hexagram", 2, "def");
-    g.for_each_x_add_c_y("hexagram", 1, "hp");
-  };
-  card_actions["160041"] = (g) => {
-    g.add_c_of_x(3, "agility");
-    g.deal_damage(g.players[0].agility);
-  };
-  card_actions["160042"] = (g) => {
-    g.add_c_of_x(4, "agility");
-    g.deal_damage(g.players[0].agility);
-  };
-  card_actions["160043"] = (g) => {
-    g.add_c_of_x(5, "agility");
-    g.deal_damage(g.players[0].agility);
-  };
-  card_actions["160051"] = (g) => {
-    const qi_gain = Math.floor(g.players[0].physique / 2);
-    if (qi_gain > 0) g.increase_idx_qi(0, qi_gain);
-    const bonus = g.players[0].qi;
-    g.atk(2 + bonus);
-    g.atk(2 + bonus);
-  };
-  card_actions["160052"] = (g) => {
-    const qi_gain = Math.floor(g.players[0].physique / 2);
-    if (qi_gain > 0) g.increase_idx_qi(0, qi_gain);
-    const bonus = g.players[0].qi;
-    g.atk(3 + bonus);
-    g.atk(3 + bonus);
-  };
-  card_actions["160053"] = (g) => {
-    const qi_gain = Math.floor(g.players[0].physique / 2);
-    if (qi_gain > 0) g.increase_idx_qi(0, qi_gain);
-    const bonus = g.players[0].qi;
-    g.atk(4 + bonus);
-    g.atk(4 + bonus);
-  };
-  card_actions["160061"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    g.increase_idx_def(0, 2);
-    g.atk(2 + Math.floor(g.players[0].qi / 2));
-    g.atk(2 + Math.floor(g.players[0].def / 3));
-  };
-  card_actions["160062"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    g.increase_idx_def(0, 3);
-    g.atk(3 + Math.floor(g.players[0].qi / 2));
-    g.atk(3 + Math.floor(g.players[0].def / 3));
-  };
-  card_actions["160063"] = (g) => {
-    g.increase_idx_qi(0, 2);
-    g.increase_idx_def(0, 4);
-    g.atk(4 + Math.floor(g.players[0].qi / 2));
-    g.atk(4 + Math.floor(g.players[0].def / 3));
-  };
-  card_actions["160071"] = (g) => {
-    const bonus = Math.floor(g.players[0].physique / 3);
-    g.atk(3 + bonus);
-    g.atk(3 + bonus);
-  };
-  card_actions["160072"] = (g) => {
-    g.physique(2);
-    const bonus = Math.floor(g.players[0].physique / 3);
-    g.atk(3 + bonus);
-    g.atk(3 + bonus);
-  };
-  card_actions["160073"] = (g) => {
-    g.physique(3);
-    const bonus = Math.floor(g.players[0].physique / 2);
-    g.atk(4 + bonus);
-    g.atk(4 + bonus);
-  };
-  card_actions["160081"] = (g) => {
-    g.atk(3);
-    g.increase_idx_qi(0, 1);
-    const extra = Math.floor(g.players[0].qi / 3);
-    g.physique(1 + extra);
-  };
-  card_actions["160082"] = (g) => {
-    g.atk(4);
-    g.increase_idx_qi(0, 1);
-    const extra = Math.floor(g.players[0].qi / 2);
-    g.physique(1 + extra);
-  };
-  card_actions["160083"] = (g) => {
-    g.atk(5);
-    g.increase_idx_qi(0, 2);
-    const extra = Math.floor(g.players[0].qi / 2);
-    g.physique(2 + extra);
-  };
-  card_actions["160091"] = (g) => {
-    g.atk(3);
-    g.add_c_of_x(1, "star_power");
-    if (g.if_star_point()) {
-      g.increase_idx_max_hp(0, 2);
-      g.for_each_x_add_c_y("star_power", 1, "max_hp");
+  card_actions["D27015"] = (game) => {
+    const me = game.players[0];
+    game.reduce_idx_hp(0, 2, false);
+    if (!me.can_post_action[me.currently_playing_card_idx]) {
+      game.add_enemy_c_of_x(1, "skip_to_previous_card_stacks");
+    }
+    if (game.players[1].played_card_count > 0) {
+      game.chase();
     }
   };
-  card_actions["160092"] = (g) => {
-    g.atk(4);
-    g.add_c_of_x(1, "star_power");
-    if (g.if_star_point()) {
-      g.increase_idx_max_hp(0, 3);
-      g.for_each_x_add_c_y("star_power", 1, "max_hp");
+  card_actions["D27024"] = (game) => {
+    game.add_enemy_c_of_x(1, "internal_injury");
+  };
+  card_actions["D27025"] = (game) => {
+    game.add_enemy_c_of_x(3, "internal_injury");
+  };
+  card_actions["D23015"] = (game) => {
+    game.add_c_of_x(2, "dream_craze_dance_tune_pending_stacks");
+    game.add_enemy_c_of_x(2, "dream_craze_dance_tune_pending_stacks");
+  };
+  card_actions["D23024"] = (game) => {
+    game.increase_idx_qi(0, 1);
+    game.add_c_of_x(1, "prevent_anti_chase");
+    if (game.players[0].played_card_count > 0) {
+      game.chase();
     }
   };
-  card_actions["160093"] = (g) => {
-    g.atk(5);
-    g.add_c_of_x(2, "star_power");
-    if (g.if_star_point()) {
-      g.increase_idx_max_hp(0, 4);
-      g.for_each_x_add_c_y("star_power", 2, "max_hp");
+  card_actions["D23025"] = (game) => {
+    game.increase_idx_qi(0, 2);
+    game.add_c_of_x(1, "prevent_anti_chase");
+    if (game.players[0].played_card_count > 0) {
+      game.chase();
     }
   };
-  card_actions["160101"] = (g) => {
-    g.atk(3);
-    g.increase_idx_qi(0, 1);
-    if (g.players[0].qi > g.players[1].qi) {
-      g.add_enemy_c_of_x(1, "flaw");
+  card_actions["D23035"] = (game) => {
+    game.reduce_my_hp(5);
+  };
+  card_actions["D23045"] = (game) => {
+    game.reduce_idx_x_by_c(0, "qi", 4);
+    game.reduce_idx_x_by_c(1, "qi", 4);
+  };
+  card_actions["D24014"] = (game) => {
+    game.increase_idx_def(0, 2);
+    game.trigger_replay_card_from_next_random_outcome();
+  };
+  card_actions["D24015"] = (game) => {
+    game.increase_idx_def(0, 10);
+    game.trigger_replay_card_from_next_random_outcome();
+  };
+  card_actions["D22015"] = (game) => {
+    game.increase_idx_qi(0, 3);
+    game.reduce_c_of_x(4, "internal_injury");
+    game.reduce_c_of_x(4, "weaken");
+    game.reduce_c_of_x(4, "flaw");
+    game.reduce_c_of_x(4, "decrease_atk");
+    game.reduce_c_of_x(4, "entangle");
+    game.reduce_c_of_x(4, "wound");
+    game.reduce_c_of_x(4, "styx");
+    game.add_c_of_x(4, "hexproof");
+  };
+  card_actions["D22024"] = (game) => {
+    for (let i = 0; i < 2; i++) {
+      game.reduce_idx_hp(1, 5, false);
     }
-    if (g.if_star_point()) g.chase();
+    game.add_enemy_c_of_x(1, "prevent_gain_def_stacks");
+    game.add_enemy_c_of_x(1, "prevent_gain_hp_stacks");
   };
-  card_actions["160102"] = (g) => {
-    g.atk(4);
-    g.increase_idx_qi(0, 1);
-    if (g.players[0].qi > g.players[1].qi) {
-      g.add_enemy_c_of_x(2, "flaw");
+  card_actions["D22025"] = (game) => {
+    for (let i = 0; i < 3; i++) {
+      game.reduce_idx_hp(1, 5, false);
     }
-    if (g.if_star_point()) g.chase();
-  };
-  card_actions["160103"] = (g) => {
-    g.atk(5);
-    g.increase_idx_qi(0, 2);
-    if (g.players[0].qi > g.players[1].qi) {
-      g.add_enemy_c_of_x(3, "flaw");
-    }
-    if (g.if_star_point()) g.chase();
-  };
-  card_actions["160111"] = (g) => {
-    g.add_enemy_c_of_x(2, "internal_injury");
-    g.increase_idx_def(0, 4 + g.get_debuff_count(1));
-    if (g.players[0].def >= 8) g.chase();
-  };
-  card_actions["160112"] = (g) => {
-    g.add_enemy_c_of_x(3, "internal_injury");
-    g.increase_idx_def(0, 5 + g.get_debuff_count(1));
-    if (g.players[0].def >= 10) g.chase();
-  };
-  card_actions["160113"] = (g) => {
-    g.add_enemy_c_of_x(4, "internal_injury");
-    g.increase_idx_def(0, 6 + 2 * g.get_debuff_count(1));
-    if (g.players[0].def >= 12) g.chase();
-  };
-  card_actions["160121"] = (g) => {
-    g.atk(3);
-    if (g.players[0].qi >= 1) {
-      g.reduce_c_of_x(1, "qi");
-      g.atk(2);
-    }
-  };
-  card_actions["160122"] = (g) => {
-    g.atk(4);
-    if (g.players[0].qi >= 1) {
-      g.reduce_c_of_x(1, "qi");
-      g.atk(3);
-    }
-  };
-  card_actions["160123"] = (g) => {
-    g.atk(5);
-    if (g.players[0].qi >= 1) {
-      g.reduce_c_of_x(1, "qi");
-      g.atk(4);
-    }
-  };
-  card_actions["160131"] = (g) => {
-    g.atk(3);
-    g.increase_idx_def(0, 2);
-    let spent = 0;
-    while (spent < 2 && g.players[0].qi >= 1) {
-      g.reduce_c_of_x(1, "qi");
-      spent++;
-    }
-    if (spent > 0) {
-      g.atk(2 * spent);
-      g.increase_idx_def(0, spent);
-    }
-  };
-  card_actions["160132"] = (g) => {
-    g.atk(4);
-    g.increase_idx_def(0, 3);
-    let spent = 0;
-    while (spent < 2 && g.players[0].qi >= 1) {
-      g.reduce_c_of_x(1, "qi");
-      spent++;
-    }
-    if (spent > 0) {
-      g.atk(2 * spent);
-      g.increase_idx_def(0, 2 * spent);
-    }
-  };
-  card_actions["160133"] = (g) => {
-    g.atk(5);
-    g.increase_idx_def(0, 4);
-    let spent = 0;
-    while (spent < 3 && g.players[0].qi >= 1) {
-      g.reduce_c_of_x(1, "qi");
-      spent++;
-    }
-    if (spent > 0) {
-      g.atk(3 * spent);
-      g.increase_idx_def(0, 2 * spent);
-    }
-  };
-  card_actions["160141"] = (g) => {
-    const qi_bonus = g.players[0].qi;
-    g.atk(3 + qi_bonus);
-    let spent = 0;
-    while (spent < 2 && g.players[0].qi >= 1) {
-      g.reduce_c_of_x(1, "qi");
-      spent++;
-    }
-    if (spent > 0) g.add_c_of_x(2 * spent, "agility");
-  };
-  card_actions["160142"] = (g) => {
-    const qi_bonus = g.players[0].qi;
-    g.atk(4 + qi_bonus);
-    let spent = 0;
-    while (spent < 2 && g.players[0].qi >= 1) {
-      g.reduce_c_of_x(1, "qi");
-      spent++;
-    }
-    if (spent > 0) g.add_c_of_x(3 * spent, "agility");
-  };
-  card_actions["160143"] = (g) => {
-    const qi_bonus = g.players[0].qi;
-    g.atk(5 + qi_bonus);
-    let spent = 0;
-    while (spent < 3 && g.players[0].qi >= 1) {
-      g.reduce_c_of_x(1, "qi");
-      spent++;
-    }
-    if (spent > 0) g.add_c_of_x(3 * spent, "agility");
-  };
-  card_actions["160151"] = (g) => {
-    g.atk(3);
-    g.atk(3);
-    g.increase_idx_def(0, 3 + 1 * g.players[0].attack_count);
-  };
-  card_actions["160152"] = (g) => {
-    g.atk(4);
-    g.atk(4);
-    g.increase_idx_def(0, 4 + 1 * g.players[0].attack_count);
-  };
-  card_actions["160153"] = (g) => {
-    g.atk(5);
-    g.atk(5);
-    g.increase_idx_def(0, 5 + 2 * g.players[0].attack_count);
-  };
-  card_actions["160161"] = (g) => {
-    g.increase_idx_max_hp(0, 3);
-    const bonus = Math.floor(g.players[0].hp_gained / 4);
-    g.atk(4 + bonus);
-    if (g.if_c_pct(20)) g.chase();
-  };
-  card_actions["160162"] = (g) => {
-    g.increase_idx_max_hp(0, 4);
-    const bonus = Math.floor(g.players[0].hp_gained / 3);
-    g.atk(5 + bonus);
-    if (g.if_c_pct(25)) g.chase();
-  };
-  card_actions["160163"] = (g) => {
-    g.increase_idx_max_hp(0, 5);
-    const bonus = Math.floor(g.players[0].hp_gained / 3);
-    g.atk(6 + bonus);
-    if (g.if_c_pct(30)) g.chase();
-  };
-  card_actions["160171"] = (g) => {
-    g.add_enemy_c_of_x(1, "internal_injury");
-    g.atk(3);
-    g.atk(3);
-    if (g.if_c_pct(10)) g.atk(2);
-    if (g.if_c_pct(10)) g.add_enemy_c_of_x(1, "decrease_atk");
-  };
-  card_actions["160172"] = (g) => {
-    g.add_enemy_c_of_x(1, "internal_injury");
-    g.atk(4);
-    g.atk(4);
-    if (g.if_c_pct(10)) g.atk(3);
-    if (g.if_c_pct(10)) g.add_enemy_c_of_x(2, "decrease_atk");
-  };
-  card_actions["160173"] = (g) => {
-    g.add_enemy_c_of_x(2, "internal_injury");
-    g.atk(5);
-    g.atk(5);
-    if (g.if_c_pct(10)) g.atk(3);
-    if (g.if_c_pct(10)) g.add_enemy_c_of_x(2, "decrease_atk");
-  };
-  card_actions["160181"] = (g) => {
-    g.atk_rand_range(3, 7);
-    g.increase_idx_max_hp(0, 3);
-  };
-  card_actions["160182"] = (g) => {
-    g.atk_rand_range(4, 9);
-    g.increase_idx_max_hp(0, 4);
-  };
-  card_actions["160183"] = (g) => {
-    g.atk_rand_range(5, 12);
-    g.increase_idx_max_hp(0, 5);
-  };
-  card_actions["160191"] = (g) => {
-    g.atk(3);
-    g.increase_idx_x_by_c(0, "sword_qi", 2);
-    const src = g.players[0].qi + g.players[0].sword_qi;
-    g.add_c_of_x(Math.min(src * 1, 4), "agility");
-  };
-  card_actions["160192"] = (g) => {
-    g.atk(4);
-    g.increase_idx_x_by_c(0, "sword_qi", 2);
-    const src = g.players[0].qi + g.players[0].sword_qi;
-    g.add_c_of_x(Math.min(src * 1, 6), "agility");
-  };
-  card_actions["160193"] = (g) => {
-    g.atk(5);
-    g.increase_idx_x_by_c(0, "sword_qi", 3);
-    const src = g.players[0].qi + g.players[0].sword_qi;
-    g.add_c_of_x(Math.min(src * 1, 8), "agility");
-  };
-  card_actions["160201"] = (g) => {
-    g.increase_idx_x_by_c(0, "force_of_water", 2);
-    g.increase_idx_max_hp(0, 3);
-    const src = g.players[0].force_of_water + g.players[0].qi;
-    g.add_c_of_x(Math.min(src * 2, 6), "agility");
-  };
-  card_actions["160202"] = (g) => {
-    g.increase_idx_x_by_c(0, "force_of_water", 2);
-    g.increase_idx_max_hp(0, 4);
-    const src = g.players[0].force_of_water + g.players[0].qi;
-    g.add_c_of_x(Math.min(src * 2, 8), "agility");
-  };
-  card_actions["160203"] = (g) => {
-    g.increase_idx_x_by_c(0, "force_of_water", 3);
-    g.increase_idx_max_hp(0, 5);
-    const src = g.players[0].force_of_water + g.players[0].qi;
-    g.add_c_of_x(Math.min(src * 2, 10), "agility");
-  };
-  card_actions["160211"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    g.add_c_of_x(2, "internal_injury");
-    const src = g.players[0].qi + g.get_debuff_count(0);
-    g.increase_idx_max_hp(0, src);
-  };
-  card_actions["160212"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    g.add_c_of_x(2, "internal_injury");
-    const src = g.players[0].qi + g.get_debuff_count(0);
-    g.increase_idx_max_hp(0, src);
-  };
-  card_actions["160213"] = (g) => {
-    g.increase_idx_qi(0, 2);
-    g.add_c_of_x(3, "internal_injury");
-    const src = g.players[0].qi + g.get_debuff_count(0);
-    g.increase_idx_max_hp(0, 2 * src);
-  };
-  card_actions["160221"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    g.continuous();
-    g.add_c_of_x(3, "shang_hun_zhou_zhen_stacks");
-  };
-  card_actions["160222"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    g.continuous();
-    g.add_c_of_x(4, "shang_hun_zhou_zhen_stacks");
-  };
-  card_actions["160223"] = (g) => {
-    g.increase_idx_qi(0, 2);
-    g.continuous();
-    g.add_c_of_x(5, "shang_hun_zhou_zhen_stacks");
-  };
-  card_actions["160231"] = (g) => {
-    g.increase_idx_max_hp(0, 4);
-    g.chase();
-    g.continuous();
-    g.add_c_of_x(1, "ji_yun_jian_rou_xin_stacks");
-  };
-  card_actions["160232"] = (g) => {
-    g.increase_idx_max_hp(0, 5);
-    g.chase();
-    g.continuous();
-    g.add_c_of_x(2, "ji_yun_jian_rou_xin_stacks");
-  };
-  card_actions["160233"] = (g) => {
-    g.increase_idx_max_hp(0, 6);
-    g.chase();
-    g.continuous();
-    g.add_c_of_x(2, "ji_yun_jian_rou_xin_stacks");
-  };
-  card_actions["160241"] = (g) => {
-    g.chase();
-    g.continuous();
-    g.add_c_of_x(1, "ji_shui_ling_zhen_stacks");
-  };
-  card_actions["160242"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    g.chase();
-    g.continuous();
-    g.add_c_of_x(1, "ji_shui_ling_zhen_stacks");
-  };
-  card_actions["160243"] = (g) => {
-    g.increase_idx_qi(0, 2);
-    g.chase();
-    g.continuous();
-    g.add_c_of_x(2, "ji_shui_ling_zhen_stacks");
-  };
-  card_actions["160251"] = (g) => {
-    g.add_c_of_x(3, "agility");
-    g.continuous();
-    g.add_c_of_x(1, "ji_beng_tian_bu_stacks");
-  };
-  card_actions["160252"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    g.add_c_of_x(4, "agility");
-    g.continuous();
-    g.add_c_of_x(1, "ji_beng_tian_bu_stacks");
-  };
-  card_actions["160253"] = (g) => {
-    g.increase_idx_qi(0, 2);
-    g.add_c_of_x(5, "agility");
-    g.continuous();
-    g.add_c_of_x(1, "ji_beng_tian_bu_stacks");
-  };
-  card_actions["160261"] = (g) => {
-    g.continuous();
-    g.add_c_of_x(1, "yu_ling_xin_fa_qi_gain_def_stacks");
-    g.add_c_of_x(1, "yu_ling_xin_fa_qi_loss_def_stacks");
-  };
-  card_actions["160262"] = (g) => {
-    g.continuous();
-    g.add_c_of_x(2, "yu_ling_xin_fa_qi_gain_def_stacks");
-    g.add_c_of_x(1, "yu_ling_xin_fa_qi_loss_def_stacks");
-  };
-  card_actions["160263"] = (g) => {
-    g.continuous();
-    g.add_c_of_x(2, "yu_ling_xin_fa_qi_gain_def_stacks");
-    g.add_c_of_x(2, "yu_ling_xin_fa_qi_loss_def_stacks");
-  };
-  card_actions["160271"] = (g) => {
-    g.increase_idx_max_hp(0, 4);
-    g.chase();
-    g.continuous();
-    g.add_c_of_x(1, "ji_jing_qi_xin_fa_stacks");
-  };
-  card_actions["160272"] = (g) => {
-    g.increase_idx_max_hp(0, 5);
-    g.chase();
-    g.continuous();
-    g.add_c_of_x(1, "ji_jing_qi_xin_fa_stacks");
-  };
-  card_actions["160273"] = (g) => {
-    g.increase_idx_max_hp(0, 6);
-    g.chase();
-    g.continuous();
-    g.add_c_of_x(2, "ji_jing_qi_xin_fa_stacks");
-  };
-  card_actions["160281"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    g.continuous();
-    g.add_c_of_x(1, "bird_shadow_decree_stacks");
-  };
-  card_actions["160282"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    g.continuous();
-    g.add_c_of_x(1, "bird_shadow_decree_stacks");
-  };
-  card_actions["160283"] = (g) => {
-    g.increase_idx_qi(0, 2);
-    g.continuous();
-    g.add_c_of_x(2, "bird_shadow_decree_stacks");
-  };
-  card_actions["160291"] = (g) => {
-    g.add_c_of_x(3, "agility");
-    g.continuous();
-    if (g.players[0].shan_zhuan_teng_nuo_stacks === 0) {
-      g.add_c_of_x(1, "shan_zhuan_teng_nuo_stacks");
-    }
-  };
-  card_actions["160292"] = (g) => {
-    g.add_c_of_x(4, "agility");
-    g.continuous();
-    if (g.players[0].shan_zhuan_teng_nuo_stacks === 0) {
-      g.add_c_of_x(1, "shan_zhuan_teng_nuo_stacks");
-    }
-  };
-  card_actions["160293"] = (g) => {
-    g.add_c_of_x(5, "agility");
-    g.continuous();
-    if (g.players[0].shan_zhuan_teng_nuo_stacks === 0) {
-      g.add_c_of_x(1, "shan_zhuan_teng_nuo_stacks");
-    }
-  };
-  card_actions["160301"] = (g) => {
-    g.increase_idx_hp(0, 3);
-    g.add_c_of_x(3, "agility");
-    g.continuous();
-    g.add_c_of_x(1, "feng_xu_yu_feng_stacks");
-  };
-  card_actions["160302"] = (g) => {
-    g.increase_idx_hp(0, 4);
-    g.add_c_of_x(4, "agility");
-    g.continuous();
-    g.add_c_of_x(1, "feng_xu_yu_feng_stacks");
-  };
-  card_actions["160303"] = (g) => {
-    g.increase_idx_hp(0, 5);
-    g.add_c_of_x(5, "agility");
-    g.continuous();
-    g.add_c_of_x(2, "feng_xu_yu_feng_stacks");
-  };
-  card_actions["160311"] = (g) => {
-    g.physique(2);
-    g.increase_idx_hp(0, 3);
-    g.add_c_of_x(2, "flaw");
-    g.continuous();
-    g.add_c_of_x(1, "zui_quan_jia_shi_stacks");
-  };
-  card_actions["160312"] = (g) => {
-    g.physique(2);
-    g.increase_idx_hp(0, 4);
-    g.add_c_of_x(3, "flaw");
-    g.continuous();
-    g.add_c_of_x(2, "zui_quan_jia_shi_stacks");
-  };
-  card_actions["160313"] = (g) => {
-    g.physique(3);
-    g.increase_idx_hp(0, 5);
-    g.add_c_of_x(3, "flaw");
-    g.continuous();
-    g.add_c_of_x(2, "zui_quan_jia_shi_stacks");
-  };
-  card_actions["160321"] = (g) => {
-    g.deal_damage(2);
-    g.continuous();
-    g.add_c_of_x(1, "zhen_yin_xin_fa_stacks");
-  };
-  card_actions["160322"] = (g) => {
-    g.deal_damage(3);
-    g.continuous();
-    g.add_c_of_x(2, "zhen_yin_xin_fa_stacks");
-  };
-  card_actions["160323"] = (g) => {
-    g.deal_damage(4);
-    g.continuous();
-    g.add_c_of_x(2, "zhen_yin_xin_fa_stacks");
-  };
-  card_actions["160331"] = (g) => {
-    const hp_cost_used = g.players[0].hp_cost_cards_used;
-    if (hp_cost_used > 0) g.add_c_of_x(1 * hp_cost_used, "force");
-    g.atk(3 + g.players[0].force);
-  };
-  card_actions["160332"] = (g) => {
-    const hp_cost_used = g.players[0].hp_cost_cards_used;
-    if (hp_cost_used > 0) g.add_c_of_x(2 * hp_cost_used, "force");
-    g.atk(4 + g.players[0].force);
-  };
-  card_actions["160333"] = (g) => {
-    const hp_cost_used = g.players[0].hp_cost_cards_used;
-    if (hp_cost_used > 0) g.add_c_of_x(2 * hp_cost_used, "force");
-    g.atk(5 + g.players[0].force);
-  };
-  card_actions["160341"] = (g) => {
-    const me = g.players[0];
-    const bonus = me.sword_intent + me.increase_atk;
-    if (g.if_cloud_hit()) {
-      g.add_c_of_x(1, "smash_def");
-      g.atk(3 + bonus + 1);
-      g.atk(3 + bonus + 1);
+    game.add_enemy_c_of_x(1, "prevent_gain_def_stacks");
+    game.add_enemy_c_of_x(1, "prevent_gain_hp_stacks");
+  };
+  card_actions["D22034"] = (game) => {
+    if (game.players[1].hp <= 30) {
+      game.players[1].hp = -100;
     } else {
-      g.atk(3 + bonus);
-      g.atk(3 + bonus);
+      game.deal_damage(13);
     }
   };
-  card_actions["160342"] = (g) => {
-    const me = g.players[0];
-    const bonus = me.sword_intent + me.increase_atk;
-    if (g.if_cloud_hit()) {
-      g.add_c_of_x(1, "smash_def");
-      g.atk(4 + bonus + 2);
-      g.atk(4 + bonus + 2);
+  card_actions["D22035"] = (game) => {
+    if (game.players[1].hp <= 35) {
+      game.players[1].hp = -100;
     } else {
-      g.atk(4 + bonus);
-      g.atk(4 + bonus);
+      game.deal_damage(18);
     }
   };
-  card_actions["160343"] = (g) => {
-    const me = g.players[0];
-    const bonus = me.sword_intent + me.increase_atk;
-    if (g.if_cloud_hit()) {
-      g.add_c_of_x(1, "smash_def");
-      g.atk(5 + bonus + 2);
-      g.atk(5 + bonus + 2);
-    } else {
-      g.atk(5 + bonus);
-      g.atk(5 + bonus);
+  card_actions["D22045"] = (game) => {
+    game.add_enemy_c_of_x(1, "weaken");
+    game.chase();
+    game.consumption();
+  };
+  card_actions["D25015"] = (game) => {
+    game.increase_idx_max_hp(0, 20);
+    game.increase_idx_hp(0, 20);
+    game.increase_idx_x_by_c(0, "cannot_act_stacks", 1);
+    const duration = game.players[0].dream_motionless_tutelary_formation_stacks > 0 ? 1 : 2;
+    game.increase_idx_x_by_c(0, "dream_motionless_tutelary_formation_stacks", duration);
+  };
+  card_actions["D25024"] = (game) => {
+    game.do_dream_echo_formation_thing();
+  };
+  card_actions["D25025"] = (game) => {
+    game.increase_idx_max_hp(0, 6);
+    game.increase_idx_hp(0, 6);
+    game.do_dream_echo_formation_thing();
+  };
+  card_actions["D26014"] = (game) => {
+    game.increase_idx_def(0, 10);
+    game.add_c_of_x(1, "guard_up");
+  };
+  card_actions["D26015"] = (game) => {
+    const me = game.players[0];
+    game.increase_idx_def(0, 10);
+    game.add_c_of_x(1, "guard_up");
+    if (!me.can_post_action[me.currently_playing_card_idx]) {
+      game.add_c_of_x(1, "guard_up");
     }
   };
-  card_actions["160351"] = (g) => {
-    const me = g.players[0];
-    const saved = me.sword_intent;
-    me.sword_intent = 0;
-    g.atk(4);
-    me.sword_intent = saved;
-    g.increase_idx_x_by_c(0, "sword_intent", 1);
-    if (g.players[0].sword_intent > 0) g.chase();
-  };
-  card_actions["160352"] = (g) => {
-    const me = g.players[0];
-    const saved = me.sword_intent;
-    me.sword_intent = 0;
-    g.atk(5);
-    me.sword_intent = saved;
-    g.increase_idx_x_by_c(0, "sword_intent", 2);
-    if (g.players[0].sword_intent > 0) g.chase();
-  };
-  card_actions["160353"] = (g) => {
-    const me = g.players[0];
-    const saved = me.sword_intent;
-    me.sword_intent = 0;
-    g.atk(6);
-    me.sword_intent = saved;
-    g.increase_idx_x_by_c(0, "sword_intent", 2);
-    if (g.players[0].sword_intent > 0) g.chase();
-  };
-  card_actions["160361"] = (g) => {
-    const me = g.players[0];
-    const elems = g.get_n_different_five_elements(0);
-    g.atk(4 + me.qi + elems);
-  };
-  card_actions["160362"] = (g) => {
-    const me = g.players[0];
-    const elems = g.get_n_different_five_elements(0);
-    g.atk(5 + me.qi + elems);
-  };
-  card_actions["160363"] = (g) => {
-    const me = g.players[0];
-    const elems = g.get_n_different_five_elements(0);
-    g.atk(6 + me.qi + elems);
-  };
-  card_actions["160371"] = (g) => {
-    g.increase_idx_def(0, 3);
-    g.add_c_of_x(1, "cloud_sea");
-    g.increase_idx_x_by_c(0, "cloud_sword_chain_count", 1);
-    g.chase();
-  };
-  card_actions["160372"] = (g) => {
-    g.increase_idx_def(0, 4);
-    g.add_c_of_x(1, "cloud_sea");
-    g.increase_idx_x_by_c(0, "cloud_sword_chain_count", 2);
-    g.chase();
-  };
-  card_actions["160373"] = (g) => {
-    g.increase_idx_def(0, 5);
-    g.add_c_of_x(2, "cloud_sea");
-    g.increase_idx_x_by_c(0, "cloud_sword_chain_count", 2);
-    g.chase();
-  };
-  card_actions["160381"] = (g) => {
-    g.increase_idx_def(0, 3);
-    if (g.if_earth_spirit()) g.chase();
-  };
-  card_actions["160382"] = (g) => {
-    g.increase_idx_def(0, 4);
-    if (g.if_earth_spirit()) g.chase();
-  };
-  card_actions["160383"] = (g) => {
-    g.increase_idx_def(0, 5);
-    if (g.if_earth_spirit()) g.chase();
-  };
-  card_actions["160391"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    if (g.if_wood_spirit()) g.increase_idx_max_hp(0, 2);
-    g.atk(3);
-  };
-  card_actions["160392"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    if (g.if_wood_spirit()) g.increase_idx_max_hp(0, 3);
-    g.atk(4);
-  };
-  card_actions["160393"] = (g) => {
-    g.increase_idx_qi(0, 2);
-    if (g.if_wood_spirit()) g.increase_idx_max_hp(0, 4);
-    g.atk(5);
-  };
-  card_actions["160401"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    const me = g.players[0];
-    const limit = 3;
-    const can_add = Math.max(0, limit - me.increase_atk);
-    if (can_add > 0) {
-      g.add_c_of_x(can_add, "increase_atk");
-      g.reduce_idx_max_hp(0, can_add * 1);
-    }
-    if (g.if_fire_spirit()) {
-      g.reduce_idx_max_hp(1, me.increase_atk * 1);
+  card_actions["D26024"] = (game) => {
+    const me = game.players[0];
+    game.add_enemy_c_of_x(1, "wound");
+    game.add_c_of_x(2, "smash_def");
+    if (!me.can_post_action[me.currently_playing_card_idx]) {
+      game.add_enemy_c_of_x(1, "entangle");
     }
   };
-  card_actions["160402"] = (g) => {
-    g.increase_idx_qi(0, 1);
-    const me = g.players[0];
-    const limit = 4;
-    const can_add = Math.max(0, limit - me.increase_atk);
-    if (can_add > 0) {
-      g.add_c_of_x(can_add, "increase_atk");
-      g.reduce_idx_max_hp(0, can_add * 1);
-    }
-    if (g.if_fire_spirit()) {
-      g.reduce_idx_max_hp(1, me.increase_atk * 2);
+  card_actions["D26025"] = (game) => {
+    const me = game.players[0];
+    game.add_enemy_c_of_x(2, "wound");
+    game.add_c_of_x(2, "smash_def");
+    if (!me.can_post_action[me.currently_playing_card_idx]) {
+      game.add_enemy_c_of_x(1, "entangle");
     }
   };
-  card_actions["160403"] = (g) => {
-    g.increase_idx_qi(0, 2);
-    const me = g.players[0];
-    const limit = 5;
-    const can_add = Math.max(0, limit - me.increase_atk);
-    if (can_add > 0) {
-      g.add_c_of_x(can_add, "increase_atk");
-      g.reduce_idx_max_hp(0, can_add * 1);
-    }
-    if (g.if_fire_spirit()) {
-      g.reduce_idx_max_hp(1, me.increase_atk * 2);
-    }
-  };
-  card_actions["160411"] = (g) => {
-    g.add_c_of_x(2, "wood_thorn");
-    g.atk(3);
-    g.atk(3);
-    if (g.if_wood_spirit() && g.players[0].hp_gained > 0) g.chase();
-  };
-  card_actions["160412"] = (g) => {
-    g.add_c_of_x(3, "wood_thorn");
-    g.atk(4);
-    g.atk(4);
-    if (g.if_wood_spirit() && g.players[0].hp_gained > 0) g.chase();
-  };
-  card_actions["160413"] = (g) => {
-    g.add_c_of_x(4, "wood_thorn");
-    g.atk(5);
-    g.atk(5);
-    if (g.if_wood_spirit() && g.players[0].hp_gained > 0) g.chase();
-  };
-  card_actions["160421"] = (g) => {
-    const elems = g.get_n_different_five_elements(0);
-    g.increase_idx_qi(0, 1 + elems);
-  };
-  card_actions["160422"] = (g) => {
-    const elems = g.get_n_different_five_elements(0);
-    g.increase_idx_qi(0, 1 + elems);
-  };
-  card_actions["160423"] = (g) => {
-    const elems = g.get_n_different_five_elements(0);
-    g.increase_idx_qi(0, 2 + elems);
-  };
-  card_actions["160431"] = (g) => {
-    g.deal_damage(3);
-    g.add_c_of_x(1, "crash_fist_shattered_bone_carry_stacks");
-    g.atk(4);
-    g.atk(4);
-    g.add_c_of_x(1, "smash_def");
-  };
-  card_actions["160432"] = (g) => {
-    g.deal_damage(3);
-    g.add_c_of_x(1, "crash_fist_shattered_bone_carry_stacks");
-    g.atk(5);
-    g.atk(5);
-    g.add_c_of_x(1, "smash_def");
-  };
-  card_actions["160433"] = (g) => {
-    g.deal_damage(4);
-    g.add_c_of_x(1, "crash_fist_shattered_bone_carry_stacks");
-    g.atk(6);
-    g.atk(6);
-    g.add_c_of_x(2, "smash_def");
-  };
-  card_actions["160441"] = (g) => {
-    g.increase_idx_hp(0, 3);
-    g.add_c_of_x(3, "agility");
-    g.add_c_of_x(1, "blood_shadow_escape_stacks");
-  };
-  card_actions["160442"] = (g) => {
-    g.increase_idx_hp(0, 4);
-    g.add_c_of_x(4, "agility");
-    g.add_c_of_x(1, "blood_shadow_escape_stacks");
-  };
-  card_actions["160443"] = (g) => {
-    g.increase_idx_hp(0, 5);
-    g.add_c_of_x(5, "agility");
-    g.add_c_of_x(1, "blood_shadow_escape_stacks");
-  };
-  card_actions["160451"] = (g) => {
-    const me = g.players[0];
-    const refund_pct = 50;
-    const fire_atk = (base) => {
-      const consumed = me.blade_forging_sharpness_stacks;
-      if (consumed > 0) me.blade_forging_sharpness_stacks = 0;
-      g.atk(base + consumed * 3);
-      if (consumed > 0 && g.if_metal_spirit()) {
-        const refund = Math.ceil(consumed * refund_pct / 100);
-        if (refund > 0) g.add_c_of_x(refund, "blade_forging_sharpness_stacks");
-      }
-    };
-    fire_atk(4);
-    fire_atk(4);
-  };
-  card_actions["160452"] = (g) => {
-    const me = g.players[0];
-    const refund_pct = 75;
-    const fire_atk = (base) => {
-      const consumed = me.blade_forging_sharpness_stacks;
-      if (consumed > 0) me.blade_forging_sharpness_stacks = 0;
-      g.atk(base + consumed * 3);
-      if (consumed > 0 && g.if_metal_spirit()) {
-        const refund = Math.ceil(consumed * refund_pct / 100);
-        if (refund > 0) g.add_c_of_x(refund, "blade_forging_sharpness_stacks");
-      }
-    };
-    fire_atk(5);
-    fire_atk(5);
-  };
-  card_actions["160453"] = (g) => {
-    const me = g.players[0];
-    const refund_pct = 100;
-    const fire_atk = (base) => {
-      const consumed = me.blade_forging_sharpness_stacks;
-      if (consumed > 0) me.blade_forging_sharpness_stacks = 0;
-      g.atk(base + consumed * 3);
-      if (consumed > 0 && g.if_metal_spirit()) {
-        const refund = Math.ceil(consumed * refund_pct / 100);
-        if (refund > 0) g.add_c_of_x(refund, "blade_forging_sharpness_stacks");
-      }
-    };
-    fire_atk(6);
-    fire_atk(6);
+  card_actions["D26035"] = (game) => {
   };
 
-  // vendor/yisim/card_info.js
+  // vendor/yisim-master/card_info.js
   var swogi = {};
   var names_json = [];
   var card_names = [];
@@ -33273,12 +35263,8 @@
       if (swogi[name] !== void 0) {
         return name;
       }
-      if (card_name_to_id[name] !== void 0) {
-        return card_name_to_id[name];
-      }
-      const searchResult = fuzzy2.search(card_names, name);
-      const idxs = searchResult && searchResult[0];
-      if (!idxs || idxs.length === 0) {
+      const [idxs, info, order] = fuzzy2.search(card_names, name);
+      if (idxs.length === 0) {
         console.log("could not find card with name " + name);
         throw new Error("could not find card with name " + name);
       }
@@ -33357,10 +35343,6 @@
       // regular sect cards - five elements
       ["14"]: "dx",
       // regular sect cards - duan xuan
-      ["15"]: "no_marking",
-      // extension prefix used by this repo for dream cards yisim doesn't ship (Round 18.8)
-      ["16"]: "no_marking",
-      // R30 extension prefix: 2026-05 patch's new cards (灵羽/极•X family). User flagged class assignment as unreliable so we don't categorize — leave as no_marking until proven.
       ["21"]: "sw",
       // secret enchantment cards - cloud spirit sword sect
       ["22"]: "he",
@@ -33424,6 +35406,23 @@
     const valid_markings = new Set(valid_markings_list);
     function get_marking(card_id) {
       if (card_id.startsWith("D")) {
+        if (card_id[1] === "2") {
+          const dream_side_job_marking = {
+            "1": "el",
+            "2": "fu",
+            "3": "mu",
+            "4": "pa",
+            "5": "fm",
+            "6": "pm",
+            "7": "ft"
+          }[card_id[2]];
+          if (dream_side_job_marking !== void 0) {
+            return dream_side_job_marking;
+          }
+        }
+        if (card_id[1] === "3") {
+          return "no_marking";
+        }
         card_id = card_id.substring(1);
       }
       const prefix = card_id.substring(0, 2);
@@ -33495,10 +35494,10 @@
       return swogi[card_id].name.includes("Sword Formation");
     };
     let is_crash_fist2 = function(card_id) {
-      return swogi[card_id].name.includes("Crash Fist") || card_id.startsWith("D1412");
+      return swogi[card_id].name.includes("Crash Fist") || card_id.startsWith("D1412") || card_id.startsWith("D1419");
     };
     let is_crash_fist_continue = function(card_id) {
-      return swogi[card_id].name === "Crash Fist - Continue" || card_id === "D14144" || card_id === "D14145";
+      return swogi[card_id].name === "Crash Fist - Continue";
     };
     let is_wood_spirit = function(card_id) {
       return swogi[card_id].name.includes("Wood Spirit");
@@ -33586,6 +35585,7 @@
       const character = with_default(swogi[card_id].character, with_default(swogi[base_id].character, void 0));
       const decrease_qi_cost_by_x = with_default(swogi[card_id].decrease_qi_cost_by_x, with_default(swogi[base_id].decrease_qi_cost_by_x, void 0));
       const water_spirit_cost_0_qi = with_default(swogi[card_id].water_spirit_cost_0_qi, with_default(swogi[base_id].water_spirit_cost_0_qi, void 0));
+      const cloud_hit_cost_0_qi = with_default(swogi[card_id].cloud_hit_cost_0_qi, with_default(swogi[base_id].cloud_hit_cost_0_qi, void 0));
       const is_salty = with_default(swogi[card_id].is_salty, with_default(swogi[base_id].is_salty, void 0));
       const is_sweet = with_default(swogi[card_id].is_sweet, with_default(swogi[base_id].is_sweet, void 0));
       const marking = with_default(swogi[card_id].marking, with_default(swogi[base_id].marking, void 0));
@@ -33602,6 +35602,7 @@
         hp_cost,
         decrease_qi_cost_by_x,
         water_spirit_cost_0_qi,
+        cloud_hit_cost_0_qi,
         gather_qi,
         card_actions: card_actions[card_id],
         opening: swogi[card_id].opening,
@@ -33669,7 +35670,7 @@
     card_names.sort((a, b) => a.length - b.length);
   })();
 
-  // vendor/yisim/gamestate_full_nolog.js
+  // vendor/yisim-master/gamestate_full_nolog.js
   var keys = Object.keys(swogi);
   keys.sort();
   var CHARACTER_ID_TO_NAME = {
@@ -33827,12 +35828,11 @@
       this.star_power = 0;
       this.strike_twice_stacks = 0;
       this.hp_gained = 0;
-      this.turn_hp_gained = 0;
       this.stillness_citta_dharma_stacks = 0;
       this.triggered_hexagram_count = 0;
-      this.hexagram_lost = 0;
       this.hexagram_formacide_stacks = 0;
       this.repel_citta_dharma_stacks = 0;
+      this.soul_wound_curse_formation_stacks = 0;
       this.card_play_direction = 1;
       this.hunter_hunting_hunter_stacks = 0;
       this.vitality_blossom_stacks = 0;
@@ -33903,6 +35903,7 @@
       this.hp_lost = 0;
       this.physique_gained = 0;
       this.exercise_bones_stacks = 0;
+      this.drunken_fist_stance_stacks = 0;
       this.majestic_qi_stacks = 0;
       this.ignore_decrease_atk = false;
       this.endless_force_stacks = 0;
@@ -34216,10 +36217,6 @@
       this.dream_cloud_sword_softheart_gain_def = 0;
       this.dream_cloud_sword_softheart_sword_formation_gives_cloud_sea = 0;
       this.next_attack_double_sword_intent_and_increase_atk = 0;
-      this.dream_spiritage_sword_on_sword_qi = 0;
-      this.later_dream_spiritage_sword_on_sword_qi = 0;
-      this.dream_unrestrained_sword_two_end_turn = 0;
-      this.later_dream_unrestrained_sword_two_end_turn = 0;
       this.dream_yin_yang_formation_def_stacks = 0;
       this.dream_yin_yang_formation_hp_stacks = 0;
       this.played_post_action_count = 0;
@@ -34232,11 +36229,6 @@
       this.can_trigger_dream_dotted_around = true;
       this.dream_revitalized_played_count = 0;
       this.dream_revitalized_doublings = 0;
-      this.dream_star_point_internal_injury = 0;
-      this.later_dream_star_point_internal_injury = 0;
-      this.dream_thunder_hexagram_regain_on_first_loss = 0;
-      this.later_dream_thunder_hexagram_regain_on_first_loss = 0;
-      this.can_trigger_dream_thunder_hexagram_regain = true;
       this.gain_penetrate_on_chase_stacks = 0;
       this.dream_water_spirit_billows_double = 0;
       this.total_amount_injured = 0;
@@ -34251,7 +36243,6 @@
       this.dream_heavenly_marrow_limited_stacks = 0;
       this.dream_heavenly_marrow_unlimited_stacks = 0;
       this.dream_fire_formation_stacks = 0;
-      this.played_five_element_card_count = 0;
       this.dream_elusive_footwork_stacks = 0;
       this.dream_elusive_footwork_reflect_cap = 1;
       this.dream_elusive_footwork_trigger_count = 0;
@@ -34262,32 +36253,6 @@
       this.dream_crash_footwork_fake_crash_fist = 0;
       this.dream_crash_fist_continue_bonus_atk = 0;
       this.dream_majestic_qi_permanent = 0;
-      this.dream_motionless_flat_damage = 0;
-      this.later_dream_motionless_flat_damage = 0;
-      this.dream_motionless_gain_damage_pct = 0;
-      this.later_dream_motionless_gain_damage_pct = 0;
-      this.dream_exercise_fist_next_flat_physique = 0;
-      this.later_dream_exercise_fist_next_flat_physique = 0;
-      this.dream_exercise_fist_next_pct_physique = 0;
-      this.later_dream_exercise_fist_next_pct_physique = 0;
-      this.this_card_dream_exercise_fist_pct_physique = 0;
-      this.dream_great_pill_stacks = 0;
-      this.dream_flying_cloud_stacks = 0;
-      this.bird_shadow_decree_stacks = 0;
-      this.yu_ling_xin_fa_qi_gain_def_stacks = 0;
-      this.yu_ling_xin_fa_qi_loss_def_stacks = 0;
-      this.ji_jing_qi_xin_fa_stacks = 0;
-      this.shan_zhuan_teng_nuo_stacks = 0;
-      this.feng_xu_yu_feng_stacks = 0;
-      this.zui_quan_jia_shi_stacks = 0;
-      this.zhen_yin_xin_fa_stacks = 0;
-      this.ji_yun_jian_rou_xin_stacks = 0;
-      this.ji_shui_ling_zhen_stacks = 0;
-      this.shang_hun_zhou_zhen_stacks = 0;
-      this.ji_beng_tian_bu_stacks = 0;
-      this.hp_cost_cards_used = 0;
-      this.crash_fist_shattered_bone_carry_stacks = 0;
-      this.blood_shadow_escape_stacks = 0;
     }
     reset_can_play() {
       this.cards = this.cards.slice();
@@ -34319,7 +36284,7 @@
       if (swogi[this.cards[n_cards - 1]].name === "Space Spiritual Field") {
         this.skip_one_play[n_cards - 1] = true;
       }
-      if (n_cards >= 2 && swogi[this.cards[n_cards - 2]].name === "Space Spiritual Field") {
+      if (swogi[this.cards[n_cards - 2]].name === "Space Spiritual Field") {
         this.skip_one_play[n_cards - 2] = true;
       }
       if (this.cards[n_cards - 1] === "601011" && this.heptastar_soulstat_stacks > 0) {
@@ -34844,79 +36809,6 @@
       }
       return this[action_name](...args);
     }
-    is_five_elements_card(card_id) {
-      return card_id.startsWith("13") || card_id.startsWith("D13");
-    }
-    do_dream_post_card_state_updates(card_id, idx) {
-      const me = this.players[0];
-      if (me.dream_spiritage_sword_on_sword_qi > 0 && this.is_sword(card_id)) {
-        this.increase_idx_x_by_c(0, "sword_qi", me.dream_spiritage_sword_on_sword_qi);
-      }
-      if (me.dream_star_point_internal_injury > 0 && me.is_star_point[idx]) {
-        this.increase_idx_debuff(1, "internal_injury", 1);
-      }
-      if (this.is_five_elements_card(card_id)) {
-        me.played_five_element_card_count += 1;
-      }
-      if (me.later_dream_spiritage_sword_on_sword_qi > 0) {
-        me.dream_spiritage_sword_on_sword_qi += me.later_dream_spiritage_sword_on_sword_qi;
-        me.later_dream_spiritage_sword_on_sword_qi = 0;
-      }
-      if (me.later_dream_unrestrained_sword_two_end_turn > 0) {
-        me.dream_unrestrained_sword_two_end_turn += me.later_dream_unrestrained_sword_two_end_turn;
-        me.later_dream_unrestrained_sword_two_end_turn = 0;
-      }
-      if (me.later_dream_star_point_internal_injury > 0) {
-        me.dream_star_point_internal_injury = 1;
-        me.later_dream_star_point_internal_injury = 0;
-      }
-      if (me.later_dream_thunder_hexagram_regain_on_first_loss > 0) {
-        me.dream_thunder_hexagram_regain_on_first_loss += me.later_dream_thunder_hexagram_regain_on_first_loss;
-        me.later_dream_thunder_hexagram_regain_on_first_loss = 0;
-      }
-      if (me.later_dream_motionless_flat_damage > 0) {
-        me.dream_motionless_flat_damage += me.later_dream_motionless_flat_damage;
-        me.later_dream_motionless_flat_damage = 0;
-      }
-      if (me.later_dream_motionless_gain_damage_pct > 0) {
-        me.dream_motionless_gain_damage_pct += me.later_dream_motionless_gain_damage_pct;
-        me.later_dream_motionless_gain_damage_pct = 0;
-      }
-      if (me.later_dream_exercise_fist_next_flat_physique > 0) {
-        me.dream_exercise_fist_next_flat_physique += me.later_dream_exercise_fist_next_flat_physique;
-        me.later_dream_exercise_fist_next_flat_physique = 0;
-      }
-      if (me.later_dream_exercise_fist_next_pct_physique > 0) {
-        me.dream_exercise_fist_next_pct_physique += me.later_dream_exercise_fist_next_pct_physique;
-        me.later_dream_exercise_fist_next_pct_physique = 0;
-      }
-    }
-    do_dream_unrestrained_sword_two_end_turn() {
-      const me = this.players[0];
-      if (me.dream_unrestrained_sword_two_end_turn <= 0 || me.turn_hp_gained < 3) {
-        return;
-      }
-      for (let i = 0; i < me.dream_unrestrained_sword_two_end_turn; i++) {
-        this.reduce_idx_hp(0, 3, false);
-        this.increase_idx_x_by_c(0, "unrestrained_sword_count", 1);
-      }
-    }
-    do_dream_motionless_damage_on_gain(idx, amt, includeFlat) {
-      if (idx !== 0 || amt <= 0) {
-        return;
-      }
-      const me = this.players[idx];
-      let damage = 0;
-      if (includeFlat && me.dream_motionless_flat_damage > 0) {
-        damage += me.dream_motionless_flat_damage;
-      }
-      if (me.dream_motionless_gain_damage_pct > 0) {
-        damage += Math.floor(amt * me.dream_motionless_gain_damage_pct / 100);
-      }
-      if (damage > 0) {
-        this.deal_damage_inner(damage, false, idx);
-      }
-    }
     do_cloud_sword_softheart_and_friends(card_id) {
       if (this.is_cloud_sword(card_id)) {
         const me = this.players[0];
@@ -35229,8 +37121,7 @@
       }
     }
     is_crash_fist(card_id) {
-      return this.players[0].crash_footwork_stacks > 0 || this.players[0].dream_crash_footwork_fake_crash_fist > 0 || this.players[0].ji_beng_tian_bu_stacks > 0 || // R32: 极•崩天步
-      is_crash_fist(card_id);
+      return this.players[0].crash_footwork_stacks > 0 || this.players[0].dream_crash_footwork_fake_crash_fist > 0 || is_crash_fist(card_id);
     }
     get_debuff_count(idx) {
       const me = this.players[idx];
@@ -35249,7 +37140,6 @@
         return;
       }
       const me = this.players[0];
-      me.this_card_dream_exercise_fist_pct_physique = 0;
       if (me.crash_fist_stygian_night_stacks > 0) {
         const debuff_amt = this.get_debuff_count(0);
         const bonus_atk = Math.min(debuff_amt, me.crash_fist_stygian_night_stacks);
@@ -35269,14 +37159,6 @@
       this.for_each_x_add_y("crash_fist_blink_stacks", "agility");
       this.for_each_x_add_y("crash_fist_shocked_stacks", "this_card_crash_fist_shocked_stacks");
       this.for_each_x_add_y("m_crash_fist_entangle_stacks", "this_card_m_crash_fist_entangle_stacks");
-      if (me.dream_exercise_fist_next_flat_physique > 0) {
-        this.physique(me.dream_exercise_fist_next_flat_physique);
-        me.dream_exercise_fist_next_flat_physique = 0;
-      }
-      if (me.dream_exercise_fist_next_pct_physique > 0) {
-        me.this_card_dream_exercise_fist_pct_physique = me.dream_exercise_fist_next_pct_physique;
-        me.dream_exercise_fist_next_pct_physique = 0;
-      }
       me.this_card_dream_crash_fist_continue_bonus_atk = me.dream_crash_fist_continue_bonus_atk;
       if (!swogi[card_id].is_crash_fist_continue) {
         me.crash_fist_block_stacks = 0;
@@ -35313,13 +37195,6 @@
         me.this_card_dream_crash_fist_continue_bonus_atk = 0;
         this.atk(bonus);
         this.atk(bonus);
-      }
-      if (me.this_card_dream_exercise_fist_pct_physique > 0) {
-        const gain = Math.floor(me.damage_dealt_to_hp_by_this_card_atk * me.this_card_dream_exercise_fist_pct_physique / 100);
-        me.this_card_dream_exercise_fist_pct_physique = 0;
-        if (gain > 0) {
-          this.physique(gain);
-        }
       }
     }
     do_crash_fist_shocked(card_id) {
@@ -35579,12 +37454,6 @@
         this.reduce_idx_x_by_c(0, "consume_next_card_played_stacks", 1);
         this.consumption();
       }
-      if (p0.ji_yun_jian_rou_xin_stacks > 0 && this.is_cloud_sword(card_id)) {
-        this.increase_idx_hp(0, p0.ji_yun_jian_rou_xin_stacks);
-      }
-      if (p0.ji_shui_ling_zhen_stacks > 0 && swogi[card_id].is_water_spirit) {
-        this.increase_idx_qi(0, p0.ji_shui_ling_zhen_stacks);
-      }
       this.just_do_the_card_and_nothing_else(card);
       p0.dream_qi_perfusion_guarantee_injured = 0;
       this.do_post_strike(card_id, idx);
@@ -35620,7 +37489,6 @@
       }
       this.do_cloud_sword_chain_count(card_id);
       this.do_unrestrained_sword_count(card_id);
-      this.do_dream_post_card_state_updates(card_id, idx);
       if (swogi[card_id].is_snake) {
         p0.snake_card_used += 1;
       }
@@ -36379,8 +38247,6 @@
       me.triggered_beast_spirit_sword_formation = false;
       me.can_trigger_resonance_cat_paw = true;
       me.can_trigger_dream_dotted_around = true;
-      me.can_trigger_dream_thunder_hexagram_regain = true;
-      me.turn_hp_gained = 0;
       this.do_resonance_rejuvenation();
       this.reduce_idx_x_by_c(0, "everything_goes_way_stacks", 1);
       this.reduce_idx_x_by_c(0, "god_opportunity_conform_stacks", 1);
@@ -36392,17 +38258,6 @@
       me.next_xuanming_recurring_hp = me.hp;
       if (me.dream_earth_spirit_steep_stacks > 0) {
         me.dream_earth_spirit_steep_stacks -= 1;
-      }
-      if (me.dream_great_pill_stacks > 0 && (me.max_hp < enemy.max_hp || me.hp < enemy.hp)) {
-        this.increase_idx_max_hp(0, me.dream_great_pill_stacks);
-        this.increase_idx_hp(0, me.dream_great_pill_stacks);
-      }
-      if (me.dream_flying_cloud_stacks > 0) {
-        if (enemy.def > 0) {
-          this.increase_idx_x_by_c(0, "ignore_def", me.dream_flying_cloud_stacks);
-        } else {
-          this.increase_idx_qi(0, me.dream_flying_cloud_stacks);
-        }
       }
       this.do_def_decay();
       this.do_illusion_tune();
@@ -36498,6 +38353,9 @@
         if (card.water_spirit_cost_0_qi && this.if_water_spirit()) {
           qi_cost = 0;
         }
+        if (card.cloud_hit_cost_0_qi && this.if_cloud_hit()) {
+          qi_cost = 0;
+        }
         if (me.is_star_point[me.next_card_index]) {
           qi_cost = Math.max(0, qi_cost - me.reduce_qi_cost_on_star_point_stacks);
         }
@@ -36541,15 +38399,6 @@
                 this.reduce_idx_max_hp(0, hp_cost);
               } else {
                 this.reduce_idx_hp(0, hp_cost, true);
-              }
-              me.hp_cost_cards_used += 1;
-              if (me.crash_fist_shattered_bone_carry_stacks > 0 && this.is_crash_fist(card_id)) {
-                this.deal_damage_inner(hp_cost, false, 1);
-                me.crash_fist_shattered_bone_carry_stacks -= 1;
-              }
-              if (me.blood_shadow_escape_stacks > 0) {
-                this.increase_idx_x_by_c(0, "agility", hp_cost);
-                me.blood_shadow_escape_stacks -= 1;
               }
             }
             let refund_hp = false;
@@ -36620,7 +38469,6 @@
       this.do_anthomania_formation();
       this.do_toxin_immunity();
       this.do_force_of_water();
-      this.do_dream_unrestrained_sword_two_end_turn();
       this.do_m_earth_spirit_formation();
       this.reduce_idx_x_by_c(0, "force_of_water", dream_billows_extra_fow);
       this.reduce_idx_x_by_c(0, "qi", dream_billows_extra_qi);
@@ -36826,11 +38674,6 @@
           me.hp = me.max_hp;
         }
       }
-      const actualGain = me.hp - prev_hp;
-      if (actualGain > 0) {
-        me.turn_hp_gained += actualGain;
-        this.do_dream_motionless_damage_on_gain(idx, actualGain, false);
-      }
       if (prev_hp !== me.hp) {
         for (let i = 0; i < me.birdie_wind_stacks; i++) {
           this.increase_idx_def(idx, 1);
@@ -36865,7 +38708,6 @@
       }
       me.def += amt;
       me.total_def_gained += amt;
-      this.do_dream_motionless_damage_on_gain(idx, amt, true);
     }
     increase_idx_penetrate(idx, amt) {
       if (amt === 0) {
@@ -36919,12 +38761,6 @@
       }
       if (me.dream_consonance_qi_gives_def_stacks > 0) {
         this.increase_idx_def(idx, amt * me.dream_consonance_qi_gives_def_stacks);
-      }
-      if (me.yu_ling_xin_fa_qi_gain_def_stacks > 0) {
-        this.increase_idx_def(idx, amt * me.yu_ling_xin_fa_qi_gain_def_stacks);
-      }
-      if (me.ji_jing_qi_xin_fa_stacks > 0) {
-        this.increase_idx_hp(idx, amt * me.ji_jing_qi_xin_fa_stacks);
       }
       if (me.spiritual_divination_stacks > 0) {
         const hexagram_amt = amt * me.spiritual_divination_stacks;
@@ -37020,9 +38856,6 @@
           me[gather_qi_flag] = 0;
           this.increase_idx_qi(idx, me.five_elements_gather_qi_stacks);
         }
-      }
-      if (me.zhen_yin_xin_fa_stacks > 0 && idx === 0) {
-        this.deal_damage_inner(me.zhen_yin_xin_fa_stacks, false, 1);
       }
       me[x] += amt;
     }
@@ -37207,14 +39040,6 @@
       if (x === "force_of_water") {
         me.total_force_of_water_gained += c;
       }
-      if (x === "agility" && idx === 0 && c > 0) {
-        if (me.shan_zhuan_teng_nuo_stacks > 0) {
-          this.increase_idx_def(idx, c);
-        }
-        if (me.feng_xu_yu_feng_stacks > 0) {
-          this.deal_damage_inner(c * me.feng_xu_yu_feng_stacks, false, 0);
-        }
-      }
     }
     reduce_idx_x_by_c(idx, x, c) {
       if (c === 0) {
@@ -37249,30 +39074,11 @@
       if (me[x] < 0) {
         me[x] = 0;
       }
-      const actualLoss = prev_x - me[x];
-      if (x === "hexagram" && actualLoss > 0) {
-        me.hexagram_lost += actualLoss;
-        if (idx === 0 && me.dream_thunder_hexagram_regain_on_first_loss > 0 && me.can_trigger_dream_thunder_hexagram_regain) {
-          me.can_trigger_dream_thunder_hexagram_regain = false;
-          this.increase_idx_hexagram(idx, actualLoss * me.dream_thunder_hexagram_regain_on_first_loss);
-        }
-      }
       if (idx === 0 && is_debuff(x)) {
         me.total_debuff_lost += prev_x - me[x];
       }
-      if (idx === 0 && actualLoss > 0) {
-        if (x === "qi") {
-          if (me.bird_shadow_decree_stacks > 0) {
-            this.increase_idx_x_by_c(idx, "sword_qi", actualLoss * me.bird_shadow_decree_stacks);
-          }
-          if (me.yu_ling_xin_fa_qi_loss_def_stacks > 0) {
-            this.increase_idx_def(idx, actualLoss * me.yu_ling_xin_fa_qi_loss_def_stacks);
-          }
-        } else if (x === "flaw") {
-          if (me.zui_quan_jia_shi_stacks > 0) {
-            this.increase_idx_x_by_c(idx, "increase_atk", actualLoss * me.zui_quan_jia_shi_stacks);
-          }
-        }
+      if (x === "flaw" && prev_x > me[x] && me.drunken_fist_stance_stacks > 0) {
+        this.increase_idx_x_by_c(idx, "increase_atk", (prev_x - me[x]) * me.drunken_fist_stance_stacks);
       }
       if (prev_x !== me[x] || c !== 1) {
       }
@@ -37286,10 +39092,10 @@
       }
       return false;
     }
-    deal_damage_inner(dmg, is_atk, my_idx, is_extra) {
+    deal_damage_inner(dmg, is_atk, my_idx, is_extra, this_atk_smash_def) {
       const enemy_idx = 1 - my_idx;
       let ignore_def = false;
-      let smash_def = false;
+      let smash_def = !!this_atk_smash_def;
       let pct_multiplier = 100;
       let dream_repel_reflect = 0;
       let min_dmg = 1;
@@ -37565,7 +39371,7 @@
     deal_damage(dmg) {
       this.deal_damage_inner(dmg, false, 0);
     }
-    atk(dmg, is_extra) {
+    atk(dmg, is_extra, this_atk_smash_def) {
       this.do_drift_ice_blade();
       const me = this.players[0];
       me.attack_count += 1;
@@ -37577,6 +39383,14 @@
         const repel_dmg = enemy.repel_citta_dharma_stacks;
         this.deal_damage_inner(repel_dmg, false, 1);
       }
+      if (me.soul_wound_curse_formation_stacks > 0) {
+        this.reduce_idx_x_by_c(0, "soul_wound_curse_formation_stacks", 1);
+        this.increase_idx_debuff(1, "internal_injury", 1);
+      }
+      if (enemy.soul_wound_curse_formation_stacks > 0) {
+        this.reduce_idx_x_by_c(1, "soul_wound_curse_formation_stacks", 1);
+        this.increase_idx_debuff(0, "internal_injury", 1);
+      }
       if (me.throw_petals_stacks > 0) {
         const amt = me.throw_petals_stacks;
         this.increase_idx_debuff(1, "internal_injury", amt);
@@ -37584,14 +39398,6 @@
       if (enemy.throw_petals_stacks > 0) {
         const amt = enemy.throw_petals_stacks;
         this.increase_idx_debuff(0, "internal_injury", amt);
-      }
-      if (me.shang_hun_zhou_zhen_stacks > 0) {
-        this.increase_idx_debuff(1, "internal_injury", 1);
-        me.shang_hun_zhou_zhen_stacks -= 1;
-      }
-      if (enemy.shang_hun_zhou_zhen_stacks > 0) {
-        this.increase_idx_debuff(0, "internal_injury", 1);
-        enemy.shang_hun_zhou_zhen_stacks -= 1;
       }
       if (enemy.counter_move_stacks > 0 && !enemy.stance_is_fist) {
         this.deal_damage_inner(6, false, 0);
@@ -37617,7 +39423,7 @@
         this.reduce_idx_hp(1, 1);
         this.increase_idx_hp(0, 1);
       }
-      this.deal_damage_inner(dmg, true, 0, is_extra);
+      this.deal_damage_inner(dmg, true, 0, is_extra, this_atk_smash_def);
     }
     if_cloud_hit() {
       return this.players[0].cloud_sword_chain_count > 0 || this.players[0].endurance_as_cloud_sea_stacks > 0;
@@ -37851,6 +39657,36 @@
     }
     reduce_random_debuff_by_c_n_times(c, n) {
       this.reduce_idx_random_debuff_by_c_n_times(0, c, n);
+    }
+    // Ported from gamestate.jscpp:7875 — was missing from the generated
+    // gamestate_full_nolog.js, causing 万玄破魔掌 (645021-3) to crash.
+    convert_random_debuffs_to_increase_atk(n) {
+      if (n === 0) {
+        return;
+      }
+      const me = this.players[0];
+      let converted = 0;
+      for (let i = 0; i < n; i++) {
+        let debuff_name;
+        const debuffs = [];
+        for (let j = 0; j < DEBUFF_NAMES.length; j++) {
+          if (me[DEBUFF_NAMES[j]] > 0) {
+            debuffs.push(DEBUFF_NAMES[j]);
+          }
+        }
+        if (debuffs.length === 0) {
+          break;
+        }
+        if (debuffs.length > 1) {
+          this.used_randomness = true;
+        }
+        debuff_name = debuffs[Math.floor(Math.random() * debuffs.length)];
+        this.reduce_idx_x_by_c(0, debuff_name, 1);
+        converted += 1;
+      }
+      if (converted > 0) {
+        this.increase_idx_x_by_c(0, "increase_atk", converted);
+      }
     }
     transfer_random_debuff() {
       let my_debuff_names = [];
@@ -40031,11 +41867,11 @@
   };
   uFuzzy.highlight = highlight;
 
-  // vendor/yisim/card_name_to_id_fuzzy.js
+  // vendor/yisim-master/card_name_to_id_fuzzy.js
   var fuzzy = new uFuzzy();
   var card_name_to_id_fuzzy = make_card_name_to_id_fuzzy(fuzzy);
 
-  // vendor/yisim/yisim_entry.js
+  // vendor/yisim-master/yisim_entry.js
   var DEFAULT_ROLL_MODE = "average";
   var AVERAGE_SIM_RUNS = 100;
   var lastSimulationKey = null;
@@ -40307,7 +42143,8 @@
       cultivation: playerState.cultivation,
       cards: playerCards
     };
-    player.max_hp = Number.isFinite(playerState.maxHp) ? Math.max(playerState.maxHp, player.hp) : player.hp + player.physique;
+    const playerBaseMaxHp = Number.isFinite(playerState.maxHp) ? Math.max(playerState.maxHp, player.hp) : player.hp;
+    player.max_hp = playerBaseMaxHp + (player.physique || 0);
     player.character = guessChar(player);
     let opponent;
     if (Array.isArray(options.opponentSlots) && options.opponentSlots.some(Boolean)) {
@@ -40327,7 +42164,8 @@
         cards: oppCards,
         _real: true
       };
-      opponent.max_hp = Number.isFinite(oppState.maxHp) ? Math.max(oppState.maxHp, opponent.hp) : opponent.hp + opponent.physique;
+      const oppBaseMaxHp = Number.isFinite(oppState.maxHp) ? Math.max(oppState.maxHp, opponent.hp) : opponent.hp;
+      opponent.max_hp = oppBaseMaxHp + (opponent.physique || 0);
     } else {
       opponent = {
         hp: 9999,
@@ -40365,7 +42203,7 @@
       return rollMode === "high";
     };
   }
-  function runSingleSimulation(player, opponent, rollMode, runtimeWrites = [], maxTurns = 64, oppRuntimeWrites = []) {
+  function runSingleSimulation(player, opponent, rollMode, runtimeWrites = [], maxTurns = 64, oppRuntimeWrites = [], meGoesFirst = true, lastStandSecond = false) {
     const game = new GameState();
     Object.assign(game.players[0], { ...player, cards: [...player.cards] });
     Object.assign(game.players[1], { ...opponent, cards: [...opponent.cards] });
@@ -40381,6 +42219,10 @@
       game.players[1].cards = Array(Math.max(1, game.players[1].cards.length)).fill(MYSTERY_SEED_ID);
     }
     game.start_of_game_setup();
+    if (lastStandSecond) {
+      const secondIdx = meGoesFirst ? 1 : 0;
+      game.players[secondIdx].can_last_stand = 1;
+    }
     const perTurnDealt = [];
     const perTurnTaken = [];
     let endTurn = null;
@@ -40392,19 +42234,34 @@
       const oppBefore = game.players[1].hp ?? 0;
       const myBefore = game.players[0].hp ?? 0;
       const myAbout = game.players[0].next_card_index ?? 0;
-      game.sim_turn();
-      lastSlotMe = myAbout % myDeckLen;
-      if (game.game_over) {
-        perTurnDealt.push(Math.max(0, oppBefore - (game.players[1].hp ?? oppBefore)));
-        perTurnTaken.push(0);
-        endTurn = turnIndex + 1;
-        break;
+      const oppAbout = game.players[1].next_card_index ?? 0;
+      if (meGoesFirst) {
+        game.sim_turn();
+        lastSlotMe = myAbout % myDeckLen;
+        if (game.game_over) {
+          perTurnDealt.push(Math.max(0, oppBefore - (game.players[1].hp ?? oppBefore)));
+          perTurnTaken.push(0);
+          endTurn = turnIndex + 1;
+          break;
+        }
+        game.swap_players();
+        game.sim_turn();
+        lastSlotOpp = oppAbout % oppDeckLen;
+        game.swap_players();
+      } else {
+        game.swap_players();
+        game.sim_turn();
+        lastSlotOpp = oppAbout % oppDeckLen;
+        game.swap_players();
+        if (game.game_over) {
+          perTurnDealt.push(0);
+          perTurnTaken.push(Math.max(0, myBefore - (game.players[0].hp ?? myBefore)));
+          endTurn = turnIndex + 1;
+          break;
+        }
+        game.sim_turn();
+        lastSlotMe = myAbout % myDeckLen;
       }
-      game.swap_players();
-      const oppAbout = game.players[0].next_card_index ?? 0;
-      game.sim_turn();
-      lastSlotOpp = oppAbout % oppDeckLen;
-      game.swap_players();
       perTurnDealt.push(Math.max(0, oppBefore - (game.players[1].hp ?? oppBefore)));
       perTurnTaken.push(Math.max(0, myBefore - (game.players[0].hp ?? myBefore)));
       if (game.game_over) {
@@ -40414,13 +42271,38 @@
     }
     const myHp = game.players[0].hp ?? 0;
     const oppHp = game.players[1].hp ?? 0;
+    const myMaxHp = game.players[0].max_hp ?? 0;
+    const oppMaxHp = game.players[1].max_hp ?? 0;
+    const myPhysique = game.players[0].physique ?? 0;
+    const oppPhysique = game.players[1].physique ?? 0;
+    const myIncAtk = game.players[0].increase_atk ?? 0;
+    const oppIncAtk = game.players[1].increase_atk ?? 0;
+    const myDef = game.players[0].def ?? 0;
+    const oppDef = game.players[1].def ?? 0;
     let outcome = "undecided";
     if (game.game_over) {
       if (oppHp <= 0 && myHp > 0) outcome = "win";
       else if (myHp <= 0 && oppHp > 0) outcome = "lose";
       else outcome = "draw";
     }
-    return { perTurnDealt, perTurnTaken, outcome, endTurn, myHp, oppHp, lastSlotMe, lastSlotOpp };
+    return {
+      perTurnDealt,
+      perTurnTaken,
+      outcome,
+      endTurn,
+      myHp,
+      oppHp,
+      myMaxHp,
+      oppMaxHp,
+      myPhysique,
+      oppPhysique,
+      myIncAtk,
+      oppIncAtk,
+      myDef,
+      oppDef,
+      lastSlotMe,
+      lastSlotOpp
+    };
   }
   function summarizeRuns(runs) {
     const n = runs.length || 1;
@@ -40442,6 +42324,10 @@
     else if (loses.length > wins.length && loses.length > n - wins.length - loses.length) outcome = "lose";
     else if (decided.length > 0 && wins.length === loses.length) outcome = "draw";
     const sampleRun = decided[0] || runs[0] || {};
+    const avgMyHp = Math.round(runs.reduce((s, r) => s + (r.myHp ?? 0), 0) / n);
+    const avgOppHp = Math.round(runs.reduce((s, r) => s + (r.oppHp ?? 0), 0) / n);
+    const avgMyMaxHp = Math.round(runs.reduce((s, r) => s + (r.myMaxHp ?? 0), 0) / n);
+    const avgOppMaxHp = Math.round(runs.reduce((s, r) => s + (r.oppMaxHp ?? 0), 0) / n);
     return {
       perTurnDamage: dealt.perTurn,
       cumulativeDamage: dealt.cumulative,
@@ -40452,6 +42338,14 @@
       turnsSimulated: dealt.perTurn.length,
       endTurn: avgEndTurn,
       outcome,
+      myHp: avgMyHp,
+      oppHp: avgOppHp,
+      myMaxHp: avgMyMaxHp,
+      oppMaxHp: avgOppMaxHp,
+      myIncAtk: Math.round(runs.reduce((s, r) => s + (r.myIncAtk ?? 0), 0) / n),
+      oppIncAtk: Math.round(runs.reduce((s, r) => s + (r.oppIncAtk ?? 0), 0) / n),
+      myDef: Math.round(runs.reduce((s, r) => s + (r.myDef ?? 0), 0) / n),
+      oppDef: Math.round(runs.reduce((s, r) => s + (r.oppDef ?? 0), 0) / n),
       lastSlotMe: sampleRun.lastSlotMe ?? null,
       lastSlotOpp: sampleRun.lastSlotOpp ?? null,
       verdict: {
@@ -40477,10 +42371,14 @@
     const normalizedTalents = normalizeTalents(options.talents);
     const opponentSlots = options.mode === "matchup" && Array.isArray(options.opponentSlots) ? options.opponentSlots : null;
     const normalizedOppTalents = options.mode === "matchup" ? normalizeTalents(options.opponentTalents) : [];
+    const turnOrder = options.turnOrder || "me-first";
+    const lastStandSecond = !!options.lastStandSecond;
     const cacheKey = JSON.stringify({
       deckSlots,
       rollMode,
       maxTurns,
+      turnOrder,
+      lastStandSecond,
       playerState: {
         hp: playerState.hp,
         maxHp: playerState.maxHp,
@@ -40512,10 +42410,23 @@
       const probeOpponent = probeGame.players[1];
       const { integration: talentIntegration, runtimeWrites } = prepareTalentIntegration(normalizedTalents, probePlayer, player.cards, normalizedSlots);
       const { integration: opponentTalentIntegration, runtimeWrites: oppRuntimeWrites } = normalizedOppTalents.length ? prepareTalentIntegration(normalizedOppTalents, probeOpponent, opponent.cards, opponentSlots || []) : { integration: null, runtimeWrites: [] };
-      const runs = rollMode === "average" ? Array.from(
-        { length: AVERAGE_SIM_RUNS },
-        () => runSingleSimulation(player, opponent, DEFAULT_ROLL_MODE, runtimeWrites, maxTurns, oppRuntimeWrites)
-      ) : [runSingleSimulation(player, opponent, rollMode, runtimeWrites, maxTurns, oppRuntimeWrites)];
+      const runOrders = turnOrder === "tied" ? [true, false] : turnOrder === "opp-first" ? [false] : [true];
+      const runsPerOrder = rollMode === "average" ? Math.max(1, Math.floor(AVERAGE_SIM_RUNS / runOrders.length)) : 1;
+      const runs = [];
+      for (const meFirst of runOrders) {
+        for (let i = 0; i < runsPerOrder; i += 1) {
+          runs.push(runSingleSimulation(
+            player,
+            opponent,
+            rollMode === "average" ? DEFAULT_ROLL_MODE : rollMode,
+            runtimeWrites,
+            maxTurns,
+            oppRuntimeWrites,
+            meFirst,
+            lastStandSecond
+          ));
+        }
+      }
       const summary = summarizeRuns(runs);
       if (!opponent._real) {
         summary.verdict = null;

@@ -45,6 +45,26 @@ reroll_events: list = []
 # Fate ids the user has chosen this game (breakthrough rewards), in pick order.
 chosen_fates: list = []
 
+# Daoyun (道韵) free-grant events for the Counter. Each entry is a card NAME
+# that the server granted (via daoyun pick / 自在随心 random draw). Drained
+# by proxy_view.Counter._drain_daoyun_events so the granted card doesn't
+# count as a deck draw when it next appears in the hand.
+daoyun_grant_events: list = []
+
+# Snapshot of team_container[1] ids (set of int). RESETS at every GameStatus;
+# diffed at every PlayerData to find new entries. ONLY actual daoyun grants
+# get emitted — see _emit_daoyun_grants_from_team1.
+_team1_snapshot: set = set()
+
+# Daoyun pick state — only set after SimpleClientPact(kind=9) fires:
+#   _daoyun_random_pending = True when a 自在随心 (id=27) pick happens; the
+#       NEXT new id appearing in team_container[1] is the random card.
+#   _daoyun_pending_picks  = set of explicit picked ids waiting to land in
+#       team_container[1] (may be immediate or deferred until the player
+#       reaches that card's required phase).
+_daoyun_random_pending: bool = False
+_daoyun_pending_picks: set = set()
+
 
 def _load_config() -> dict:
     if os.path.exists(CONFIG_FILE):
@@ -67,6 +87,77 @@ def _save_config(cfg: dict):
 def _get_me_uid() -> str:
     with _me_uid_lock:
         return _me_uid
+
+
+def _reset_team1_snapshot(b):
+    """Replace the team_container[1] snapshot with the new round's value.
+    Called at every GameStatus (round boundary). The bytes are decoded as a
+    packed varint list of card ids."""
+    global _team1_snapshot
+    ids: set = set()
+    if isinstance(b, (bytes, bytearray)) and b:
+        try:
+            ids = set(shadow_state.decode_varint_list(b))
+        except Exception:
+            ids = set()
+    _team1_snapshot = ids
+
+
+def _emit_daoyun_grants_from_team1(b):
+    """Diff team_container[1] against the round-start snapshot to find any
+    NEW ids. Emit grant events ONLY for ids that match an outstanding daoyun
+    pick (explicit pick id) or — if a 自在随心 random pick is pending — the
+    first new id encountered (the server's resolved random card).
+
+    team_container[1] also changes for non-daoyun reasons (it carries broader
+    deck/round state); the daoyun-pending gating filters those out."""
+    global _team1_snapshot, _daoyun_random_pending, _daoyun_pending_picks
+    if not isinstance(b, (bytes, bytearray)) or not b:
+        return
+    try:
+        cur = set(shadow_state.decode_varint_list(b))
+    except Exception:
+        return
+    new_ids = cur - _team1_snapshot
+    _team1_snapshot |= cur
+    if not new_ids:
+        return
+    # Match explicit-pick ids first (deferred or immediate grants both match
+    # here — the pick stays in the pending set until its id appears).
+    resolved_explicit = new_ids & _daoyun_pending_picks
+    for cid in resolved_explicit:
+        try:
+            nm = card_name(int(cid))
+        except Exception:
+            continue
+        daoyun_grant_events.append({"name": nm, "id": int(cid)})
+    _daoyun_pending_picks -= resolved_explicit
+    # 自在随心 random pick: the server resolved a random card and put its id
+    # in team_container[1]. We can't predict which id, so credit any
+    # remaining new id (not already credited above). One per pending pick.
+    if _daoyun_random_pending:
+        remaining = new_ids - resolved_explicit
+        if remaining:
+            cid = next(iter(remaining))
+            try:
+                nm = card_name(int(cid))
+                daoyun_grant_events.append({"name": nm, "id": int(cid)})
+            except Exception:
+                pass
+            _daoyun_random_pending = False
+
+
+def _note_daoyun_pick(chosen_id: int):
+    """Called from _handle_simple_client_pact when a daoyun pact (kind=9)
+    is observed. Tracks the picked card id so the next team_container[1]
+    addition that matches it counts as a daoyun grant."""
+    global _daoyun_random_pending, _daoyun_pending_picks
+    if chosen_id == 27:
+        # 自在随心 — random card, resolved by server, id unknown until we
+        # see the next team_container[1] addition.
+        _daoyun_random_pending = True
+    elif chosen_id > 0:
+        _daoyun_pending_picks.add(int(chosen_id))
 
 
 def _set_me_uid(uid: str):
@@ -149,6 +240,32 @@ def _is_round_end(mp) -> bool:
     return bool(inner and inner.get("type") == "BattleResult")
 
 
+# ─── Spectator-mode detection ─────────────────────────────────────────────────
+# Only SpectateFriendReq is treated as the spectator-entry signal. We tried
+# matching SpectateReq earlier but it also fires for ambiguous things in the
+# lobby (player-info previews, ranking refreshes, etc.), wrongly flipping the
+# flag and freezing the counter on the user's next real game. SpectateFriendReq
+# is the explicit "Spectate a Friend" click and only fires when entering an
+# actual spectate session.
+# Cleared by StartGameResp OR any client→server game action (MoveCardReq /
+# ReplaceCardReq / etc.) — see the safety net in process_msgpack.
+_is_spectating: bool = False
+
+
+def _set_spectating(value: bool):
+    global _is_spectating
+    if _is_spectating != value:
+        _is_spectating = value
+        _log(f"[spectator] {'ENTERING' if value else 'LEAVING'} spectator mode")
+
+
+def _is_spectate_msg(mp) -> bool:
+    inner = _inner(mp)
+    if not inner:
+        return False
+    return inner.get("type", "") == "SpectateFriendReq"
+
+
 # ─── Shadow / state-queue plumbing ────────────────────────────────────────────
 _last_my_state_lock = threading.Lock()
 _last_my_state = None
@@ -219,6 +336,13 @@ def _handle_replace_card_resp(mp):
     # pb["3"] = {2: slot, 3: old_id} — the discarded card (rerolled away).
     old_info = pb.get("3") if isinstance(pb.get("3"), dict) else {}
     old_id = int(old_info.get("3", 0) or 0) if isinstance(old_info, dict) else 0
+    # Normalize paired Diviner faces (天谕·攻 ↔ 天谕·守 etc.) to the canonical
+    # face id BEFORE looking up the card name. Otherwise the reroll event's
+    # `old` could read e.g. "天谕·攻" while the shadow stores 天谕·守 — the
+    # Counter would canonical-tally fine, but card_name's value is also used
+    # for display/log so consistency matters.
+    new_id = shadow_state.canonical_card_id(new_id)
+    old_id = shadow_state.canonical_card_id(old_id)
     reroll_events.append({
         "old": card_name(old_id) if old_id else None,
         "new": card_name(new_id),
@@ -270,11 +394,16 @@ def _handle_pending_daoyun(mp):
     b = pb.get("3", b"") if isinstance(pb, dict) else b""
     if not isinstance(b, (bytes, bytearray)):
         return
+    # 2026-05 patch: daoyun grew from 4 to 5 options. The new 5th option can
+    # use a SHORT id (e.g. id=27 for 自在随心) while the existing 4 use full
+    # 7-digit card ids. The old `v >= 1_000_000` filter silently dropped the
+    # new short-id option; keep all positive ids.
     options = []
     for v in shadow_state.decode_varint_list(b):
-        if v >= 1_000_000:
-            options.append(shadow_state.ZoneCard(
-                id=v, name=card_name(v), level=shadow_state._level_from_id(v)))
+        if v <= 0:
+            continue
+        options.append(shadow_state.ZoneCard(
+            id=v, name=card_name(v), level=shadow_state._level_from_id(v)))
     if not options:
         return
     shadow_state.set_pending_choice(shadow_state.PendingChoice(
@@ -364,7 +493,9 @@ def _handle_player_data(mp):
         cards=_parse_cards(pdict.get("103", [])),
         display_name=display_name,
         xiuwei=xiuwei, tipo=tipo, realm_tier=realm_tier,
-        hp=40 + xiuwei,
+        # HP is NOT on the wire — the legacy `40 + xiuwei` was wrong. Real
+        # HP comes from battle_log.json via proxy_view._battle_log_stats.
+        hp=0,
         hp_field=hp_field,
         next_opponent_id=_to_str(next_opp) if next_opp else "",
         prev_opponent_id=_to_str(prev_opp) if prev_opp else "",
@@ -383,6 +514,12 @@ def _handle_player_data(mp):
     # Reroll-remaining lives in team_container field 4.
     if team_container is not None:
         player.rerolls = int(team_container.get("4", 0) or 0)
+        # team_container[1] is the "incoming cards this round" list — daoyun
+        # grants (and other free grants like 自在随心's random draw) get
+        # appended to it during the round. Diff against the snapshot taken at
+        # round-start to find NEW additions and queue them as free grants for
+        # the Counter (so they don't decrement the deck pool).
+        _emit_daoyun_grants_from_team1(team_container.get("1", b""))
 
     shadow_state.reset_from_player(player, name_fn=card_name,
                                    source="PlayerData", team_container=team_container)
@@ -416,8 +553,10 @@ def _handle_insert_card_req(mp):
 
 def _handle_simple_client_pact(mp):
     """SimpleClientPact (C→S): the client confirms a discrete choice as
-    {1: kind, 2: chosen_id}. When a fate (天命) choice is pending and the
-    chosen id matches one of the offered fates, record it for the damage sim."""
+    {1: kind, 2: chosen_id}. Kinds we handle:
+      kind=9 (daoyun pick) — record the picked id so the next team_container[1]
+              addition that matches becomes a free-grant event.
+      kind=anything-else (fate pick on a pending fate choice) — handled below."""
     inner = _inner(mp)
     if not inner or inner.get("type") != "SimpleClientPact":
         return
@@ -427,11 +566,32 @@ def _handle_simple_client_pact(mp):
     chosen = int(pb.get("2", 0) or 0)
     if not chosen:
         return
+    kind = int(pb.get("1", 0) or 0)
+    if kind == 9:
+        # Daoyun pact. Record the pick for later matching against
+        # team_container[1] additions (see _emit_daoyun_grants_from_team1).
+        _note_daoyun_pick(chosen)
+        # Don't return here — the regular fate-pending path below would
+        # never fire for kind=9 anyway (kind=9 is its own pact category).
     pc = shadow_state.get_pending_choice()
     if pc is not None and getattr(pc, "kind", "") == "fate":
         option_ids = {getattr(o, "id", None) for o in getattr(pc, "options", [])}
         if chosen in option_ids:
             chosen_fates.append(chosen)
+            # If this fate is 副职兼修, capture the phase from the fate id so
+            # the next SelectCareerReq (secondary slot) records it correctly.
+            shadow_state.note_fate_pick(chosen)
+            # PendingTalentResp + this pact = breakthrough fate pick. The
+            # game updates the player's realm tier server-side but doesn't
+            # send a fresh PlayerData / GameStatus until the next round, so
+            # the sidejob counter would otherwise lag a full round. Bump
+            # the shadow's realm_tier optimistically (capped at 5) so the
+            # counter sees the new realm immediately.
+            sh = shadow_state.shadow
+            if sh is not None:
+                cur = int(getattr(sh, "realm_tier", 1) or 1)
+                if cur < 5:
+                    sh.realm_tier = cur + 1
             shadow_state.clear_pending_choice()
             _wake()
             return f"Fate chosen: {shadow_state.fate_name(chosen)} ({chosen})"
@@ -446,8 +606,14 @@ def _handle_select_career_req(mp):
     cid = int(pb.get("1", 0) or 0) if isinstance(pb, dict) else 0
     if not cid:
         return
-    shadow_state.note_career_pick(cid)
-    return f"SelectCareerReq → career {cid} ({shadow_state.career_name(cid)})"
+    # Field 3 = 1 marks the 副职兼修 SECONDARY pick (the fate-granted second
+    # sidejob). When set, route to the secondary slot so the counter credits
+    # an additional deck — including the case where primary == secondary
+    # (same career chosen twice → double copies of that career's cards).
+    is_secondary = bool(int(pb.get("3", 0) or 0)) if isinstance(pb, dict) else False
+    shadow_state.note_career_pick(cid, secondary=is_secondary)
+    slot = "secondary (副职兼修)" if is_secondary else "primary"
+    return f"SelectCareerReq → {slot} career {cid} ({shadow_state.career_name(cid)})"
 
 
 # ─── GameStatus → GameState push ──────────────────────────────────────────────
@@ -460,18 +626,28 @@ def _try_push_game_state(mp):
         return None
 
     # Auto-detect the user's UID from their own team container (pb["6"]).
-    f6 = pb.get("6")
-    if isinstance(f6, dict) and isinstance(f6.get("1"), (bytes, bytearray)) \
-            and isinstance(f6.get("2"), (bytes, bytearray)):
-        uid_b = f6.get("200", b"")
-        uid_s = (uid_b.decode("utf-8", "replace")
-                 if isinstance(uid_b, (bytes, bytearray)) else str(uid_b))
-        if uid_s and len(uid_s) >= 16 and uid_s != _get_me_uid():
-            _set_me_uid(uid_s)
+    # SKIP THIS WHEN SPECTATING — the team container during spectating is the
+    # SPECTATED player's, and persisting it as the user's UID would leak hand
+    # info downstream (PlayerData/GameStatus handlers update the shadow when
+    # the message UID matches _me_uid).
+    if not _is_spectating:
+        f6 = pb.get("6")
+        if isinstance(f6, dict) and isinstance(f6.get("1"), (bytes, bytearray)) \
+                and isinstance(f6.get("2"), (bytes, bytearray)):
+            uid_b = f6.get("200", b"")
+            uid_s = (uid_b.decode("utf-8", "replace")
+                     if isinstance(uid_b, (bytes, bytearray)) else str(uid_b))
+            if uid_s and len(uid_s) >= 16 and uid_s != _get_me_uid():
+                _set_me_uid(uid_s)
 
     me_uid = _get_me_uid()
     state = parse_game_state(pb, phase="prep", me_uid=me_uid)
-    is_my_game = bool(me_uid) and state.me_index >= 0
+    # Skip shadow updates while spectating — even if me_index >= 0 (e.g. the
+    # auto-detect above ran on a prior frame before SpectateReq fired), we
+    # don't want to keep updating the shadow with the spectated player's data.
+    is_my_game = (not _is_spectating
+                  and bool(me_uid)
+                  and state.me_index >= 0)
 
     if is_my_game:
         shadow_state.reset_from_player(
@@ -479,6 +655,11 @@ def _try_push_game_state(mp):
             source="GameStatus", team_container=state.team_container or None)
         if shadow_state.shadow is not None:
             shadow_state.shadow.round_num = state.round_num
+        # Snapshot team_container[1] (incoming-cards list) at round boundary
+        # WITHOUT emitting daoyun grants — the entries here are round-start
+        # refills, not free grants. Subsequent PlayerData additions to this
+        # field DURING the round will be diffed against this snapshot.
+        _reset_team1_snapshot((state.team_container or {}).get("1", b""))
         _push_state(state)
         return f"GameStatus pushed — round {state.round_num}, {len(state.players)} players"
     return None
@@ -495,6 +676,21 @@ def process_msgpack(mp, from_client: bool):
             new_game_event.set()
             reroll_events.clear()
             chosen_fates.clear()
+            daoyun_grant_events.clear()
+            _team1_snapshot.clear()
+            _daoyun_pending_picks.clear()
+            globals()["_daoyun_random_pending"] = False
+            # Reset the stale sidejob career pick from the previous game so
+            # the Counter doesn't auto-populate the wrong sidejob's pool at
+            # R1 of the new game before the new SelectCareerReq arrives.
+            shadow_state.last_career_pick = 0
+            # The user is starting their own match — definitely not spectating
+            # anymore. Clear the flag so GameStatus / PlayerData paths resume
+            # updating the shadow from the user's own player struct.
+            _set_spectating(False)
+            # YX_DEBUG=1: open a fresh battle_log/<timestamp>/ folder for this
+            # game (copies the previous game's BattleLog.json on the way out).
+            _open_battle_log_dir()
             # Drop any seasonal-parked cards so they don't leak into the new game
             # (seasonal is otherwise preserved across round resets within a game).
             if shadow_state.shadow is not None:
@@ -513,6 +709,24 @@ def process_msgpack(mp, from_client: bool):
         if note:
             _log(note)
     else:
+        # Client→server: catch spectator requests BEFORE the regular handlers.
+        # SpectateReq / SpectateFriendReq flip _is_spectating so subsequent
+        # GameStatus / PlayerData don't reset the shadow with the spectated
+        # player's data (which would leak their hand into the user's UI).
+        if _is_spectate_msg(mp):
+            _set_spectating(True)
+        # Safety net: any in-game ACTION the client sends proves the user is
+        # in their own game (spectators can't move/refine/reroll cards). Clear
+        # the flag so a stale SpectateReq from earlier lobby browsing doesn't
+        # keep the counter frozen after the user actually starts playing.
+        # StartGameResp also clears, but it doesn't always fire (e.g. AI /
+        # practice games, reconnecting to an in-progress match).
+        elif _is_spectating:
+            inner_c = _inner(mp)
+            if inner_c and inner_c.get("type") in (
+                    "MoveCardReq", "InsertCardReq", "ReplaceCardReq",
+                    "RefineCardReq", "CardOperationReq", "SelectCareerReq"):
+                _set_spectating(False)
         note = (_handle_move_card_req(mp)
                 or _handle_insert_card_req(mp)
                 or _handle_simple_client_pact(mp)
@@ -537,6 +751,99 @@ CAPTURE = os.environ.get("YX_CAPTURE", "0") != "0"
 _CAPTURE_DIR = Path(__file__).resolve().parent / "output"
 _TRAFFIC_PATH = _CAPTURE_DIR / "traffic.jsonl"
 _UNHANDLED_PATH = _CAPTURE_DIR / "unhandled_types.txt"
+
+# ─── Debug mode (YX_DEBUG=1) — per-game folders under battle_log/ ─────────────
+# When enabled, each StartGameResp opens a fresh folder
+#   battle_log/<YYYY-MM-DD_HHMMSS>/
+# containing four files for that game:
+#   msgdump.jsonl       — every WS frame (same shape as traffic.jsonl)
+#   shadow_log.txt      — translated/interpreted shadow events
+#   deck_tracker.jsonl  — view-model snapshots (what the UI sees) per push
+#   battle_log.json     — copy of the game's local BattleLog.json
+DEBUG = os.environ.get("YX_DEBUG", "0") != "0"
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+_BATTLE_LOG_ROOT = _PROJECT_ROOT / "battle_log"
+_battle_log_dir: Path | None = None    # current game's folder (None if no game active)
+_battle_log_lock = threading.Lock()
+
+
+def _open_battle_log_dir() -> Path | None:
+    """Create a fresh battle_log/<timestamp>/ folder for a new game and make
+    it the current target for msgdump / shadow_log / deck_tracker writes.
+    Also copies BattleLog.json into the PREVIOUS game's folder (if any)
+    before rotating, so the just-finished game has its battle log captured."""
+    global _battle_log_dir
+    if not DEBUG:
+        return None
+    # Close out the previous game by copying its BattleLog.json.
+    _copy_battle_log_into_dir()
+    try:
+        ts = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
+        new_dir = _BATTLE_LOG_ROOT / ts
+        new_dir.mkdir(parents=True, exist_ok=True)
+        with _battle_log_lock:
+            _battle_log_dir = new_dir
+        # Pre-create empty files so the folder is obviously per-game.
+        (new_dir / "msgdump.jsonl").write_text("", encoding="utf-8")
+        (new_dir / "deck_tracker.jsonl").write_text("", encoding="utf-8")
+        # shadow_log.txt is created lazily by shadow_state on first write.
+        # Tell shadow_state where the per-game shadow_log lives.
+        try:
+            import shadow_state
+            shadow_state.set_debug_trace_log_path(new_dir / "shadow_log.txt")
+        except Exception:
+            pass
+        print(f"[debug] new battle_log dir: {new_dir}", flush=True)
+        return new_dir
+    except Exception as e:
+        print(f"[debug] failed to open battle_log dir: {e}", flush=True)
+        return None
+
+
+def _copy_battle_log_into_dir() -> None:
+    """Copy the user's local BattleLog.json (game-managed) into the current
+    debug battle_log dir as battle_log.json. Safe to call repeatedly — the
+    latest copy wins. Also called on app exit via atexit."""
+    if not DEBUG:
+        return
+    with _battle_log_lock:
+        dest_dir = _battle_log_dir
+    if dest_dir is None:
+        return
+    try:
+        from battle_log import DEFAULT_PATH as _BLOG_SRC
+        if not _BLOG_SRC.exists():
+            return
+        import shutil
+        shutil.copy2(str(_BLOG_SRC), str(dest_dir / "battle_log.json"))
+    except Exception:
+        pass
+
+
+def write_deck_tracker_snapshot(view_model: dict) -> None:
+    """Append one view-model snapshot to deck_tracker.jsonl. Called from the
+    consumer thread after every push() so we have a full record of what the
+    UI showed across the game."""
+    if not DEBUG:
+        return
+    with _battle_log_lock:
+        dest_dir = _battle_log_dir
+    if dest_dir is None:
+        return
+    try:
+        entry = {
+            "ts": datetime.datetime.utcnow().isoformat() + "Z",
+            "vm": view_model,
+        }
+        with (dest_dir / "deck_tracker.jsonl").open("a", encoding="utf-8") as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
+
+
+# Refresh BattleLog.json copy at the end of every state push and on exit.
+import atexit
+atexit.register(_copy_battle_log_into_dir)
 
 # Message types our handlers actually consume (for the unhandled tally).
 _HANDLED_TYPES = {
@@ -580,7 +887,7 @@ def _flush_unhandled():
         pass
 
 
-def _capture_frame(mp, from_client: bool):
+def _capture_frame(mp, from_client: bool, url: str = ""):
     """Append one decoded frame to traffic.jsonl and tally its type. Live-only
     (called from websocket_message), never during replay."""
     global _capture_frames
@@ -594,14 +901,26 @@ def _capture_frame(mp, from_client: bool):
         "type": "ws_frame",
         "ts": datetime.datetime.utcnow().isoformat() + "Z",
         "direction": direction,
+        "url": url,
         "decoded": {"msgpack": mp},
     }
+    # NOTE: raw bytes are intentionally not stored on ws_frame to keep the
+    # msgdump small for typical game messages (msgpack is enough). If you
+    # need to inspect the opcode byte for debugging schema-decoded frames,
+    # use _capture_undecoded (opcode 0x0e/0x0f) which DOES store raw hex.
     with _capture_lock:
         try:
             with _TRAFFIC_PATH.open("a", encoding="utf-8") as f:
                 f.write(json.dumps(event, ensure_ascii=False) + "\n")
         except Exception:
             pass
+        # Mirror into the per-game debug folder if DEBUG mode is active.
+        if DEBUG and _battle_log_dir is not None:
+            try:
+                with (_battle_log_dir / "msgdump.jsonl").open("a", encoding="utf-8") as f:
+                    f.write(json.dumps(event, ensure_ascii=False) + "\n")
+            except Exception:
+                pass
         key = (direction, mtype or "?")
         _type_tally[key] = _type_tally.get(key, 0) + 1
         _capture_frames += 1
@@ -609,13 +928,16 @@ def _capture_frame(mp, from_client: bool):
         count = _capture_frames
     if do_flush:
         _flush_unhandled()
+        # Also refresh the BattleLog.json copy periodically.
+        _copy_battle_log_into_dir()
         print(f"[capture] {count} frames recorded", flush=True)
 
 
-def _capture_undecoded(raw, from_client: bool):
+def _capture_undecoded(raw, from_client: bool, url: str = ""):
     """Record a binary WS frame that produced no msgpack, so we can see whether
     missing actions are decode failures (these appear) vs dropped frames (gaps
-    in timestamps with nothing here)."""
+    in timestamps with nothing here). Also records the WebSocket URL so we
+    can tell if multiple rooms/connections are in play."""
     direction = "client->server" if from_client else "server->client"
     try:
         data = bytes(raw)
@@ -625,8 +947,9 @@ def _capture_undecoded(raw, from_client: bool):
         "type": "ws_undecoded",
         "ts": datetime.datetime.utcnow().isoformat() + "Z",
         "direction": direction,
+        "url": url,
         "len": len(data),
-        "hex": data[:512].hex(),
+        "hex": data.hex(),
     }
     with _capture_lock:
         try:
@@ -634,6 +957,12 @@ def _capture_undecoded(raw, from_client: bool):
                 f.write(json.dumps(event, ensure_ascii=False) + "\n")
         except Exception:
             pass
+        if DEBUG and _battle_log_dir is not None:
+            try:
+                with (_battle_log_dir / "msgdump.jsonl").open("a", encoding="utf-8") as f:
+                    f.write(json.dumps(event, ensure_ascii=False) + "\n")
+            except Exception:
+                pass
         _type_tally[(direction, "<undecoded>")] = _type_tally.get((direction, "<undecoded>"), 0) + 1
 
 
@@ -665,13 +994,20 @@ class YiXianInterceptor:
 
         mp = decode_frame(msg.content).get("msgpack")
         if CAPTURE:
+            ws_url = ""
+            try:
+                ws_url = flow.request.pretty_url
+            except Exception:
+                pass
             if mp is None:
                 # A binary frame we couldn't turn into msgpack — record it so we
                 # can tell whether missing actions are decode failures vs truly
-                # absent (dropped) frames.
-                _capture_undecoded(msg.content, msg.from_client)
+                # absent (dropped) frames. Schema-encoded ROOM_STATE frames
+                # (opcode 0x0e/0x0f) land here too, with full raw bytes so
+                # we can later schema-decode them for HP / max_hp.
+                _capture_undecoded(msg.content, msg.from_client, ws_url)
             else:
-                _capture_frame(mp, msg.from_client)
+                _capture_frame(mp, msg.from_client, ws_url)
         process_msgpack(mp, msg.from_client)
 
     def done(self):

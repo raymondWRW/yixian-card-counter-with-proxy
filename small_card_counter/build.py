@@ -27,6 +27,7 @@ cmd = [
     "--onefile",
     "--windowed",
     "--name", "YiXianCounterLite",
+    "--icon", "icon.ico",
     "--add-data", f"web{SEP}web",
     "--add-data", f"proxy{SEP}proxy",
     "--add-data", f"tools{SEP}tools",

@@ -34,7 +34,7 @@ const stubNodeBuiltins = {
 };
 
 await build({
-  entryPoints: [path.join(__dirname, 'vendor', 'yisim', 'yisim_entry.js')],
+  entryPoints: [path.join(__dirname, 'vendor', 'yisim-master', 'yisim_entry.js')],
   bundle: true,
   format: 'iife',
   platform: 'browser',

@@ -13,6 +13,11 @@ import sys
 import threading
 from pathlib import Path
 
+# YiXianCounterLite never produces battle_log/ debug folders. Strip any
+# leaked YX_DEBUG env var before importing addon so the per-game folder
+# rotation stays dormant in the lite build.
+os.environ.pop("YX_DEBUG", None)
+
 import webview
 
 

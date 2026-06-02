@@ -255,8 +255,11 @@ function render(vm) {
   $('phase-label').textContent = vm.phase || '';
 
   const me = vm.me || {};
+  // HP prefix uses '~' when predicted (formula fallback, BattleLog.json not
+  // available for this round) and nothing when authoritative (from BL).
+  const meHpStr = me.hp == null ? '—' : (me.hpIsPredicted ? `~${me.hp}` : `${me.hp}`);
   $('me-stats').textContent = me.destiny != null
-    ? `命${me.destiny} · HP${me.hp ?? '—'} · 修${me.xiuwei ?? 0} · 体${me.tipo ?? 0} · 境${me.realm_tier ?? 1} · 转${me.rerolls ?? '—'}`
+    ? `命${me.destiny} · HP${meHpStr} · 修${me.xiuwei ?? 0} · 体${me.tipo ?? 0} · 境${me.realm_tier ?? 1} · 转${me.rerolls ?? '—'}`
     : '';
   renderFates($('me-fates'), me.fateNames, me.fates);
   renderBoard($('me-board'), me.board, me.unlocked);
@@ -265,14 +268,47 @@ function render(vm) {
   const opp = vm.opponent || {};
   // Round 14: opp.board is now the current-round board (was previous-round).
   const boardSrc = opp.boardFromRound ? `current board R${opp.boardFromRound}` : 'no board yet';
+  const oppHpStr = opp.hp == null ? '—' : (opp.hpIsPredicted ? `~${opp.hp}` : `${opp.hp}`);
   $('opp-stats').textContent = opp.destiny != null
-    ? `命${opp.destiny} · HP${opp.hp ?? '—'} · 修${opp.xiuwei ?? 0} · 体${opp.tipo ?? 0} · 境${opp.realm_tier ?? 1} · ${opp.phase || vm.phase || ''} · ${boardSrc}`
+    ? `命${opp.destiny} · HP${oppHpStr} · 修${opp.xiuwei ?? 0} · 体${opp.tipo ?? 0} · 境${opp.realm_tier ?? 1} · ${opp.phase || vm.phase || ''} · ${boardSrc}`
     : '';
   renderOppFates($('opp-fates'), opp.fateNames, opp.fates);
   renderBoard($('opp-board'), opp.board, opp.unlocked);
 
-  renderCounter($('counter-list'), (vm.counter || {}).remaining);
+  // Counter lives in a separate window (web/counter.html). Skip rendering it
+  // here if the counter-list element is absent in this layout.
+  const counterEl = $('counter-list');
+  if (counterEl) renderCounter(counterEl, (vm.counter || {}).remaining);
   renderDamage(vm);
+  fitWindowToContent();
+}
+
+// ── Window auto-resize ─────────────────────────────────────────────────────
+// After each render we ask the OS window to match the content's natural
+// height (titlebar + visible cards). Width stays fixed at FIXED_WIDTH; the
+// user can drag the window around but not resize it (frameless = no edge
+// handles). Mirrors the lite version and the companion counter window.
+const FIXED_WIDTH = 360;
+let lastResizeH = -1;
+let resizePending = false;
+
+function fitWindowToContent() {
+  if (resizePending) return;
+  resizePending = true;
+  requestAnimationFrame(async () => {
+    resizePending = false;
+    // body.scrollHeight = titlebar + main content (including margins/padding).
+    // Min 40 keeps us above the titlebar collapse height (34) so a single
+    // bad measurement can't fully hide the window. Max 900 prevents a
+    // pathological vm from spawning a screen-tall window.
+    const h = Math.max(40, Math.min(900, Math.ceil(document.body.scrollHeight)));
+    if (h === lastResizeH) return;
+    lastResizeH = h;
+    const a = window.pywebview && window.pywebview.api;
+    if (a) {
+      try { await a.resize_main(FIXED_WIDTH, h); } catch (_) {}
+    }
+  });
 }
 
 // Opponent fate row — same chips as renderFates, but if the list is empty

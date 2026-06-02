@@ -1,9 +1,0 @@
-{
-  "name": "sword-girls-anime-online-card-game",
-  "version": "0.0.0",
-  "type": "module",
-  "dependencies": {
-    "@leeoniya/ufuzzy": "1.0.14",
-    "seedrandom": "^3.0.5"
-  }
-}

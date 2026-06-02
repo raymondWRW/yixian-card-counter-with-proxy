@@ -8,21 +8,23 @@
 </head>
 <body>
   <header id="titlebar">
-    <span class="title">Cards Left</span>
+    <span class="title" id="ui-title">剩余卡牌</span>
     <span id="status-dot" class="dot" title="proxy status"></span>
     <span id="round-pill" class="round-pill">R—</span>
     <span class="spacer"></span>
-    <button id="btn-quit" class="tbtn" title="Quit">✕</button>
+    <button id="btn-lang" class="tbtn" title="切换语言 / Toggle language">中</button>
+    <button id="btn-quit" class="tbtn" title="退出">✕</button>
   </header>
 
   <main id="content">
     <section class="card" id="counter-card">
       <div id="counter-list" class="counter">
-        <span class="empty-note">waiting for game…</span>
+        <span class="empty-note" id="ui-empty">等待游戏…</span>
       </div>
     </section>
   </main>
 
+  <script src="card_names.js"></script>
   <script src="ui.js"></script>
 </body>
 </html>

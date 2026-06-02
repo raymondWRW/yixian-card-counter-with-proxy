@@ -23,9 +23,13 @@ import webview
 BASE_DIR = Path(__file__).resolve().parent
 WEB_DIR = BASE_DIR / "web"
 INDEX_HTML = WEB_DIR / "index.html"
+COUNTER_HTML = WEB_DIR / "counter.html"
 
-# Window handle, set in main(); used by the consumer thread to push state.
+# Window handles, set in main(); used by the consumer thread to push state.
+# _window      — main window (round bar / damage / boards / hand)
+# _counter_win — companion window (deck counter only, lite-style)
 _window = None
+_counter_win = None
 
 # Height of the titlebar in px (must match #titlebar height in app.css). When the
 # user minimizes the window, we resize to this height to leave only the titlebar
@@ -90,8 +94,38 @@ class Api:
         return bool(collapsed)
 
     def quit(self):
+        # Quit both windows so the process exits when either window's ✕ is
+        # clicked. pywebview keeps the event loop alive as long as ANY
+        # window is open, so we must destroy them both.
+        if _counter_win is not None:
+            try: _counter_win.destroy()
+            except Exception: pass
         if _window is not None:
-            _window.destroy()
+            try: _window.destroy()
+            except Exception: pass
+
+    # ── Counter-window helpers (used by web/counter.js) ─────────────────────
+    def move_counter(self, x, y):
+        """Move the counter window's top-left to (x, y) in screen pixels."""
+        if _counter_win is not None:
+            try: _counter_win.move(int(x), int(y))
+            except Exception: pass
+
+    def resize_counter(self, w, h):
+        """Resize the counter window — counter.js calls this each render so
+        the window auto-fits its content height."""
+        if _counter_win is not None:
+            try: _counter_win.resize(int(w), int(h))
+            except Exception: pass
+
+    def resize_main(self, w, h):
+        """Resize the main window — ui.js calls this each render so the main
+        window auto-fits its content height (same behavior as the lite /
+        counter window). Width stays at whatever JS passes (currently fixed
+        in ui.js); height tracks document.body.scrollHeight."""
+        if _window is not None:
+            try: _window.resize(int(w), int(h))
+            except Exception: pass
 
 
 # ─── Settings persistence (AppData) ───────────────────────────────────────────
@@ -130,16 +164,21 @@ def _save_settings(settings: dict):
 
 # ─── Pushing state to the UI ──────────────────────────────────────────────────
 def push_state(view_model: dict):
-    """Push a view-model dict to the JS side. Safe to call from any thread."""
-    if _window is None:
-        return
+    """Push a view-model dict to BOTH the main window and the counter window.
+
+    Each window's `window.onState` picks the slices it cares about (the main
+    window uses the full view-model; the counter window only reads
+    `vm.counter.remaining` and `vm.round`).
+    """
     payload = json.dumps(view_model, ensure_ascii=False)
-    # window.onState is defined in ui.js; JSON is embedded as a literal arg.
     js = f"window.onState && window.onState({payload})"
-    try:
-        _window.evaluate_js(js)
-    except Exception:
-        pass
+    for w in (_window, _counter_win):
+        if w is None:
+            continue
+        try:
+            w.evaluate_js(js)
+        except Exception:
+            pass
 
 
 # ─── Background workers (wired up in M2/M3) ───────────────────────────────────
@@ -199,14 +238,16 @@ def _start_workers():
 
 
 def main():
-    global _window
+    global _window, _counter_win
     api = Api()
+    # Main window — round bar, damage card, you/opponent boards, hand.
     _window = webview.create_window(
         title="YiXian Counter",
         url=INDEX_HTML.as_uri(),
         js_api=api,
         width=360,
         height=720,
+        x=40, y=40,
         frameless=True,
         easy_drag=False,        # we drag via a dedicated header (-webkit-app-region)
         on_top=api.settings.get("onTop", True),
@@ -217,6 +258,22 @@ def main():
         # a ~366px black widget below the titlebar. Frameless=True means
         # the user can't drag-resize edges, so a small min is safe.
         min_size=(300, TITLEBAR_HEIGHT),
+    )
+    # Counter window — same JS API instance (shared settings, shared quit).
+    # Lite-style: small, frameless, always-on-top. Auto-resizes height to
+    # fit the counter list via Api.resize_counter() called from counter.js.
+    _counter_win = webview.create_window(
+        title="YiXian Counter — Cards Left",
+        url=COUNTER_HTML.as_uri(),
+        js_api=api,
+        width=260,
+        height=200,
+        x=420, y=40,        # placed to the right of the main window
+        frameless=True,
+        easy_drag=False,
+        on_top=api.settings.get("onTop", True),
+        background_color="#11141a",
+        min_size=(220, 30),
     )
     webview.start(_start_workers, debug=bool(os.environ.get("YX_DEBUG")))
 

@@ -239,6 +239,37 @@ def _pick_opponent(state):
     return alive[0][1]
 
 
+# ─── HP formula (predicted fallback when BattleLog.json is unavailable) ──────
+#
+# The wire doesn't carry HP. BattleLog.json is the authoritative source but
+# only updates when the game flushes per-round entries, and isn't available
+# at all for the current opponent until that round's battle is recorded.
+# When BL is missing for a round we use this empirical formula:
+#
+#     HP = realm_base[realm] + (round_num - 1) * 2
+#
+# where realm_base = {1: 40, 2: 45, 3: 52, 4: 62, 5: 75} — the cumulative
+# breakthrough HP totals (+5, +7, +10, +13 per breakthrough). The +2/round
+# baseline grows with xiuwei progression. Verified exact-match for at least
+# one full game; drifts under-count by ~0–10 HP late-game when the player
+# picks max_hp-boost cards (锻髓, 大还丹, etc.) — those effects are not on
+# the wire and would require simulating each card's per-turn rule.
+#
+# Always paired with a `predicted=True` flag so the UI can mark these values
+# visually distinct from authoritative BL values.
+_REALM_BASE_HP = {1: 40, 2: 45, 3: 52, 4: 62, 5: 75}
+
+
+def _predict_hp(round_num: int, realm_tier: int) -> int:
+    """Predict max_hp from realm + round. Returns 0 if inputs invalid."""
+    if not (isinstance(round_num, int) and round_num >= 1):
+        return 0
+    base = _REALM_BASE_HP.get(realm_tier or 1)
+    if base is None:
+        return 0
+    return base + (round_num - 1) * 2
+
+
 def _battle_log_stats(round_num: int, display_name: str):
     """Look up `(life, xiuwei, tipo, max_tipo, max_hp, realm_tier,
     from_round)` from BattleLog.json for the given player display name.
@@ -284,30 +315,38 @@ def build_view_model(state, counter=None, last_battle=None, opp_tracker=None):
             xiuwei, tipo, realm = me.xiuwei, me.tipo, me.realm_tier
             rerolls = getattr(me, "rerolls", 0)
             seasonal = []
-        # R28: prefer BattleLog.json for HP / tipo / maxTipo when available.
-        # The log is slightly delayed but authoritative (the game client
-        # writes the exact displayed values). Wire-derived stays as the
-        # fallback when the log lacks an entry for this round.
+        # HP / tipo / maxTipo prefer battle_log.json (authoritative). When BL
+        # doesn't have a record for this round we fall back to the formula
+        # `realm_base[realm] + (R-1)*2` and flag the value as `hpIsPredicted`
+        # so the UI can render it visually distinct from authoritative values.
+        # The wire does NOT carry HP directly.
         log_stats = _battle_log_stats(state.round_num, getattr(me, "display_name", ""))
         log_hp     = int(log_stats["max_hp"])     if log_stats else 0
         log_tipo   = int(log_stats["tipo"])       if log_stats else None
         log_maxtp  = int(log_stats["max_tipo"])   if log_stats else 0
         log_round  = int(log_stats["from_round"]) if log_stats else None
 
-        hp_val   = log_hp if log_hp > 0 else me.hp
+        hp_is_predicted = (log_hp <= 0)
+        if hp_is_predicted:
+            hp_val = _predict_hp(state.round_num, realm)
+        else:
+            hp_val = log_hp
         tipo_val = log_tipo if log_tipo is not None else tipo
         max_tipo = log_maxtp  # 0 if log missing — UI treats 0 as "unknown"
 
         avail, thr, gate = shadow_state.breakthrough_status(realm, xiuwei, tipo_val)
         fates, fate_names = _build_fates()
-        # R27 diagnostic kept side-by-side so we can still see all candidates
-        # in the console probe. `me.hp` for UI / sim consumers now resolves
-        # via the precedence above (BattleLog > wire formula).
-        me_field5 = int(getattr(me, "hp_field", 0) or 0)
+        # Annotate every hand card with how many copies are left in the deck
+        # so the deck_tracker.jsonl debug dump shows them inline. `remaining()`
+        # is keyed by canonical name (handles paired transform cards).
+        remaining_map = counter.remaining() if counter else {}
+        for hc in hand:
+            if isinstance(hc, dict):
+                canon = _canonical(hc.get("name", ""))
+                hc["copiesLeftInDeck"] = remaining_map.get(canon)
         vm["me"] = {
             "destiny": me.destiny, "hp": hp_val,
-            "hpFromXiuwei": 40 + xiuwei,
-            "hpFromField5": 40 + me_field5,
+            "hpIsPredicted": hp_is_predicted,
             "hpFromLog": log_hp,
             "tipoFromLog": (log_tipo if log_tipo is not None else 0),
             "maxTipoFromLog": log_maxtp,
@@ -340,21 +379,25 @@ def build_view_model(state, counter=None, last_battle=None, opp_tracker=None):
         # `_fates_to_talents` builds talent objects with `phase = pick order`
         # so the matchup-mode sim can apply them via opts.opponentTalents.
         opp_fates, opp_fate_names = _fates_to_talents(getattr(opp, "fates", []) or [])
-        # R27: same HP diagnostic for the displayed opponent.
-        opp_field5 = int(getattr(opp, "hp_field", 0) or 0)
         # R28: BattleLog override for opponent too (same precedence as ME).
         opp_log = _battle_log_stats(state.round_num, getattr(opp, "display_name", ""))
         opp_log_hp    = int(opp_log["max_hp"])     if opp_log else 0
         opp_log_tipo  = int(opp_log["tipo"])       if opp_log else None
         opp_log_maxtp = int(opp_log["max_tipo"])   if opp_log else 0
-        opp_hp_val    = opp_log_hp if opp_log_hp > 0 else opp.hp
-        opp_tipo_val  = opp_log_tipo if opp_log_tipo is not None else opp.tipo
+        # Opponent HP: prefer BattleLog, fall back to formula prediction.
+        # The wire doesn't carry HP for any player. When the formula is used,
+        # `hpIsPredicted` is True so the UI can render the chip differently.
+        opp_hp_predicted = (opp_log_hp <= 0)
+        if opp_hp_predicted:
+            opp_hp_val = _predict_hp(state.round_num, opp.realm_tier)
+        else:
+            opp_hp_val = opp_log_hp
+        opp_tipo_val = opp_log_tipo if opp_log_tipo is not None else opp.tipo
         vm["opponent"] = {
             "player_id": opp.player_id,
             "character": "",  # opponents' class isn't directly exposed
             "destiny": opp.destiny, "hp": opp_hp_val,
-            "hpFromXiuwei": 40 + opp.xiuwei,
-            "hpFromField5": 40 + opp_field5,
+            "hpIsPredicted": opp_hp_predicted,
             "hpFromLog": opp_log_hp,
             "tipoFromLog": (opp_log_tipo if opp_log_tipo is not None else 0),
             "maxTipoFromLog": opp_log_maxtp,
@@ -381,8 +424,8 @@ _hp_probe_seen: set = set()
 
 
 def _hp_probe(state) -> None:
-    """Print per-player `(xiuwei, hp_field, 40+xiuwei, 40+hp_field)` once per
-    (round, me-uid) pair. R27 diagnostic — remove once HP source is locked in.
+    """Print per-player `(xiuwei, hp_field)` plus the BattleLog HP (the only
+    authoritative source) once per (round, me-uid) pair. Diagnostic only.
     """
     me_uid = ""
     if 0 <= state.me_index < len(state.players):
@@ -395,9 +438,11 @@ def _hp_probe(state) -> None:
     for p in state.players:
         tag = "ME " if p.player_id == me_uid else "   "
         f5 = int(getattr(p, "hp_field", 0) or 0)
+        log = _battle_log_stats(state.round_num, getattr(p, "display_name", ""))
+        log_hp = int(log["max_hp"]) if log else 0
         print(f"[hp-probe] R{state.round_num} {tag}{p.player_id[:24]:24s} "
               f"xiuwei={p.xiuwei:3d} field5={f5:3d}  "
-              f"hp(xw)={40 + p.xiuwei:3d} hp(f5)={40 + f5:3d}",
+              f"hp(log)={log_hp:3d}",
               file=sys.stderr, flush=True)
 
 
@@ -405,13 +450,213 @@ DEFAULT_COPIES = 8  # each card has 8 copies in the deck unless specified
 PHASE5_COPIES = 6   # phase-5 (latest-patch) cards: 6 copies instead of 8
 
 # Cards with non-default deck size. Add new entries here as we learn them.
-# Takes precedence over the phase-5 rule (e.g. 悟道丹 stays at 3 even though
-# its CardConfig phase may be > 1).
-SPECIAL_COPIES = {
-    "洗髓丹":  3,   # Marrow-Cleansing Pill — Elixirist dan, 3 copies
-    "悟道丹":  3,   # Enlightenment Pill — Elixirist dan, 3 copies
-    "锻体玄丹": 3,  # Body-Forging Mystic Pill — Elixirist dan, 3 copies
+# Note: The 3 dans (洗髓丹/悟道丹/锻体玄丹) used to live here but are now
+# managed entirely by the sidejob-pool system (added via SIDEJOB_BONUSES
+# when the player picks 炼丹师 / reaches certain realm tiers). SPECIAL_COPIES
+# stays for any future non-sidejob cards with custom deck sizes.
+SPECIAL_COPIES: dict[str, int] = {}
+
+
+# ─── Sidejob (副职) tracking ──────────────────────────────────────────────────
+# The wire's SelectCareerReq carries career_id 1..7 — a compact enum just for
+# the wire. The CardConfig sect/class enum has a wider 0..12 range used for
+# the card ID prefix (id // 1_000_000). Map between the two:
+CAREER_TO_SIDEJOB_PREFIX = {
+    1: 2,    # 炼丹师 Elixirist
+    2: 3,    # 符咒师 Talisman
+    3: 5,    # 琴师   Musician
+    4: 6,    # 画师   Painter
+    5: 8,    # 阵法师 Formation
+    6: 9,    # 灵植师 Plant
+    7: 11,   # 命理师 Diviner
 }
+SIDEJOB_PREFIXES = set(CAREER_TO_SIDEJOB_PREFIX.values())
+
+# Per-sidejob deck-pool rules. At sidejob selection, EVERY card belonging to
+# the picked sidejob is added to the pool at the default count (DEFAULT_COPIES
+# or PHASE5_COPIES for phase-5 cards). Two kinds of per-sidejob exceptions:
+#
+#   'selection_overrides'  — at selection, these cards get the override count
+#                            instead of the default (e.g. 洗髓丹 = 3, not 8).
+#                            Cards NOT in this dict use the default.
+#   'realm_N_to_M'         — extra copies ADDED on top of the existing pool
+#                            when the player crosses realm tier N→M.
+#
+# Sidejobs without an entry below get the default 8 / 6 for every card with
+# no overrides and no breakthrough bonuses.
+SIDEJOB_BONUSES: dict[int, dict[str, dict[str, int]]] = {
+    2: {  # 炼丹师 Elixirist
+        "selection_overrides": {
+            "洗髓丹":  3,
+            "悟道丹":  3,
+            "锻体玄丹": 3,
+        },
+        "realm_3_to_4": {"小还丹": 1, "培元丹": 1, "地灵丹": 1, "飞云丹": 1, "神力丹": 1},
+        "realm_4_to_5": {"驱邪丹": 1, "飞云丹": 1, "疗伤丹": 1, "神力丹": 1, "大还丹": 2},
+    },
+    # 符咒师 / 琴师 / 画师 / 阵法师 / 灵植师 / 命理师: no per-card overrides,
+    # no breakthrough bonuses — every card defaults to 8 (or 6 if phase 5).
+}
+
+
+# Lazy-load: card-name → ID prefix lookup (from tools/card_phases.json's keys
+# which are the numeric card ids). Used to identify sidejob cards.
+_SIDEJOB_PREFIX_CACHE: dict | None = None
+
+# Lazy-load: set of card names that are "personal" — granted by fates or
+# other one-shot sources, NOT drawn from any sect/sidejob deck. Identified
+# by card id < 1_000_000 in tools/card_phases.json. Examples: 云泉道茶 (fate
+# grant), 狂剑·炎舞 (fate grant), 不动金刚阵 (special card). These have no
+# deck copy count and must be excluded from the counter entirely.
+_PERSONAL_CARD_NAMES_CACHE: set | None = None
+
+
+def _personal_card_names() -> set:
+    """Return the set of canonical card names that are personal/fate-granted
+    (appear ONLY with card id < 1_000_000 in card_phases.json) — these have
+    no deck copies and should never appear in the Counter's remaining list.
+
+    Many sidejob cards (e.g. 符咒师's 奔雷符) have a TWIN entry in the same
+    json with id < 1000 — these twins are e.g. fate-preview variants. A name
+    is personal only when NO id-variant of it is >= 1_000_000, otherwise the
+    sidejob/sect deck version owns the name and it must remain visible."""
+    global _PERSONAL_CARD_NAMES_CACHE
+    if _PERSONAL_CARD_NAMES_CACHE is not None:
+        return _PERSONAL_CARD_NAMES_CACHE
+    low_ids: set = set()   # canonical names appearing with id < 1_000_000
+    high_ids: set = set()  # canonical names appearing with id >= 1_000_000
+    try:
+        with _PHASE_MAP_FILE.open(encoding="utf-8") as f:
+            data = json.load(f)
+        for cid_str, info in data.items():
+            try:
+                cid = int(cid_str)
+            except (TypeError, ValueError):
+                continue
+            nm = info.get("name", "")
+            if not nm:
+                continue
+            key = _canonical(_normalize_sep(nm))
+            if cid < 1_000_000:
+                low_ids.add(key)
+            else:
+                high_ids.add(key)
+    except Exception:
+        pass
+    # Personal = appears low-id only, never with a deck-card high-id variant.
+    _PERSONAL_CARD_NAMES_CACHE = low_ids - high_ids
+    return _PERSONAL_CARD_NAMES_CACHE
+
+
+def _name_to_sidejob_prefix() -> dict:
+    """Return {card_name: id_prefix} where id_prefix = cid // 1_000_000.
+    Only includes cards whose prefix is in SIDEJOB_PREFIXES (i.e. side-job
+    cards). Cached on first call."""
+    global _SIDEJOB_PREFIX_CACHE
+    if _SIDEJOB_PREFIX_CACHE is not None:
+        return _SIDEJOB_PREFIX_CACHE
+    out: dict[str, int] = {}
+    try:
+        with _PHASE_MAP_FILE.open(encoding="utf-8") as f:
+            data = json.load(f)
+        for cid_str, info in data.items():
+            try:
+                cid = int(cid_str)
+            except (TypeError, ValueError):
+                continue
+            prefix = cid // 1_000_000
+            if prefix not in SIDEJOB_PREFIXES:
+                continue
+            nm = info.get("name", "")
+            if not nm:
+                continue
+            # Normalize separator (card_phases.json uses •, runtime uses ·).
+            out[_normalize_sep(nm)] = prefix
+    except Exception:
+        out = {}
+    _SIDEJOB_PREFIX_CACHE = out
+    return out
+
+
+# Lazy-load: per-sidejob default deck pool. {prefix: {card_name: default_count}}
+# where default_count is PHASE5_COPIES for phase-5 cards, DEFAULT_COPIES
+# otherwise. Used to populate the pool when the player picks a sidejob.
+_SIDEJOB_DEFAULT_POOL_CACHE: dict | None = None
+
+
+def _sidejob_pool_filtered(prefix: int, min_phase: int = 1) -> dict:
+    """Return {canonical_name: default_count} for cards in the given sidejob
+    prefix whose phase is >= `min_phase`.
+
+    Used for 副职兼修 secondary picks: the fate only adds cards of the pick's
+    phase and above, not the realm-1 starter cards. For primary picks (or
+    when no filtering is desired) pass `min_phase=1` to include everything.
+
+    Keys are CANONICAL (paired transform cards merged into one shared key).
+    """
+    out: dict[str, int] = {}
+    try:
+        with _PHASE_MAP_FILE.open(encoding="utf-8") as f:
+            data = json.load(f)
+        for cid_str, info in data.items():
+            try:
+                cid = int(cid_str)
+            except (TypeError, ValueError):
+                continue
+            if cid // 1_000_000 != prefix:
+                continue
+            ph = int(info.get("phase", 0) or 0)
+            if ph < min_phase:
+                continue
+            nm = info.get("name", "")
+            if not nm:
+                continue
+            key = _canonical(_normalize_sep(nm))
+            cnt = PHASE5_COPIES if ph == 5 else DEFAULT_COPIES
+            if cnt > out.get(key, 0):
+                out[key] = cnt
+    except Exception:
+        return {}
+    return out
+
+
+def _sidejob_default_pool(prefix: int) -> dict:
+    """Return {card_name: default_count} for all cards in the given sidejob
+    prefix (8 copies by default, 6 if phase 5).
+
+    Keys are CANONICAL (paired transform cards like 天谕·守 / 天谕·攻 are
+    merged into 天谕·攻/守 with ONE shared count) so lookups from the
+    Counter — which always uses `_canonical(name)` — match correctly."""
+    global _SIDEJOB_DEFAULT_POOL_CACHE
+    if _SIDEJOB_DEFAULT_POOL_CACHE is None:
+        all_pools: dict[int, dict[str, int]] = {}
+        try:
+            with _PHASE_MAP_FILE.open(encoding="utf-8") as f:
+                data = json.load(f)
+            for cid_str, info in data.items():
+                try:
+                    cid = int(cid_str)
+                except (TypeError, ValueError):
+                    continue
+                p = cid // 1_000_000
+                if p not in SIDEJOB_PREFIXES:
+                    continue
+                nm = info.get("name", "")
+                if not nm:
+                    continue
+                nm = _normalize_sep(nm)
+                key = _canonical(nm)  # merge paired cards into the shared key
+                ph = int(info.get("phase", 0) or 0)
+                cnt = PHASE5_COPIES if ph == 5 else DEFAULT_COPIES
+                bucket = all_pools.setdefault(p, {})
+                # max() ensures the pair's shared slot keeps a single count
+                # even when both faces have the same phase/count.
+                if cnt > bucket.get(key, 0):
+                    bucket[key] = cnt
+        except Exception:
+            all_pools = {}
+        _SIDEJOB_DEFAULT_POOL_CACHE = all_pools
+    return dict(_SIDEJOB_DEFAULT_POOL_CACHE.get(prefix, {}))
 
 
 # Lazy-load card-name → phase mapping from tools/card_phases.json (extracted
@@ -440,6 +685,10 @@ def _name_to_phase() -> dict:
             ph = int(info.get("phase", 0) or 0)
             if not nm:
                 continue
+            # card_phases.json uses U+2022 BULLET; runtime card names use
+            # U+00B7 MIDDLE DOT. Normalize so lookups by the runtime name
+            # find the right entry.
+            nm = _normalize_sep(nm)
             if ph > out.get(nm, 0):
                 out[nm] = ph
     except Exception:
@@ -470,6 +719,57 @@ FREE_REPLACE_CARDS = {
     "妙笔生花",  # Magic Brush Flowers
     "触类旁通",  # Inferring from one to others
 }
+
+
+# The game uses TWO different separator characters in different data sources:
+#   • U+2022 BULLET            — appears in CardConfig.xlsx (tools/card_phases.json)
+#   · U+00B7 MIDDLE DOT        — appears at runtime (proxy/card_id_map.json)
+# Normalize to the middle dot so lookups work regardless of source.
+_SEP_NORMALIZE = str.maketrans({"•": "·"})
+
+
+def _normalize_sep(name):
+    """Normalize separator characters in a card name so lookups against
+    PAIRED_CARDS / card_phases.json match regardless of which separator
+    variant the data source happens to use."""
+    if not isinstance(name, str):
+        return name
+    return name.translate(_SEP_NORMALIZE)
+
+
+# Paired transform cards (Diviner / 命理师 class). Each pair occupies ONE
+# slot in the deck — drawing or rerolling either face decrements the shared
+# pool. We track them under a merged display name so the counter shows one
+# row per pair with the correct shared remaining count.
+# (Note: 天机·地煞 / 天机·返蛊 are unrelated regular cards from a different
+# sub-class and are NOT in this map.)
+# Keys and values use the middle dot (U+00B7) to match the runtime
+# card_id_map.json convention.
+PAIRED_CARDS = {
+    "天谕·攻":   "天谕·攻/守",
+    "天谕·守":   "天谕·攻/守",
+    "天运·避凶": "天运·避凶/趋吉",
+    "天运·趋吉": "天运·避凶/趋吉",
+    "天命·飞逝": "天命·飞逝/重现",
+    "天命·重现": "天命·飞逝/重现",
+    "天星·牵引": "天星·牵引/御心",
+    "天星·御心": "天星·牵引/御心",
+    "天机·顺应": "天机·顺应/逆施",
+    "天机·逆施": "天机·顺应/逆施",
+}
+
+# Reverse lookup: canonical (merged) name -> one face name. Used for phase
+# lookup. Both faces in a pair share the same phase, so either face works.
+_PAIR_CANONICAL_TO_FACE = {canon: face for face, canon in PAIRED_CARDS.items()}
+
+
+def _canonical(name):
+    """For paired transform cards return the merged display name, otherwise
+    return the original name unchanged. Used by the counter so a pair is
+    tracked as one shared deck pool."""
+    if name is None:
+        return name
+    return PAIRED_CARDS.get(_normalize_sep(name), name)
 
 
 class Counter:
@@ -507,11 +807,37 @@ class Counter:
         self._draws = {}            # name -> copies drawn
         self._reroll_discards = {}  # name -> times rerolled away
         self._prev_owned = {}       # name -> count in hand+board at last snapshot
+        # Cards the server granted "for free" (daoyun pick, 自在随心 random
+        # draw, etc.) and that haven't yet shown up in the hand. When such a
+        # card next appears in the hand diff, it absorbs that incoming +1 so
+        # the Counter does NOT subtract it from the deck pool.
+        self._pending_grants = {}   # name -> outstanding free-grant credit
+        # Sidejob (副职) state. All sidejob cards start with 0 copies in the
+        # deck. Picking a sidejob and breaking through realm tiers adds copies
+        # via SIDEJOB_BONUSES. Non-picked sidejob cards stay at 0.
+        # The pool combines copies from BOTH the primary career (picked R2)
+        # AND zero-or-more secondary careers (picked via 副职兼修 fate at
+        # breakthroughs). Each secondary pick is phase-filtered — only cards
+        # of the pick's phase and above are granted.
+        self._sidejob_pool = {}     # canonical_name -> max_copies in deck
+        self._selection_applied = False
+        self._applied_career_id = 0 # the primary career_id whose pool was applied
+        # Each entry: {career_id, phase, applied_realm}. `applied_realm` tracks
+        # which breakthrough bonuses have been applied for THIS pick — fresh
+        # picks start at `phase` (the realm reached when 副职兼修 was picked).
+        self._applied_secondary_picks: list = []
+        self._prev_realm = 0        # last observed realm_tier (primary)
 
     @staticmethod
     def _is_deck_card(name) -> bool:
         # Dream cards (梦…) are not drawn from the normal deck.
-        return bool(name) and not str(name).startswith("梦")
+        if not name or str(name).startswith("梦"):
+            return False
+        # Personal / fate-granted cards (card id < 1_000_000) are not part of
+        # any sect or sidejob deck — they appear in the hand via fate effects
+        # or special grants and have no fixed copy count. Exclude them so the
+        # counter never shows "N copies remaining" for them.
+        return _canonical(_normalize_sep(str(name))) not in _personal_card_names()
 
     def _owned_multiset(self) -> dict:
         sh = shadow_state.shadow
@@ -527,8 +853,30 @@ class Counter:
                 continue
             n = getattr(c, "name", None)
             if self._is_deck_card(n):
-                counts[n] = counts.get(n, 0) + 1
+                # Paired transform cards share a deck pool — tally both faces
+                # under one canonical name (e.g. "天命•飞逝/重现").
+                key = _canonical(n)
+                counts[key] = counts.get(key, 0) + 1
         return counts
+
+    def _drain_daoyun_events(self):
+        """Drain free-grant events (daoyun picks, 自在随心 random draws, other
+        special grants the server adds via team_container[1] during a round)
+        into self._pending_grants. When a granted card next appears in the
+        owned-multiset diff, the grant absorbs that incoming +1 instead of it
+        being counted as a deck draw."""
+        try:
+            import addon
+            events = addon.daoyun_grant_events
+        except Exception:
+            return
+        while events:
+            ev = events.pop(0)
+            nm = ev.get("name")
+            if not self._is_deck_card(nm):
+                continue
+            key = _canonical(nm)
+            self._pending_grants[key] = self._pending_grants.get(key, 0) + 1
 
     def _drain_reroll_events(self):
         try:
@@ -544,26 +892,167 @@ class Counter:
             # pulled from the deck — skip the +1 draw credit, but still
             # pre-credit `_prev_owned` so the snapshot diff doesn't catch it.
             from_free_pool = old in FREE_REPLACE_CARDS
+            # Paired-card aware: tally both faces under the merged name so
+            # rerolling 天命•飞逝 also burns 天命•重现 (one shared pool).
+            new_key = _canonical(new)
+            old_key = _canonical(old)
             if self._is_deck_card(new):
                 if not from_free_pool:
-                    self._draws[new] = self._draws.get(new, 0) + 1
+                    self._draws[new_key] = self._draws.get(new_key, 0) + 1
                 # Either way, the reroll-in shows up in the owned snapshot;
                 # pre-credit prev_owned so the diff doesn't double-count it.
-                self._prev_owned[new] = self._prev_owned.get(new, 0) + 1
+                self._prev_owned[new_key] = self._prev_owned.get(new_key, 0) + 1
             if self._is_deck_card(old):
-                self._reroll_discards[old] = self._reroll_discards.get(old, 0) + 1
+                self._reroll_discards[old_key] = self._reroll_discards.get(old_key, 0) + 1
                 # The discarded card leaves the owned set; reflect that so its
                 # departure isn't later misread.
-                self._prev_owned[old] = max(0, self._prev_owned.get(old, 0) - 1)
+                self._prev_owned[old_key] = max(0, self._prev_owned.get(old_key, 0) - 1)
+
+    def _apply_sidejob_events(self, state):
+        """Detect sidejob selection (primary + each 副职兼修 secondary) and
+        realm-tier breakthroughs; populate `_sidejob_pool` with the
+        appropriate copies. Each trigger fires at most once per Counter
+        lifetime (reset by `reset()`).
+
+        副职兼修 rules:
+          • The fate can be picked at multiple breakthroughs (phase 2, 3,
+            4, 5). Each pick grants an additional sidejob deck.
+          • Only cards of the pick's phase and above are granted (so
+            picking at phase 2 skips realm-1 starter cards).
+          • If a granted sidejob has SIDEJOB_BONUSES (currently only
+            炼丹师 / Elixirist), realm-tier breakthroughs AFTER the pick
+            still apply those bonuses to this secondary deck.
+        """
+        try:
+            import shadow_state as _ss
+            career_id = _ss.get_career_pick()
+            secondary_picks = _ss.get_secondary_career_picks()
+        except Exception:
+            career_id = 0
+            secondary_picks = []
+        if not career_id:
+            return
+        prefix = CAREER_TO_SIDEJOB_PREFIX.get(career_id)
+        if not prefix:
+            return
+        bonuses = SIDEJOB_BONUSES.get(prefix, {})
+
+        # ── Primary selection ────────────────────────────────────────────
+        # Fires once when SelectCareerReq is first observed. Also re-fires
+        # if the career CHANGES (e.g. between games in the same consumer-
+        # thread lifetime, or if the user genuinely switches mid-game).
+        # Clears the old pool first.
+        if not self._selection_applied or self._applied_career_id != career_id:
+            if self._selection_applied and self._applied_career_id != career_id:
+                self._sidejob_pool = {}
+                self._applied_secondary_picks = []
+                self._prev_realm = 0
+            base_pool = _sidejob_default_pool(prefix)
+            overrides = bonuses.get("selection_overrides") or {}
+            for nm, cnt in overrides.items():
+                base_pool[nm] = cnt
+            for nm, cnt in base_pool.items():
+                self._sidejob_pool[nm] = self._sidejob_pool.get(nm, 0) + cnt
+            self._selection_applied = True
+            self._applied_career_id = career_id
+
+        # ── Current realm (used by primary AND secondary breakthroughs) ──
+        # Read from the LIVE shadow first — PlayerData updates shadow.realm_tier
+        # mid-round when a breakthrough happens, but the cached GameState
+        # we get here still has the old realm from the last GameStatus.
+        cur_realm = 0
+        sh = shadow_state.shadow
+        if sh is not None:
+            cur_realm = int(getattr(sh, "realm_tier", 0) or 0)
+        if cur_realm == 0 and state is not None:
+            me_idx = getattr(state, "me_index", -1)
+            players = getattr(state, "players", [])
+            if 0 <= me_idx < len(players):
+                cur_realm = int(getattr(players[me_idx], "realm_tier", 0) or 0)
+
+        # ── 副职兼修 secondary picks ─────────────────────────────────────
+        # Each pick from shadow_state may be new (apply initial pool now) or
+        # already-applied (carry forward to handle realm-bonus catch-up).
+        # Identity = (career_id, phase). The same career picked at different
+        # phases is two different picks (each grants its own deck).
+        applied_keys = {(p["career_id"], p["phase"])
+                        for p in self._applied_secondary_picks}
+        for pick in secondary_picks:
+            key = (int(pick.get("career_id", 0)),
+                   int(pick.get("phase", 2)))
+            if key in applied_keys:
+                continue
+            sec_cid, sec_phase = key
+            sec_prefix = CAREER_TO_SIDEJOB_PREFIX.get(sec_cid)
+            if not sec_prefix:
+                continue
+            # Initial pool — phase-filtered (only phase >= sec_phase cards).
+            sec_pool = _sidejob_pool_filtered(sec_prefix, min_phase=sec_phase)
+            sec_bonuses = SIDEJOB_BONUSES.get(sec_prefix, {})
+            sec_overrides = sec_bonuses.get("selection_overrides") or {}
+            for nm, cnt in sec_overrides.items():
+                # Apply override only if the card passed the phase filter
+                # (i.e. it's already in sec_pool). Skip cards below pick phase.
+                key_c = _canonical(nm)
+                if key_c in sec_pool:
+                    sec_pool[key_c] = cnt
+            for nm, cnt in sec_pool.items():
+                self._sidejob_pool[nm] = self._sidejob_pool.get(nm, 0) + cnt
+            # Record so we don't re-apply, and so realm bonuses catch up.
+            # `applied_realm` = sec_phase because picking at phase N means the
+            # realm is already N (just transitioned); breakthroughs N+1 etc.
+            # are the only ones we need to apply going forward.
+            self._applied_secondary_picks.append({
+                "career_id": sec_cid,
+                "phase": sec_phase,
+                "applied_realm": sec_phase,
+            })
+
+        # ── Realm-tier breakthroughs ─────────────────────────────────────
+        # Primary: bonuses defined under primary career's SIDEJOB_BONUSES.
+        if cur_realm > self._prev_realm:
+            for r in range(self._prev_realm + 1, cur_realm + 1):
+                key = f"realm_{r - 1}_to_{r}"
+                for nm, cnt in (bonuses.get(key) or {}).items():
+                    self._sidejob_pool[nm] = self._sidejob_pool.get(nm, 0) + cnt
+            self._prev_realm = cur_realm
+        # Each secondary pick: same logic against its own career's bonuses.
+        # `applied_realm` advances independently per pick (since they were
+        # added at different breakthrough phases).
+        for entry in self._applied_secondary_picks:
+            sec_prefix = CAREER_TO_SIDEJOB_PREFIX.get(entry["career_id"])
+            if not sec_prefix:
+                continue
+            sec_bonuses = SIDEJOB_BONUSES.get(sec_prefix, {})
+            sec_applied = int(entry.get("applied_realm", entry["phase"]))
+            if cur_realm > sec_applied:
+                for r in range(sec_applied + 1, cur_realm + 1):
+                    key = f"realm_{r - 1}_to_{r}"
+                    for nm, cnt in (sec_bonuses.get(key) or {}).items():
+                        self._sidejob_pool[nm] = self._sidejob_pool.get(nm, 0) + cnt
+                entry["applied_realm"] = cur_realm
 
     def observe(self, state):
         self._drain_reroll_events()
+        self._drain_daoyun_events()
+        self._apply_sidejob_events(state)
         owned = self._owned_multiset()
-        # Any net increase in owned copies (not from a reroll-in) is a deal/draw.
+        # Any net increase in owned copies (not from a reroll-in or a free
+        # grant) is a deal/draw. Free grants (daoyun, 自在随心, etc.) sit in
+        # _pending_grants and absorb incoming +1s without decrementing the
+        # deck pool.
         for name, cnt in owned.items():
             prev = self._prev_owned.get(name, 0)
             if cnt > prev:
-                self._draws[name] = self._draws.get(name, 0) + (cnt - prev)
+                diff = cnt - prev
+                grant_credit = min(diff, self._pending_grants.get(name, 0))
+                if grant_credit:
+                    self._pending_grants[name] -= grant_credit
+                    if self._pending_grants[name] <= 0:
+                        del self._pending_grants[name]
+                actual_draws = diff - grant_credit
+                if actual_draws:
+                    self._draws[name] = self._draws.get(name, 0) + actual_draws
         # Snapshot becomes the new baseline (decreases = merges/places/absorbs).
         self._prev_owned = owned
 
@@ -577,18 +1066,54 @@ class Counter:
         if sh is not None:
             for c in list(sh.hand) + list(getattr(sh, "seasonal", {}).values()):
                 if c is not None and self._is_deck_card(getattr(c, "name", None)):
-                    held.add(c.name)
+                    # Canonicalize so a held face shows up under the merged
+                    # pair name (one row per paired card, not two).
+                    held.add(_canonical(c.name))
         out = {}
         phase_map = _name_to_phase()
+        sidejob_prefix_map = _name_to_sidejob_prefix()
+        # Which sidejobs the player picked. Both primary (initial R2 pick) and
+        # ALL 副职兼修 secondary picks contribute to the legal-sidejob set.
+        try:
+            import shadow_state as _ss
+            picked_career = _ss.get_career_pick()
+            sec_picks = _ss.get_secondary_career_picks()
+        except Exception:
+            picked_career = 0
+            sec_picks = []
+        picked_sidejob_prefixes = set()
+        primary_prefix = CAREER_TO_SIDEJOB_PREFIX.get(picked_career, 0)
+        if primary_prefix:
+            picked_sidejob_prefixes.add(primary_prefix)
+        for sp in sec_picks:
+            sp_prefix = CAREER_TO_SIDEJOB_PREFIX.get(sp.get("career_id", 0), 0)
+            if sp_prefix:
+                picked_sidejob_prefixes.add(sp_prefix)
+
         for name in held:
-            # SPECIAL_COPIES wins (e.g. 悟道丹 stays at 3). Otherwise,
-            # phase-5 cards start with 6 copies; everything else with 8.
-            if name in SPECIAL_COPIES:
-                max_copies = SPECIAL_COPIES[name]
-            elif phase_map.get(name) == 5:
-                max_copies = PHASE5_COPIES
+            # Look up sidejob prefix under the face name (paired cards aren't
+            # sidejob cards, but cover both forms defensively).
+            face_for_lookup = _normalize_sep(_PAIR_CANONICAL_TO_FACE.get(name, name))
+            sidejob_prefix = sidejob_prefix_map.get(face_for_lookup)
+
+            if sidejob_prefix in SIDEJOB_PREFIXES:
+                # Side-job card. Pool is 0 unless this is one of the picked
+                # sidejobs (primary OR secondary via 副职兼修) AND the card
+                # has had bonuses applied.
+                if sidejob_prefix not in picked_sidejob_prefixes:
+                    max_copies = 0
+                else:
+                    max_copies = self._sidejob_pool.get(name, 0)
             else:
-                max_copies = DEFAULT_COPIES
+                # Main-sect / special / fate card — existing rules apply.
+                phase_lookup_name = face_for_lookup
+                if name in SPECIAL_COPIES:
+                    max_copies = SPECIAL_COPIES[name]
+                elif phase_map.get(phase_lookup_name) == 5:
+                    max_copies = PHASE5_COPIES
+                else:
+                    max_copies = DEFAULT_COPIES
+
             reroll_mult = 0 if name in NO_REROLL_PENALTY else 3
             removed = (
                 self._draws.get(name, 0)

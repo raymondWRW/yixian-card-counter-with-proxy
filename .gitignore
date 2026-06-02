@@ -39,8 +39,28 @@ small_card_counter/dist_share/*.zip
 # Anything written by the proxy at runtime is private to the user who ran it.
 proxy/output/
 
+# Per-game battle log captures (YX_DEBUG=1 / capture_game.bat output).
+# Contains msgdump.jsonl, shadow_log.txt, deck_tracker.jsonl, battle_log.json —
+# all riddled with UIDs, usernames, opponent names, and hand contents.
+battle_log/
+
 # Entire analysis folder — local debugging scripts + their captured outputs.
 proxy_analysis/
+
+# Account UID is persisted here by the proxy (addon.py _set_me_uid).
+# Personal — must NOT be tracked. (Currently committed; untrack with
+#   git rm --cached proxy/config.json small_card_counter/proxy/config.json)
+proxy/config.json
+small_card_counter/proxy/config.json
+
+# Verification reports reference real usernames + per-round game data from
+# captures; private to the user who ran verify_damage.py.
+tools/verify_*.md
+tools/verify_*.json
+
+# Lite version's diagnostic log (written to dist_share when running).
+yxlite-log.txt
+small_card_counter/dist_share/yxlite-log.txt
 
 # Local game log copy if it ever lands here
 BattleLog.json

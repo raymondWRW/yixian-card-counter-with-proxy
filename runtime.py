@@ -54,6 +54,12 @@ def start_consumer(push):
             vm = build_view_model(state, counter=counter,
                                   last_battle=addon.last_battle, opp_tracker=opp_tracker)
             push(vm)
+            # YX_DEBUG=1: also persist this view-model into the per-game
+            # battle_log/<timestamp>/deck_tracker.jsonl for offline analysis.
+            try:
+                addon.write_deck_tracker_snapshot(vm)
+            except Exception:
+                pass
         except Exception as e:
             print(f"[consumer] view-model build failed: {e}")
 
@@ -66,10 +72,13 @@ def start_proxy(listen_port: int = 8080):
     from mitmproxy.tools.dump import DumpMaster
 
     async def _run():
-        opts = Options(mode=["local"], listen_port=listen_port)
+        # Scope the WinDivert redirect to ONLY YiXianPai.exe so other apps
+        # (browsers, Discord, Steam, banking — anything with cert pinning)
+        # continue working normally while the counter is open.
+        opts = Options(mode=["local:YiXianPai.exe"], listen_port=listen_port)
         master = DumpMaster(opts, with_termlog=False, with_dumper=False)
         master.addons.add(addon.YiXianInterceptor())
-        print(f"[proxy] mitmproxy local mode active (port {listen_port})")
+        print(f"[proxy] mitmproxy local mode active (port {listen_port}, scope: YiXianPai.exe)")
         await master.run()
 
     try:

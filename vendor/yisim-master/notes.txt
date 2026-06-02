@@ -1,0 +1,48 @@
+card id is:
+[class][sect/job][phase][2 digit id][upgrade level]
+class = 1 for sect (normal), 2 for sect secret enchantment, 3 for side job, 4 for talisman, 5 for pet, 6 for character-specific
+"sect/job" really refers to the marking behind the card text. There are more than 10 but we're using only 1 digit using the following scheme:
+- 0 means "no marking" unless class is 4,5
+- if class is 1,2, sect/job means sect
+	- sects are 1=sw, 2=he, 3=fe, 4=dx
+- if class is 3, sect/job means job
+	- jobs are 1=el, 2=fu, 3=mu, 4=pa, 5=fo, 6=pl
+- if class is 4, the marking is always "talisman" and sect/job is always 0
+- if class is 5, the marking is always "pet" and sect/job is always 0
+- if class is 6, the marking is always "no marking" and sect/job is always 0
+- phase 1=me, 2=fo, 3=vi, 4=im, 5=in, 6=di
+- cards within a [class][sect/job][phase] are sorted alphabetically to generate the mapping from id to card. the first card has id "01".
+- upgrade level is 1,2, or 3, all other values are disallowed.
+
+divine brush can roll secret enchantment cards. including divine ones.
+divine brush does not get locked out when it copies a continuous card
+emptiness sword formation triggers from itself being played
+emptiness sword formation does not trigger when you play it using divine brush
+speculation: emptiness sword formation does not trigger when you play it using echo formation
+emptiness sword formation triggers only 1 time when you play chain sword formation, it doesn't seem to care about the inner sword formation card that was triggered
+	what if you use echo formation to copy a sword formation card?
+		you won't get any attacks from emptiness if you are only playing sword formation cards via divine brush
+		so presumably it is the same for echo formation
+chain sword formation can let u trigger emptiness agian, adding 7 more stacks (duh)
+
+If you play sword slash and you have an extra attack at the end from endless sword formation, the extra attack at the end will consume the sword intent, and you will be left with 0.
+If have sword intent and you play flying fang sword, and you have an extra attack at the end from endless sword formation, the extra attack at the end will NOT consume the sword intent.
+
+unlike emptiness sword formation, zero and softheart will trigger from cards that are triggered by other cards (e.g. divine brush triggering an unrestrained sword - one, or divine brush triggering a cloud sword - touch sky)
+TODO: ensure that this rules engine actually has the above-mentioned behavior.
+
+speculation: zero does not trigger if an "unrestrained sword: divine brush" (enabled by unrestrained_sword_clear_heart_stacks) triggers some other non-US attack.
+
+some cards like tremolo and cloud sword - cat paw say "this card's attacks ignore def".
+if you already have some ignore_def, and you play cat paw, then cat paw's attacks do not consume the ignore_def.
+if you also have an extra attack added to the end of cat paw (e.g. by endless sword formation) then that attack is a normal, non-def-ignoring attack. so it will consume a stack of ignore_def if you have any.
+
+Colorful Spirit Crane and Dark Star Bat just set your stacks to a certain amount. So if you retrigger them, you get no additional stacks. What other cards work this way?
+
+If u use lv2 dark star bat and then lv1, does lv1 decrease your stacks or leave them the same?
+
+TODO: Metal Spirit - Charge should add penetrate only 1 time (this matters because it only benefits from Kun Wu 1 time)
+
+It seems like revives such as nangong's revive trigger at the same times that the player could actually lose (so the current implementation is correct).
+
+I heard that astral eclipse increases the first debuff-adding event wihout considering hexproof. So if you try to add 1 weaken and your opponent has 10 hexproof, and you took p5 astral eclipse, it will use up your astral eclipse and consume 4 hexproof.

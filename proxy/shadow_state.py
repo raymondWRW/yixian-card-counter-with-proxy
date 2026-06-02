@@ -154,6 +154,19 @@ def fate_name(fate_id: int) -> str:
 # call appends 4 lines: action description + hand + board + bench.
 _TRACE_LOG_PATH = Path(__file__).resolve().parent / "output" / "shadow_log.txt"
 
+# Optional second target — set by addon._open_battle_log_dir() in DEBUG mode
+# so the trace is ALSO written into the per-game battle_log/<timestamp>/ folder.
+# Default None = single-target (legacy behavior).
+_DEBUG_TRACE_LOG_PATH: Path | None = None
+
+
+def set_debug_trace_log_path(path: Path | None) -> None:
+    """Toggle the per-game debug shadow_log destination. When set to a Path,
+    every _log_state() write is mirrored there (in addition to the default
+    path). Setting to None disables the mirror."""
+    global _DEBUG_TRACE_LOG_PATH
+    _DEBUG_TRACE_LOG_PATH = path
+
 
 @dataclass
 class ZoneCard:
@@ -251,19 +264,80 @@ def get_pending_choice() -> "PendingChoice | None":
 # The addon records every C→S SelectCareerReq here so the executor can verify
 # a class/sidejob click actually committed the intended career.
 last_career_pick: int = 0
+# Secondary careers chosen via the 副职兼修 fate. The fate can be picked at
+# multiple breakthroughs (phase 2 / 3 / 4 / 5), each granting its own
+# additional sidejob. Each entry is {"career_id": int, "phase": int} where
+# `phase` is the breakthrough phase at which 副职兼修 was picked (2-5).
+# Phase matters because 副职兼修 only adds cards of that phase and above —
+# the realm-1 starter cards of the secondary career are NOT granted.
+secondary_career_picks: list = []
+# Phase of the most recently picked 副职兼修 fate, captured when the fate is
+# confirmed via SimpleClientPact. Consumed by the next SelectCareerReq that
+# has field 3=1 (the secondary career pick that immediately follows).
+_pending_secondary_phase: int = 0
 career_pick_event = threading.Event()
 
 
-def note_career_pick(career_id: int):
-    """Called by the addon when a SelectCareerReq {1: id} is observed."""
-    global last_career_pick
-    last_career_pick = int(career_id or 0)
+# Base fate id for 副职兼修 (the per-phase variants are at +10000 / +20000 /
+# +30000 — fate_id 188 = phase 2, 10188 = phase 3, 20188 = phase 4, 30188 =
+# phase 5). Used to detect the fate pick and derive the phase from id.
+_FUZHIJIANXIU_BASE_ID = 188
+
+
+def note_fate_pick(fate_id: int):
+    """Called by addon._handle_simple_client_pact when a breakthrough fate is
+    confirmed. If the fate is 副职兼修, captures the phase (derived from the
+    fate id's per-phase offset) so the immediately-following SelectCareerReq
+    with field 3=1 knows what phase to record on the secondary pick."""
+    global _pending_secondary_phase
+    if not isinstance(fate_id, int) or fate_id <= 0:
+        return
+    base = fate_id % 10000
+    if base != _FUZHIJIANXIU_BASE_ID:
+        return
+    # phase 2 = base, phase 3 = +10000, phase 4 = +20000, phase 5 = +30000
+    _pending_secondary_phase = (fate_id // 10000) + 2
+
+
+def note_career_pick(career_id: int, secondary: bool = False):
+    """Called by the addon when a SelectCareerReq is observed.
+    `secondary=True` when the wire's field 3 is set (the 副职兼修 secondary
+    pick). Each secondary pick records the phase from the preceding
+    `note_fate_pick(副职兼修)` so the counter can phase-filter cards correctly.
+    Primary pick resets the secondary list (new game / character reset)."""
+    global last_career_pick, secondary_career_picks, _pending_secondary_phase
+    cid = int(career_id or 0)
+    if secondary:
+        if cid:
+            phase = _pending_secondary_phase or 2
+            secondary_career_picks.append({"career_id": cid, "phase": phase})
+        _pending_secondary_phase = 0  # consume regardless
+    else:
+        last_career_pick = cid
+        # Starting a new game / new primary career: clear all secondary state.
+        secondary_career_picks = []
+        _pending_secondary_phase = 0
     career_pick_event.set()
 
 
 def get_career_pick() -> int:
-    """The career id of the most recently observed SelectCareerReq (0 = none)."""
+    """The career id of the most recently observed PRIMARY SelectCareerReq
+    (0 = none). Use `get_secondary_career_picks()` for the 副职兼修 slots."""
     return last_career_pick
+
+
+def get_secondary_career_picks() -> list:
+    """List of secondary career picks via 副职兼修, each as
+    {"career_id": int, "phase": int}. Empty if 副职兼修 not picked."""
+    return list(secondary_career_picks)
+
+
+def get_secondary_career_pick() -> int:
+    """Backwards-compat: career id of the LAST secondary pick (or 0 if none).
+    New code should use `get_secondary_career_picks()` to see all picks."""
+    if secondary_career_picks:
+        return secondary_career_picks[-1].get("career_id", 0)
+    return 0
 
 
 def _log_state(action_desc: str):
@@ -293,6 +367,14 @@ def _log_state(action_desc: str):
                 f.write("\n".join(lines) + "\n")
         except Exception:
             pass
+        # Mirror to per-game debug folder when DEBUG mode is active.
+        if _DEBUG_TRACE_LOG_PATH is not None:
+            try:
+                _DEBUG_TRACE_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+                with _DEBUG_TRACE_LOG_PATH.open("a", encoding="utf-8") as f:
+                    f.write("\n".join(lines) + "\n")
+            except Exception:
+                pass
     except Exception:
         pass
 
@@ -307,6 +389,13 @@ def log_event(line: str):
         _TRACE_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
         with _TRACE_LOG_PATH.open("a", encoding="utf-8") as f:
             f.write(out + "\n")
+        if _DEBUG_TRACE_LOG_PATH is not None:
+            try:
+                _DEBUG_TRACE_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+                with _DEBUG_TRACE_LOG_PATH.open("a", encoding="utf-8") as f:
+                    f.write(out + "\n")
+            except Exception:
+                pass
     except Exception:
         pass
 
@@ -337,6 +426,43 @@ def _name_lookup_default(card_id: int) -> str:
     return f"#{card_id}"
 
 
+# ── Paired Diviner transform cards (天谕 / 天运 / 天命 / 天机 / 天星) ─────────
+# Each pair is ONE card with two faces; the user toggles between them by
+# placing the card on the board and removing it. The game's wire protocol
+# refers to a paired card by whichever face is currently visible, but our
+# Counter (and any other code that compares ids) treats the pair as one card
+# in a shared deck slot. To make this transparent everywhere downstream, we
+# NORMALIZE the id at every wire-entry point in the shadow: the "even" face
+# id (天谕·攻 = 11000004 etc.) is rewritten to its "odd" partner (天谕·守 =
+# 11000003 etc.) before being stored in any ZoneCard. After this, the shadow
+# always reports the canonical face; reroll lookups, hand matching, and
+# observation diffs all work uniformly regardless of which physical face
+# the user happens to be holding in the game UI.
+_DIVINER_EVEN_FACES: set = {
+    # 天谕·攻 (paired with 天谕·守 = -1)
+    11000004, 11010004, 11020004, 11030004, 11040004,
+    # 天运·趋吉 (paired with 天运·避凶 = -1)
+    11000008, 11010008, 11020008, 11030008, 11040008,
+    # 天命·重现 (paired with 天命·飞逝 = -1)
+    11000012, 11010012, 11020012, 11030012, 11040012,
+    # 天机·逆施 (paired with 天机·顺应 = -1)
+    11000020, 11010020, 11020020, 11030020, 11040020,
+    # 天星·御心 (paired with 天星·牵引 = -1)
+    11000026, 11010026, 11020026, 11030026, 11040026,
+}
+
+
+def canonical_card_id(card_id: int) -> int:
+    """For paired Diviner transform cards, return the canonical (lower-id)
+    face. Non-paired cards return unchanged. Applied at all wire→shadow id
+    entry points so the shadow stores ONE face per pair regardless of which
+    one the game UI is currently showing."""
+    cid = int(card_id or 0)
+    if cid in _DIVINER_EVEN_FACES:
+        return cid - 1
+    return cid
+
+
 def _level_from_id(card_id: int) -> int:
     """Same formula as game_state.level_from_card_id — duplicated here to
     avoid an import cycle. Level = ((id // 10000) % 100) + 1."""
@@ -359,6 +485,7 @@ def parse_board_from_varints(b, name_fn=_name_lookup_default, n_slots: int = BOA
         if v == 0:
             slots.append(None)
         else:
+            v = canonical_card_id(v)  # collapse paired Diviner faces to one id
             slots.append(ZoneCard(id=v, name=name_fn(v), level=_level_from_id(v)))
         if len(slots) >= n_slots:
             break
@@ -376,6 +503,7 @@ def parse_bench_from_varints(b, name_fn=_name_lookup_default) -> list:
     for v in ids:
         if v == 0:
             continue
+        v = canonical_card_id(v)  # collapse paired Diviner faces to one id
         out.append(ZoneCard(id=v, name=name_fn(v), level=_level_from_id(v)))
     return out
 
@@ -489,7 +617,8 @@ def reset_from_player(player, name_fn=_name_lookup_default, source: str = "?",
             # Fallback 2: round-1 fresh game with neither pb["6"] nor 200.7.
             # Derive from field 103 minus board. Loses duplicates.
             full_pool = [
-                ZoneCard(id=c.id, name=c.name, level=max(1, c.level))
+                ZoneCard(id=canonical_card_id(c.id), name=c.name,
+                         level=max(1, c.level))
                 for c in (player.cards or [])
             ]
             new_hand = _subtract_multiset(full_pool, new_board)
@@ -1000,8 +1129,11 @@ def apply_replace_resp(pb: dict, name_fn=_name_lookup_default):
     info_old = pb.get("3") if isinstance(pb.get("3"), dict) else None
     if not isinstance(info_new, dict):
         return
-    new_id = int(info_new.get("3", 0) or 0)
-    old_id = int(info_old.get("3", 0) or 0) if isinstance(info_old, dict) else 0
+    # Normalize the wire ids first: paired Diviner faces (天谕·攻 ↔ 天谕·守
+    # etc.) are stored under the canonical (odd) face id in the shadow, so
+    # the search and the inserted card both use the canonical form.
+    new_id = canonical_card_id(int(info_new.get("3", 0) or 0))
+    old_id = canonical_card_id(int(info_old.get("3", 0) or 0)) if isinstance(info_old, dict) else 0
     if not new_id:
         return
     with shadow_lock:

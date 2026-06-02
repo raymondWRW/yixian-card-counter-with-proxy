@@ -291,14 +291,12 @@ def parse_game_state(pb: dict, phase: str = "prep", me_uid: str = "") -> GameSta
         # "max destiny" sentinel (always 100); only top-level p[3] tracks the
         # live value.
         destiny = int(p.get("3", 0) or 0)
-        # R24-Phase-B: max HP follows xiuwei (修为). The wire doesn't carry
-        # the displayed HP number directly — the game computes it client-side
-        # from realm + xiuwei + tipo + bonuses. The xiuwei series matches the
-        # SHAPE of the user's reported HP series exactly (starts ~0, grows
-        # each round, big jump on each breakthrough). +40 base yields a
-        # plausible R1=40 starting display. The legacy formula `40 + f200[2]`
-        # read a per-round counter unrelated to HP and was stuck near 40.
-        hp = 40 + int(f200.get("3", 0) or 0)
+        # HP is NOT on the wire. The legacy `40 + xiuwei` was a wrong
+        # approximation (wrong shape AND wrong base). Real HP comes from
+        # battle_log.json (read by proxy_view via _battle_log_stats). Leave
+        # the parsed value at 0; proxy_view falls back to 0 if the log is
+        # unavailable (UI then treats it as "unknown").
+        hp = 0
         # Reroll-remaining lives in the team container (pb["6"] for me; not
         # exposed per-opponent). Default to 0 here; filled in below for
         # me_index once we resolve the team container.
@@ -341,8 +339,8 @@ def parse_game_state(pb: dict, phase: str = "prep", me_uid: str = "") -> GameSta
         # player, increases monotonically per round, and jumps at breakthrough.
         # Whether it IS displayed HP (with a per-player base offset) or only a
         # near-proxy of it requires one user-verified data point — stored
-        # verbatim so proxy_view can expose both 40+xiuwei and 40+hp_field
-        # side-by-side without re-parsing.
+        # verbatim so proxy_view can compare it to the BattleLog HP without
+        # re-parsing the wire.
         hp_field = int(p.get("5", 0) or 0)
         # R28: display name from top-level [2] (utf-8 bytes). Used by
         # proxy_view to match the player against BattleLog.json entries for
