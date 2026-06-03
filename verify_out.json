@@ -1,0 +1,35 @@
+[
+  {
+    "round": 11,
+    "error": null,
+    "first8Turns": 0,
+    "perTurnDamage": [
+      0
+    ],
+    "perTurnTaken": [
+      0
+    ],
+    "cumulativeDamage": [
+      0
+    ],
+    "cumulativeTaken": [
+      0
+    ],
+    "outcome": "draw",
+    "endTurn": 1,
+    "myHp": 0,
+    "oppHp": 0,
+    "turnOrder": "opp-first",
+    "hasRng": false,
+    "rngHi": {
+      "outcome": "draw",
+      "dealt": 0,
+      "taken": 0
+    },
+    "rngLo": {
+      "outcome": "draw",
+      "dealt": 0,
+      "taken": 0
+    }
+  }
+]

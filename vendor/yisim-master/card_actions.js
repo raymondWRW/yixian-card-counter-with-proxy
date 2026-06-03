@@ -10180,12 +10180,12 @@ card_actions["611023"] = (game) => {
 
 // Clear Heart Sword Embryo
 card_actions["611031"] = (game) => {
-
+    game.do_clear_heart();
 }
 
 // 611032
 card_actions["611032"] = (game) => {
-
+    game.do_clear_heart();
 }
 
 // 611033

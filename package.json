@@ -9,5 +9,8 @@
   "devDependencies": {
     "@leeoniya/ufuzzy": "^1.0.14",
     "esbuild": "^0.24.0"
+  },
+  "dependencies": {
+    "seedrandom": "^3.0.5"
   }
 }

@@ -64,6 +64,96 @@ def _board_from_pb(p: dict, name_fn) -> list[dict]:
     return [{"name": c.name, "level": c.level} if c else None for c in cards]
 
 
+# Fate-specific extra-card containers. Several fates store their card-pick
+# list at p[200][N] for varying N. Each container has shape
+#   {1: <fate_id>, 2: {1: <varint card-list bytes>}}
+# We identify by (sub_field, fate_base_id_mod_10000):
+#   p[200][14] / 199 = 五行玉瓶 (Five Elements Pure Vase) — vase contents
+#   p[200][12] / 189 = 悟剑天赋 (Swordplay Talent)        — picked cards
+def _fate_cards_from_pb(p: dict, sub_field: str, expected_fate_mod: int,
+                        name_fn) -> list[dict]:
+    import shadow_state as _ss
+    f200 = p.get("200") or p.get("200-1") or {}
+    if not isinstance(f200, dict):
+        return []
+    container = f200.get(sub_field)
+    if not isinstance(container, dict):
+        return []
+    fate_id = int(container.get("1", 0) or 0)
+    if fate_id % 10000 != expected_fate_mod:
+        return []
+    inner = container.get("2")
+    if not isinstance(inner, dict):
+        return []
+    b = inner.get("1", b"")
+    if not isinstance(b, (bytes, bytearray)) or not b:
+        return []
+    try:
+        cards = _ss.parse_board_from_varints(b, name_fn=name_fn, n_slots=8) or []
+    except Exception:
+        return []
+    return [{"name": c.name, "level": c.level} if c else None for c in cards]
+
+
+def _vase_cards_from_pb(p: dict, name_fn) -> list[dict]:
+    """Decode 五行玉瓶 contents from p[200][14] if present."""
+    return _fate_cards_from_pb(p, "14", 199, name_fn)
+
+
+def _swordplay_talent_cards_from_pb(p: dict, name_fn) -> list[dict]:
+    """Decode 悟剑天赋 picked cards from p[200][12] if present."""
+    return _fate_cards_from_pb(p, "12", 189, name_fn)
+
+
+# Map CJK card name → yisim base id (5-char prefix without level digit).
+# Loaded lazily from vendor/yisim-master/names.json.
+_CN_TO_YISIM_BASE_ID: dict[str, str] | None = None
+def _cn_to_yisim_base_id() -> dict[str, str]:
+    global _CN_TO_YISIM_BASE_ID
+    if _CN_TO_YISIM_BASE_ID is not None:
+        return _CN_TO_YISIM_BASE_ID
+    out: dict[str, str] = {}
+    try:
+        names = json.loads(Path("vendor/yisim-master/names.json").read_text(encoding="utf-8"))
+    except Exception:
+        _CN_TO_YISIM_BASE_ID = out
+        return out
+    swogi = {}
+    try:
+        swogi = json.loads(Path("vendor/yisim-master/swogi.json").read_text(encoding="utf-8"))
+    except Exception:
+        pass
+    for entry in names:
+        cn = entry.get("namecn")
+        if not cn:
+            continue
+        yid = str(entry.get("id", ""))
+        # Prefer ids that exist in swogi (resolves stub-id collisions).
+        prev = out.get(cn)
+        if prev and prev in swogi:
+            continue
+        out[cn] = yid
+    _CN_TO_YISIM_BASE_ID = out
+    return out
+
+
+def _cards_to_yisim_base_ids(cards: list[dict]) -> list[str]:
+    """Convert [{name, level}, ...] to a list of yisim 'card_id_without_level'
+    strings (the 5-char prefix). Skips unresolvable names."""
+    out: list[str] = []
+    cn_map = _cn_to_yisim_base_id()
+    for c in cards or []:
+        if not c or not c.get("name"):
+            continue
+        name = str(c["name"]).replace("•", "·")
+        base = cn_map.get(name)
+        if not base:
+            continue
+        # Strip trailing digit (level placeholder) to get 5-char prefix.
+        out.append(base[:-1])
+    return out
+
+
 def _slot_from_card_dict(c: dict | None) -> dict | None:
     if not c:
         return None
@@ -239,10 +329,17 @@ def extract_rounds(msgdump_path: Path) -> list[dict]:
             pb1_uid_s = (pb1_uid_b.decode("utf-8", "replace")
                          if isinstance(pb1_uid_b, (bytes, bytearray)) else str(pb1_uid_b))
             # Per-combatant PRE-BATTLE stat ledger lives at pb[N][1][200][9].
-            # Stat ids we care about: 10023 = current physique (tipo),
-            # 10024 = max physique. These are the values during the BATTLE,
-            # before any post-battle breakthrough that the BL row stamps.
+            # Stat ids we care about:
+            #   369   = speed (modifies turn-order: cult+speed beats cult alone)
+            #   10011 = divine_power_grass_stacks (神力草, +increase_atk at battle start)
+            #   10015 = toxic_purple_fern_stacks (紫蕨, +internal_injury to enemy at start)
+            #   10023 = current physique (tipo)
+            #   10024 = max physique
+            # The herb stats sit on the combatant WHO USED the herb; yisim's
+            # battle-start hook applies the effect (e.g. enemy debuff for fern).
             pre_battle_phys: dict[str, tuple[int, int]] = {}  # uid → (tipo, max_tipo)
+            pre_battle_herbs: dict[str, dict[str, int]] = {}  # uid → {herb_stack_key: count}
+            pre_battle_speed: dict[str, int] = {}  # uid → speed
             for combatant_key in ("1", "2"):
                 cmb = br_pb.get(combatant_key)
                 if not isinstance(cmb, dict):
@@ -256,6 +353,8 @@ def extract_rounds(msgdump_path: Path) -> list[dict]:
                 stat_list = (inner.get("200") or {}).get("9") or []
                 tipo_cur = 0
                 tipo_max = 0
+                speed = 0
+                herbs: dict[str, int] = {}
                 if isinstance(stat_list, list):
                     for entry in stat_list:
                         if not isinstance(entry, dict):
@@ -266,14 +365,26 @@ def extract_rounds(msgdump_path: Path) -> list[dict]:
                             tipo_cur = sval
                         elif sid == 10024:
                             tipo_max = sval
+                        elif sid == 369 and sval > 0:
+                            speed = sval
+                        elif sid == 10011 and sval > 0:
+                            herbs["divine_power_grass_stacks"] = sval
+                        elif sid == 10015 and sval > 0:
+                            herbs["toxic_purple_fern_stacks"] = sval
                 if uid_s and (tipo_cur or tipo_max):
                     pre_battle_phys[uid_s] = (tipo_cur, tipo_max)
+                if uid_s and herbs:
+                    pre_battle_herbs[uid_s] = herbs
+                if uid_s and speed:
+                    pre_battle_speed[uid_s] = speed
             br_battle[rn] = {
                 "pb4": int(br_pb.get("4", 0) or 0),
                 "pb5_hp_diff": int(br_pb.get("5", 0) or 0),
                 "pb6_life_diff": int(br_pb.get("6", 0) or 0),
                 "pb1_uid": pb1_uid_s,
                 "pre_battle_phys": pre_battle_phys,
+                "pre_battle_herbs": pre_battle_herbs,
+                "pre_battle_speed": pre_battle_speed,
             }
 
     # Phase 2: for each round N (except the last), pull stats from R(N)'s
@@ -350,7 +461,9 @@ def extract_rounds(msgdump_path: Path) -> list[dict]:
         # but R(N) GameStatus still shows the pre-transform list.
         opp_stats_next = _player_stats(opp_pb_next)
         opp_stats["fates"] = opp_stats_next["fates"] or opp_stats["fates"]
-        deck = 8
+        # Unlocked board slots scale with round number: R1=3, R2=4, ..., R6+=8.
+        # Cards beyond `deck` are in LOCKED slots and don't play.
+        deck = max(1, min(n + 2, 8))
         # Build full talent objects so yisim can apply runtime-stack fates
         # like 云海连绵 (id 14 → endurance_as_cloud_sea_stacks). Raw ids
         # don't satisfy yisim's normalizeTalents and silently no-op.
@@ -376,6 +489,8 @@ def extract_rounds(msgdump_path: Path) -> list[dict]:
             "br_pb6_life_diff": br_b.get("pb6_life_diff"),
             "br_pb1_is_me": br_pb1_is_me,
             "br_pre_battle_phys": br_b.get("pre_battle_phys") or {},
+            "br_pre_battle_herbs": br_b.get("pre_battle_herbs") or {},
+            "br_pre_battle_speed": br_b.get("pre_battle_speed") or {},
             "me": {
                 "displayName": my_stats["displayName"],
                 "deckSlots": deck,
@@ -387,6 +502,10 @@ def extract_rounds(msgdump_path: Path) -> list[dict]:
                 "fates": my_talents,
                 "fateNames": my_fate_names,
                 "slots": [_slot_from_card_dict(c) for c in (my_board or [None]*deck)[:deck]],
+                # 五行玉瓶 vase contents (if fate active) — yisim's
+                # do_five_elements_pure_vase reads this list at sim start.
+                "vase_cards": [_slot_from_card_dict(c) for c in _vase_cards_from_pb(my_pb_next, name_fn=card_name) if c],
+                "swordplay_talent_card_ids": _cards_to_yisim_base_ids(_swordplay_talent_cards_from_pb(my_pb_next, name_fn=card_name)),
             },
             "opponent": {
                 "displayName": opp_stats["displayName"],
@@ -400,6 +519,8 @@ def extract_rounds(msgdump_path: Path) -> list[dict]:
                 "fates": opp_talents,
                 "fateNames": opp_fate_names,
                 "slots": [_slot_from_card_dict(c) for c in (opp_board or [None]*deck)[:deck]],
+                "vase_cards": [_slot_from_card_dict(c) for c in _vase_cards_from_pb(opp_pb_next, name_fn=card_name) if c],
+                "swordplay_talent_card_ids": _cards_to_yisim_base_ids(_swordplay_talent_cards_from_pb(opp_pb_next, name_fn=card_name)),
             },
         })
     return rounds
@@ -453,11 +574,24 @@ def read_battle_log(path: Path) -> dict[int, dict[str, dict]]:
     return out
 
 
-def auto_detect_username(bl: dict, me_uid: str) -> str | None:
-    """Heuristic: pick the username of the user's display_name observed
-    on the wire (matches BattleLog). If me_uid is empty, fall back to
-    longest username — humans typically have unique long names while
-    bots are `ai1-lv3` style."""
+def auto_detect_username(bl: dict, me_uid: str,
+                          rounds: list | None = None) -> str | None:
+    """Pick the user's display_name. Source of truth: the wire's GameStatus
+    extracts each player's display_name from the protobuf; rounds_data[0]
+    ['me']['displayName'] is the user's own name, captured authoritatively
+    from the connection's perspective (no heuristic needed).
+
+    Falls back to legacy "longest non-bot name in BL" only if rounds aren't
+    provided AND no me_uid is given — that path is wrong for multi-human
+    games where another human has a longer ASCII name than the user's CJK
+    name, since Python `len(str)` counts characters not bytes.
+    """
+    # Preferred: pull from msgdump-extracted rounds (the wire is authoritative).
+    if rounds:
+        for r in rounds:
+            name = (r.get("me") or {}).get("displayName")
+            if name:
+                return name
     if not bl:
         return None
     first_round = next(iter(bl.values()), {})
@@ -465,12 +599,12 @@ def auto_detect_username(bl: dict, me_uid: str) -> str | None:
         return None
     if me_uid and me_uid in first_round:
         return me_uid
-    # Filter out bot-style names (ai\d+-lvN)
+    # Legacy fallback heuristic — kept for back-compat but wrong for
+    # multi-human games (`cococococo` 10 chars > `传奇角色先天12修` 8 chars).
     import re
     bot_re = re.compile(r"^ai\d+-lv\d+$")
     candidates = [n for n in first_round if not bot_re.match(n)]
     if candidates:
-        # Prefer the longest non-bot name (humans set custom display names)
         return max(candidates, key=len)
     return None
 
@@ -501,7 +635,7 @@ def main() -> int:
     if not bl:
         print(f"      WARN: battle_log.json is empty or missing — actual-damage column will be blank.")
 
-    me_username = args.username or auto_detect_username(bl, "")
+    me_username = args.username or auto_detect_username(bl, "", rounds_data)
     if not me_username and bl:
         print(f"      WARN: couldn't auto-detect user — pass --username explicitly")
     else:

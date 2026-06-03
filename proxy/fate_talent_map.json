@@ -1773,8 +1773,8 @@
  "7": {
   "name": "Shade Of Cloud",
   "nameCn": "云影化身",
-  "simulationKind": "non-combat-or-unsupported",
-  "runtimeKey": null,
+  "simulationKind": "runtime-stack",
+  "runtimeKey": "shade_of_cloud_stacks",
   "grantedCardBaseIds": null
  },
  "11": {
@@ -1871,8 +1871,8 @@
  "27": {
   "name": "Dragon Scale",
   "nameCn": "龙鳞",
-  "simulationKind": "non-combat-or-unsupported",
-  "runtimeKey": null,
+  "simulationKind": "runtime-stack",
+  "runtimeKey": "dragon_scale_stacks",
   "grantedCardBaseIds": null
  },
  "28": {
@@ -1983,8 +1983,8 @@
  "45": {
   "name": "Cat Soul Bless",
   "nameCn": "猫魂庇佑",
-  "simulationKind": "non-combat-or-unsupported",
-  "runtimeKey": null,
+  "simulationKind": "runtime-stack",
+  "runtimeKey": "cat_soul_bless_stacks",
   "grantedCardBaseIds": null
  },
  "46": {
@@ -2060,8 +2060,8 @@
  "65": {
   "name": "Avatar of Bird Shade",
   "nameCn": "雁影化身",
-  "simulationKind": "non-combat-or-unsupported",
-  "runtimeKey": null,
+  "simulationKind": "runtime-stack",
+  "runtimeKey": "avatar_of_bird_shade_stacks",
   "grantedCardBaseIds": null
  },
  "66": {
@@ -2172,8 +2172,8 @@
  "92": {
   "name": "Swordsmith",
   "nameCn": "铸剑师",
-  "simulationKind": "non-combat-or-unsupported",
-  "runtimeKey": null,
+  "simulationKind": "runtime-stack",
+  "runtimeKey": "swordsmith_stacks",
   "grantedCardBaseIds": null
  },
  "93": {
@@ -2312,8 +2312,8 @@
  "115": {
   "name": "Flame of life",
   "nameCn": "燃命之焰",
-  "simulationKind": "non-combat-or-unsupported",
-  "runtimeKey": null,
+  "simulationKind": "runtime-stack",
+  "runtimeKey": "flame_of_life_stacks",
   "grantedCardBaseIds": null
  },
  "121": {
@@ -2487,8 +2487,8 @@
  "154": {
   "name": "Undying Body",
   "nameCn": "生机不灭",
-  "simulationKind": "non-combat-or-unsupported",
-  "runtimeKey": null,
+  "simulationKind": "runtime-stack",
+  "runtimeKey": "undying_body_stacks",
   "grantedCardBaseIds": null
  },
  "155": {
@@ -2606,8 +2606,8 @@
  "185": {
   "name": "Meditation of Xuan",
   "nameCn": "冥心入玄",
-  "simulationKind": "non-combat-or-unsupported",
-  "runtimeKey": null,
+  "simulationKind": "runtime-stack",
+  "runtimeKey": "meditation_of_xuan_stacks",
   "grantedCardBaseIds": null
  },
  "186": {
@@ -2676,8 +2676,8 @@
  "196": {
   "name": "Jade Scroll of Yin Symbol",
   "nameCn": "阴符玉简",
-  "simulationKind": "card-grant",
-  "runtimeKey": null,
+  "simulationKind": "runtime-stack",
+  "runtimeKey": "jade_scroll_of_yin_symbol_stacks",
   "grantedCardBaseIds": [
    214
   ]
@@ -2729,8 +2729,8 @@
  "203": {
   "name": "Forget Worries",
   "nameCn": "忘忧",
-  "simulationKind": "non-combat-or-unsupported",
-  "runtimeKey": null,
+  "simulationKind": "runtime-stack",
+  "runtimeKey": "forget_worries_fate_stacks",
   "grantedCardBaseIds": null
  },
  "204": {

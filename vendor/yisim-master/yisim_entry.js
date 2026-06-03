@@ -120,6 +120,8 @@ function normalizeTalents(rawTalents) {
       grantedCardBaseIds: Array.isArray(talent.grantedCardBaseIds)
         ? talent.grantedCardBaseIds.map(Number).filter(Number.isFinite)
         : [],
+      // Per-round-scaled stack override (e.g. Swordsmith = round_number - 1).
+      stackOverride: Number.isFinite(Number(talent.stackOverride)) ? Number(talent.stackOverride) : undefined,
     }))
     .filter((talent) => talent.name);
 }
@@ -185,7 +187,11 @@ function prepareTalentIntegration(normalized, probePlayer, playerCards, normaliz
     if (talent.simulationKind === 'runtime-stack') {
       const key = talent.runtimeKey;
       if (key && !suppressedRuntimeKeys.has(key) && Object.prototype.hasOwnProperty.call(probePlayer, key)) {
-        runtimeWrites.push({ key, value: 1 });
+        // Some fates scale per round instead of being a flat 1. The
+        // caller can pass `stackOverride` on the talent to use that value.
+        const value = Number.isFinite(Number(talent.stackOverride))
+          ? Number(talent.stackOverride) : 1;
+        if (value > 0) runtimeWrites.push({ key, value });
         integration.appliedRuntimeTalents.push(talent.name);
       } else integration.unsupportedDirectTalents.push(talent.name);
       continue;
@@ -200,7 +206,15 @@ function prepareTalentIntegration(normalized, probePlayer, playerCards, normaliz
         continue;
       }
       if (talent.name === 'Solitary Void Golden Scroll') {
+        // Two-part fate: (1) transform 21501-prefix cards in the deck;
+        // (2) runtime effect on 62503-prefix cards driven by
+        // solitary_void_golden_scroll_fate_stacks (do_solitary_void_golden_scroll_fate).
+        // Seed the stack regardless of transform success so part (2) fires.
         const result = applySolitaryVoidTransform(playerCards, normalizedSlots);
+        const fateKey = 'solitary_void_golden_scroll_fate_stacks';
+        if (Object.prototype.hasOwnProperty.call(probePlayer, fateKey)) {
+          runtimeWrites.push({ key: fateKey, value: 1 });
+        }
         if (result.applied) integration.appliedRuntimeTalents.push(talent.name);
         else integration.unsupportedDirectTalents.push(talent.name);
         continue;
@@ -291,6 +305,9 @@ function buildPlayers(normalizedSlots, fuzzy, guessChar, options = {}) {
     hp: playerState.hp, physique: playerState.physique,
     max_physique: playerState.maxPhysique, cultivation: playerState.cultivation,
     cards: playerCards,
+    // 悟剑天赋 picked cards (5-char base IDs); empty if fate not active.
+    swordplay_talent_cards: Array.isArray(options.playerSwordplayTalentCards)
+      ? options.playerSwordplayTalentCards : [],
   };
   // YiXianPai mechanic: current physique extends the HP cap. Battle-start
   // max_hp = base_max_hp + current_physique. Subsequent physique gains during
@@ -310,6 +327,8 @@ function buildPlayers(normalizedSlots, fuzzy, guessChar, options = {}) {
     opponent = {
       hp: oppState.hp, physique: oppState.physique, max_physique: oppState.maxPhysique,
       cultivation: oppState.cultivation, cards: oppCards, _real: true,
+      swordplay_talent_cards: Array.isArray(options.opponentSwordplayTalentCards)
+        ? options.opponentSwordplayTalentCards : [],
     };
     const oppBaseMaxHp = Number.isFinite(oppState.maxHp)
       ? Math.max(oppState.maxHp, opponent.hp) : opponent.hp;
@@ -556,6 +575,8 @@ async function simulate(slots, options = {}) {
     }
     const { player, opponent } = buildPlayers(normalizedSlots, card_name_to_id_fuzzy, guess_character, {
       playerState, opponentSlots, opponentState: options.opponentState,
+      playerSwordplayTalentCards: options.playerSwordplayTalentCards,
+      opponentSwordplayTalentCards: options.opponentSwordplayTalentCards,
     });
     const probeGame = new GameState();
     const probePlayer = probeGame.players[0];
