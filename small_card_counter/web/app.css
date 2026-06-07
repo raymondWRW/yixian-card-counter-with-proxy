@@ -111,3 +111,69 @@ html, body {
   padding: 8px;
   text-align: center;
 }
+
+/* ── Update banner ────────────────────────────────────────────────────── */
+/* Shown above the counter list when the updater discovers a newer version
+   on Gitee. Click "更新" to download + verify + self-replace. */
+.update-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  margin: 0 0 6px 0;
+  background: #2a3344;
+  border: 1px solid var(--accent, #6ea8fe);
+  border-radius: 6px;
+  font-size: 12px;
+}
+.update-banner .update-text { flex: 1; }
+.update-banner .update-version {
+  margin-left: 4px;
+  color: var(--muted, #8b94a7);
+}
+.update-banner .update-btn,
+.update-banner .update-dismiss {
+  background: var(--accent, #6ea8fe);
+  color: #11141a;
+  border: none;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.update-banner .update-dismiss {
+  background: transparent;
+  color: var(--muted, #8b94a7);
+  padding: 3px 6px;
+  font-size: 14px;
+}
+.update-banner .update-btn:hover { background: #87b8ff; }
+.update-banner .update-btn:disabled { opacity: .6; cursor: wait; }
+
+/* ── Bottom-right resize handle ───────────────────────────────────────── */
+/* Frameless windows have no native resize edges. JS hooks into the handle
+   to apply CSS zoom proportionally and resize the OS window in lockstep. */
+#resize-handle {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
+  z-index: 1000;
+  background:
+    linear-gradient(135deg,
+      transparent 0%,
+      transparent 50%,
+      var(--muted) 50%,
+      var(--muted) 60%,
+      transparent 60%,
+      transparent 75%,
+      var(--muted) 75%,
+      var(--muted) 85%,
+      transparent 85%);
+  opacity: .55;
+  -webkit-app-region: no-drag;
+}
+#resize-handle:hover { opacity: 1; }

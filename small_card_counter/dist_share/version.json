@@ -1,0 +1,7 @@
+{
+  "_comment_": "Live at https://gitee.com/hiddensquid12321/yixian-card-counter-with-proxy/raw/master/small_card_counter/dist_share/version.json. Bump `version` + `url` + `sha256` for each release (build.py prints a ready-to-paste snippet).",
+  "version": "1.0.0",
+  "url": "https://gitee.com/hiddensquid12321/yixian-card-counter-with-proxy/releases/download/v1.0.0/YiXianCounterLite.exe",
+  "sha256": "REPLACE_WITH_SHA256_OF_THE_RELEASE_EXE",
+  "notes": "First release."
+}

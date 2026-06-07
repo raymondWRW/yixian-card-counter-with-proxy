@@ -16,6 +16,7 @@ import copy
 import datetime
 import json
 import os
+import sys
 import threading
 from pathlib import Path
 
@@ -132,32 +133,43 @@ def _emit_daoyun_grants_from_team1(b):
             continue
         daoyun_grant_events.append({"name": nm, "id": int(cid)})
     _daoyun_pending_picks -= resolved_explicit
-    # 自在随心 random pick: the server resolved a random card and put its id
-    # in team_container[1]. We can't predict which id, so credit any
-    # remaining new id (not already credited above). One per pending pick.
+    # 自在随心 random pick: USER RULE — count the granted card as a real deck
+    # draw, not a free grant. We do nothing here so the new id sits in
+    # team_container[1] and Counter.observe() picks it up via the standard
+    # hand-grew path. (Was previously credited as a free grant.)
     if _daoyun_random_pending:
+        _daoyun_random_pending = False
+    # 剑池问心 fate (ids 119 / 10119 / 20119 / 30119): when active, the cards
+    # it adds to the hand are NOT pulled from the deck pool. Credit any
+    # remaining new id as a free grant so it doesn't decrement remaining().
+    if _JIANCHI_FATE_IDS & set(chosen_fates):
         remaining = new_ids - resolved_explicit
-        if remaining:
-            cid = next(iter(remaining))
+        for cid in remaining:
             try:
                 nm = card_name(int(cid))
                 daoyun_grant_events.append({"name": nm, "id": int(cid)})
             except Exception:
                 pass
-            _daoyun_random_pending = False
 
 
 def _note_daoyun_pick(chosen_id: int):
     """Called from _handle_simple_client_pact when a daoyun pact (kind=9)
     is observed. Tracks the picked card id so the next team_container[1]
     addition that matches it counts as a daoyun grant."""
-    global _daoyun_random_pending, _daoyun_pending_picks
+    global _daoyun_pending_picks
+    # 自在随心 (id=27) — USER RULE: the random card it grants should count as
+    # a real deck draw, not a free grant. Skip the pending-pick tracking
+    # entirely so Counter.observe() treats the incoming card as a normal draw.
     if chosen_id == 27:
-        # 自在随心 — random card, resolved by server, id unknown until we
-        # see the next team_container[1] addition.
-        _daoyun_random_pending = True
-    elif chosen_id > 0:
+        return
+    if chosen_id > 0:
         _daoyun_pending_picks.add(int(chosen_id))
+
+
+# 剑池问心 fate ids across realm tiers (lv1 / lv2 / lv3 / lv4). When any of
+# these is in `chosen_fates`, mid-round cards added to the hand are credited
+# as free grants instead of decrementing the deck pool.
+_JIANCHI_FATE_IDS = frozenset({119, 10119, 20119, 30119})
 
 
 def _set_me_uid(uid: str):
@@ -760,8 +772,22 @@ _UNHANDLED_PATH = _CAPTURE_DIR / "unhandled_types.txt"
 #   shadow_log.txt      — translated/interpreted shadow events
 #   deck_tracker.jsonl  — view-model snapshots (what the UI sees) per push
 #   battle_log.json     — copy of the game's local BattleLog.json
-DEBUG = os.environ.get("YX_DEBUG", "0") != "0"
-_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+# Always-on in the published build so users can share logs for debugging
+# and so the data exists for the planned "review past games" feature.
+# Dev runs stay opt-in via YX_DEBUG=1 to keep `python app.py` quiet.
+DEBUG = (
+    os.environ.get("YX_DEBUG", "0") != "0"
+    or getattr(sys, "frozen", False)
+)
+# Where the per-game folders are written. In a PyInstaller-frozen build,
+# Path(__file__).parent.parent points into the _MEIPASS temp dir which is
+# read-only and ephemeral — useless for log retention. Use the .exe's own
+# folder so users can browse, zip, and send logs back without hunting for
+# AppData paths. (Lite stores its logs the same way — see yxlite-log.txt.)
+if getattr(sys, "frozen", False):
+    _PROJECT_ROOT = Path(sys.executable).resolve().parent
+else:
+    _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 _BATTLE_LOG_ROOT = _PROJECT_ROOT / "battle_log"
 _battle_log_dir: Path | None = None    # current game's folder (None if no game active)
 _battle_log_lock = threading.Lock()

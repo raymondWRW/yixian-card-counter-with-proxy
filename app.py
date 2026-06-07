@@ -51,6 +51,47 @@ class Api:
     def get_settings(self):
         return self.settings
 
+    def get_version(self):
+        """Return the bundled VERSION string. JS shows it in the titlebar."""
+        try:
+            from version import VERSION
+            return VERSION
+        except Exception:
+            return "?"
+
+    def start_update(self):
+        """Download + verify + apply the pending update. Triggered when the
+        user clicks the "更新" button on the update banner. Process exits
+        immediately so updater.bat can swap the file lock."""
+        try:
+            import updater
+            manifest = getattr(self, "_pending_update", None)
+            if not manifest:
+                manifest = updater.check_for_update()
+            if not manifest:
+                return {"ok": False, "error": "no update available"}
+            new_exe = updater.download_update(manifest)
+            updater.apply_update(new_exe)
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
+        import threading
+        import time
+        def _quit():
+            time.sleep(0.4)
+            try:
+                if _counter_win is not None:
+                    _counter_win.destroy()
+            except Exception:
+                pass
+            try:
+                if _window is not None:
+                    _window.destroy()
+            except Exception:
+                pass
+            os._exit(0)
+        threading.Thread(target=_quit, daemon=True).start()
+        return {"ok": True}
+
     def set_setting(self, key, value):
         self.settings[key] = value
         _save_settings(self.settings)
@@ -140,6 +181,11 @@ _DEFAULT_SETTINGS = {
     "damageMode": "matchup",   # "matchup" | "solo"
     "rollMode": "average",     # "average" | "high" | "low"
     "onTop": True,
+    # UI scale persisted per-window. The bottom-right drag handle in each
+    # window writes back to these via set_setting; the JS reads them on
+    # startup and applies CSS zoom so the layout stays proportional.
+    "uiScale": 1.0,
+    "counterScale": 1.0,
 }
 
 
@@ -210,6 +256,25 @@ def _push_demo_state():
     })
 
 
+def _push_update_notice(manifest: dict):
+    """Notify the main window's JS that an update is available. Called from
+    the updater's background thread."""
+    if _window is None:
+        return
+    payload = json.dumps({
+        "version": manifest.get("version", ""),
+        "notes": manifest.get("notes", ""),
+    }, ensure_ascii=False)
+    js = f"window.onUpdateAvailable && window.onUpdateAvailable({payload})"
+    try:
+        _window.evaluate_js(js)
+    except Exception:
+        pass
+    api = getattr(_window, "_js_api_instance", None)
+    if api is not None:
+        api._pending_update = manifest
+
+
 def _start_workers():
     """Start the data source feeding the UI.
 
@@ -217,6 +282,14 @@ def _start_workers():
     YX_REPLAY — play back a captured traffic.jsonl into the UI (no admin).
     default   — live mitmproxy capture + consumer (needs admin / WinDivert).
     """
+    # Auto-update: fire-and-forget Gitee check on startup. Short timeout +
+    # daemon thread so an offline / slow network never delays the window.
+    try:
+        import updater
+        updater.check_for_update_async(_push_update_notice)
+    except Exception:
+        pass
+
     if os.environ.get("YX_DEMO"):
         threading.Thread(target=_push_demo_state, daemon=True).start()
         return
@@ -240,13 +313,15 @@ def _start_workers():
 def main():
     global _window, _counter_win
     api = Api()
-    # Main window — round bar, damage card, you/opponent boards, hand.
+    # Main window — round bar + damage card only. (YOU / OPPONENT / HAND
+    # sections moved to the counter window, so this can start short and
+    # auto-resize from there.)
     _window = webview.create_window(
         title="YiXian Counter",
         url=INDEX_HTML.as_uri(),
         js_api=api,
         width=360,
-        height=720,
+        height=200,
         x=40, y=40,
         frameless=True,
         easy_drag=False,        # we drag via a dedicated header (-webkit-app-region)
@@ -257,8 +332,14 @@ def main():
         # (300, 400) min was clamping `_window.resize(width, 34)` and leaving
         # a ~366px black widget below the titlebar. Frameless=True means
         # the user can't drag-resize edges, so a small min is safe.
-        min_size=(300, TITLEBAR_HEIGHT),
+        # min_size width lowered (300 → 200) so MIN_SCALE=0.6 in the JS
+        # resize handle doesn't clamp the window at the bottom of its range.
+        min_size=(200, TITLEBAR_HEIGHT),
     )
+    # Stash the Api on the window so _push_update_notice can write the
+    # pending manifest back into it (avoids a re-fetch when the user clicks
+    # "更新" on the banner).
+    _window._js_api_instance = api
     # Counter window — same JS API instance (shared settings, shared quit).
     # Lite-style: small, frameless, always-on-top. Auto-resizes height to
     # fit the counter list via Api.resize_counter() called from counter.js.
@@ -267,13 +348,14 @@ def main():
         url=COUNTER_HTML.as_uri(),
         js_api=api,
         width=260,
-        height=200,
-        x=420, y=40,        # placed to the right of the main window
+        height=100,          # short start; counter.js auto-resizes to content
+        x=420, y=40,         # placed to the right of the main window
         frameless=True,
         easy_drag=False,
         on_top=api.settings.get("onTop", True),
         background_color="#11141a",
-        min_size=(220, 30),
+        # Lowered to match the lite window's MIN_SCALE=0.6: 260 * 0.6 = 156.
+        min_size=(150, 30),
     )
     webview.start(_start_workers, debug=bool(os.environ.get("YX_DEBUG")))
 

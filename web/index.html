@@ -19,13 +19,27 @@
   </header>
 
   <main id="content">
+    <!-- Update banner — shown only when the updater discovers a newer
+         version on Gitee at startup. Click "更新" → download + SHA256-verify
+         + self-replace. Hidden by default. -->
+    <section id="update-banner" class="update-banner" style="display:none">
+      <span class="update-text">
+        <strong>有新版本</strong>
+        <span id="update-version" class="update-version"></span>
+      </span>
+      <button id="update-btn" class="update-btn">更新</button>
+      <button id="update-dismiss" class="update-dismiss" title="dismiss">×</button>
+    </section>
+
     <!-- Round / phase -->
     <section id="round-bar">
       <span id="round-label">Round —</span>
       <span id="phase-label" class="phase">waiting for game…</span>
     </section>
 
-    <!-- Damage summary -->
+    <!-- Damage summary (the only data card in the main window — the
+         YOU / OPPONENT / HAND cards moved to the counter window so this
+         window can shrink to just the damage readout). -->
     <section class="card" id="damage-card">
       <h2>Damage <small id="damage-mode-note"></small></h2>
       <div class="dmg-row">
@@ -38,29 +52,11 @@
       </div>
       <div id="damage-turns" class="turns"></div>
     </section>
-
-    <!-- Your board + stats -->
-    <section class="card" id="me-card">
-      <h2>You <small id="me-stats"></small></h2>
-      <div id="me-fates" class="fates"></div>
-      <div id="me-board" class="board"></div>
-    </section>
-
-    <!-- Opponent board -->
-    <section class="card" id="opp-card">
-      <h2>Opponent <small id="opp-stats"></small></h2>
-      <div id="opp-fates" class="fates"></div>
-      <div id="opp-board" class="board"></div>
-    </section>
-
-    <!-- Card counter moved to a separate window (web/counter.html). -->
-
-    <!-- Your hand -->
-    <section class="card" id="hand-card">
-      <h2>Hand</h2>
-      <div id="hand-list" class="hand"></div>
-    </section>
   </main>
+
+  <!-- Bottom-right drag handle. JS in ui.js wires it to a CSS-zoom resize
+       that keeps content proportional (no stretching). -->
+  <div id="resize-handle" title="Drag to resize"></div>
 
   <script src="yisim.bundle.js"></script>
   <script src="ui.js"></script>

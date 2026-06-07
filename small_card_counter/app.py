@@ -47,7 +47,91 @@ if str(BASE_DIR) not in sys.path:
 _window = None
 
 
+def _settings_path() -> Path:
+    """Per-user JSON file for the lite's persisted settings (UI scale, etc.).
+    Lives in %APPDATA% so it survives exe reinstalls + auto-updates."""
+    base = os.environ.get("APPDATA") or str(BASE_DIR)
+    d = Path(base) / "yixian-counter-lite"
+    d.mkdir(parents=True, exist_ok=True)
+    return d / "settings.json"
+
+
+_DEFAULT_LITE_SETTINGS = {"uiScale": 1.0}
+
+
+def _load_lite_settings() -> dict:
+    p = _settings_path()
+    if p.exists():
+        try:
+            return {**_DEFAULT_LITE_SETTINGS, **json.loads(p.read_text(encoding="utf-8"))}
+        except Exception:
+            pass
+    return dict(_DEFAULT_LITE_SETTINGS)
+
+
+def _save_lite_settings(settings: dict):
+    try:
+        _settings_path().write_text(
+            json.dumps(settings, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+    except Exception:
+        pass
+
+
 class Api:
+    def __init__(self):
+        self.settings = _load_lite_settings()
+
+    def get_settings(self):
+        return self.settings
+
+    def set_setting(self, key, value):
+        self.settings[key] = value
+        _save_lite_settings(self.settings)
+        return self.settings
+
+    def get_version(self):
+        """Return the bundled VERSION string. JS shows it in the titlebar."""
+        try:
+            from version import VERSION
+            return VERSION
+        except Exception:
+            return "?"
+
+    def start_update(self):
+        """Called from JS when the user clicks "Update now" on the banner.
+        Downloads the new exe, verifies SHA256, schedules the swap-and-relaunch
+        via a tiny .bat helper, then exits this process.
+
+        Returns a result dict so the UI can show a message on failure
+        ({'ok': True} on success — but the process is about to die so the JS
+        will never actually receive that response)."""
+        try:
+            import updater
+            manifest = getattr(self, "_pending_update", None)
+            if not manifest:
+                manifest = updater.check_for_update()
+            if not manifest:
+                return {"ok": False, "error": "no update available"}
+            new_exe = updater.download_update(manifest)
+            updater.apply_update(new_exe)
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
+        # Give the bat helper a moment to start, then exit so it can swap
+        # the file. The main thread is the webview event loop; tear it down.
+        import threading
+        import time
+        def _quit():
+            time.sleep(0.4)
+            try:
+                if _window is not None:
+                    _window.destroy()
+            except Exception:
+                pass
+            os._exit(0)
+        threading.Thread(target=_quit, daemon=True).start()
+        return {"ok": True}
+
     def move(self, x, y):
         """Move the window's top-left to (x, y) in screen pixels.
 
@@ -91,20 +175,50 @@ def push_state(view_model: dict):
         pass
 
 
+def _push_update_notice(manifest: dict):
+    """Notify the JS UI that an update is available. Called from the
+    updater's background thread; window.evaluate_js is thread-safe enough
+    for this simple JSON push."""
+    if _window is None:
+        return
+    payload = json.dumps({
+        "version": manifest.get("version", ""),
+        "notes": manifest.get("notes", ""),
+    }, ensure_ascii=False)
+    js = f"window.onUpdateAvailable && window.onUpdateAvailable({payload})"
+    try:
+        _window.evaluate_js(js)
+    except Exception:
+        pass
+    # Stash the manifest so Api.start_update() doesn't re-check the network.
+    api = getattr(_window, "_js_api_instance", None)
+    if api is not None:
+        api._pending_update = manifest
+
+
 def _start_workers():
     import runtime
     threading.Thread(target=runtime.start_proxy, daemon=True, name="proxy").start()
     threading.Thread(
         target=runtime.start_consumer, args=(push_state,), daemon=True, name="consumer"
     ).start()
+    # Auto-update: check Gitee once on startup. Doesn't block — short timeout
+    # and runs on its own thread so a slow / offline network never delays the
+    # window opening. When a newer version is found, notifies the JS banner.
+    try:
+        import updater
+        updater.check_for_update_async(_push_update_notice)
+    except Exception:
+        pass
 
 
 def main():
     global _window
+    api = Api()
     _window = webview.create_window(
         title="YiXian Counter (Lite)",
         url=INDEX_HTML.as_uri(),
-        js_api=Api(),
+        js_api=api,
         width=260,
         height=70,                 # tiny default — JS will grow it as cards arrive
         frameless=True,
@@ -113,6 +227,10 @@ def main():
         background_color="#11141a",
         min_size=(200, 40),        # let JS shrink the window down to ~titlebar height
     )
+    # Stash the Api on the window so _push_update_notice can write the
+    # pending manifest back into it (avoids a re-fetch when the user clicks
+    # "update now" on the banner).
+    _window._js_api_instance = api
     webview.start(_start_workers, debug=bool(os.environ.get("YX_DEBUG")))
 
 

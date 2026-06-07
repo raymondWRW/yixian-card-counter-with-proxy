@@ -7,18 +7,21 @@ let liveOnce = false;
 const FIXED_WIDTH = 260;
 let lastResizeH = -1;
 let resizePending = false;
+let currentUiScale = 1.0;  // updated by the bottom-right drag handle
 
 function fitWindowToContent() {
   if (resizePending) return;
   resizePending = true;
   requestAnimationFrame(async () => {
     resizePending = false;
-    const h = Math.max(40, Math.min(800, Math.ceil(document.body.scrollHeight)));
+    const rawH = Math.ceil(document.body.scrollHeight);
+    const h = Math.max(40, Math.min(1200, Math.round(rawH * currentUiScale)));
+    const w = Math.round(FIXED_WIDTH * currentUiScale);
     if (h === lastResizeH) return;
     lastResizeH = h;
     const a = window.pywebview && window.pywebview.api;
     if (a) {
-      try { await a.resize_counter(FIXED_WIDTH, h); } catch (_) {}
+      try { await a.resize_counter(w, h); } catch (_) {}
     }
   });
 }
@@ -95,3 +98,63 @@ window.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('mouseup', () => { dragging = false; });
   window.addEventListener('blur', () => { dragging = false; });
 })();
+
+// ── Bottom-right resize handle (CSS zoom + window resize) ──────────────
+// Mirrors the main window's resize-handle behavior. Scale is persisted as
+// `counterScale` in the shared settings so the two windows track their own
+// preferred sizes independently.
+(function setupResize() {
+  const handle = $('resize-handle');
+  if (!handle) return;
+  const MIN_SCALE = 0.6, MAX_SCALE = 2.5;
+  const SENSITIVITY = 250;
+  let uiScale = 1.0;
+
+  function applyScale(s) {
+    s = Math.max(MIN_SCALE, Math.min(MAX_SCALE, s));
+    uiScale = s;
+    currentUiScale = s;
+    document.body.style.zoom = String(s);
+    lastResizeH = -1;
+    fitWindowToContent();
+    return s;
+  }
+  window.applyCounterScale = applyScale;
+
+  let dragging = false, startX = 0, startY = 0, startScale = 1;
+  handle.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return;
+    dragging = true;
+    startX = e.screenX;
+    startY = e.screenY;
+    startScale = uiScale;
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    const dx = e.screenX - startX;
+    const dy = e.screenY - startY;
+    const delta = (dx + dy) / 2 / SENSITIVITY;
+    applyScale(startScale + delta);
+  });
+  window.addEventListener('mouseup', async () => {
+    if (!dragging) return;
+    dragging = false;
+    const a = window.pywebview && window.pywebview.api;
+    if (a && a.set_setting) {
+      try { await a.set_setting('counterScale', uiScale); } catch (_) {}
+    }
+  });
+  window.addEventListener('blur', () => { dragging = false; });
+})();
+
+// Load and apply the persisted counter scale on startup.
+window.addEventListener('pywebviewready', async () => {
+  const a = window.pywebview && window.pywebview.api;
+  if (a && a.get_settings && typeof window.applyCounterScale === 'function') {
+    try {
+      const s = await a.get_settings();
+      window.applyCounterScale(Number(s.counterScale) || 1.0);
+    } catch (_) {}
+  }
+});

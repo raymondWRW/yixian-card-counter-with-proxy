@@ -196,6 +196,15 @@ function slotFromCard(c) {
 async function updateDamage(vm) {
   if (!window.yisim || !vm || !vm.me) return;
   const me = vm.me;
+  // 灵羽 (Spirit Feather) on board with no eligible lv1 merge target → yisim
+  // has no implementation for it, so the damage sim would silently treat it
+  // as 普通攻击 (3 dmg/turn) and under-count damage. Surface this explicitly
+  // instead of running the sim with bad data.
+  if (Array.isArray(me.lingyuUnresolved) && me.lingyuUnresolved.length > 0) {
+    renderDamageResult({ error: '未识别卡片 (灵羽) — 伤害计算不可用' });
+    return;
+  }
+
   // Deck size = unlocked board slots (locked slots are excluded by the slice).
   // Empty UNLOCKED slots stay as nulls so yisim plays them as 普通攻击
   // (Normal Attack, 3 dmg/turn) — that matches what the real game does for
@@ -254,26 +263,28 @@ function render(vm) {
   $('round-label').textContent = `Round ${vm.round ?? '—'}`;
   $('phase-label').textContent = vm.phase || '';
 
+  // YOU / OPPONENT / HAND sections were removed from the main window — they
+  // now live exclusively in the counter window. Each $() lookup is guarded
+  // because the elements may not exist in this layout.
   const me = vm.me || {};
-  // HP prefix uses '~' when predicted (formula fallback, BattleLog.json not
-  // available for this round) and nothing when authoritative (from BL).
+  const opp = vm.opponent || {};
   const meHpStr = me.hp == null ? '—' : (me.hpIsPredicted ? `~${me.hp}` : `${me.hp}`);
-  $('me-stats').textContent = me.destiny != null
+  const meStats = $('me-stats');
+  if (meStats) meStats.textContent = me.destiny != null
     ? `命${me.destiny} · HP${meHpStr} · 修${me.xiuwei ?? 0} · 体${me.tipo ?? 0} · 境${me.realm_tier ?? 1} · 转${me.rerolls ?? '—'}`
     : '';
-  renderFates($('me-fates'), me.fateNames, me.fates);
-  renderBoard($('me-board'), me.board, me.unlocked);
-  renderHand($('hand-list'), me.hand, me.seasonal);
+  const meFates = $('me-fates'); if (meFates) renderFates(meFates, me.fateNames, me.fates);
+  const meBoard = $('me-board'); if (meBoard) renderBoard(meBoard, me.board, me.unlocked);
+  const handList = $('hand-list'); if (handList) renderHand(handList, me.hand, me.seasonal);
 
-  const opp = vm.opponent || {};
-  // Round 14: opp.board is now the current-round board (was previous-round).
   const boardSrc = opp.boardFromRound ? `current board R${opp.boardFromRound}` : 'no board yet';
   const oppHpStr = opp.hp == null ? '—' : (opp.hpIsPredicted ? `~${opp.hp}` : `${opp.hp}`);
-  $('opp-stats').textContent = opp.destiny != null
+  const oppStats = $('opp-stats');
+  if (oppStats) oppStats.textContent = opp.destiny != null
     ? `命${opp.destiny} · HP${oppHpStr} · 修${opp.xiuwei ?? 0} · 体${opp.tipo ?? 0} · 境${opp.realm_tier ?? 1} · ${opp.phase || vm.phase || ''} · ${boardSrc}`
     : '';
-  renderOppFates($('opp-fates'), opp.fateNames, opp.fates);
-  renderBoard($('opp-board'), opp.board, opp.unlocked);
+  const oppFates = $('opp-fates'); if (oppFates) renderOppFates(oppFates, opp.fateNames, opp.fates);
+  const oppBoard = $('opp-board'); if (oppBoard) renderBoard(oppBoard, opp.board, opp.unlocked);
 
   // Counter lives in a separate window (web/counter.html). Skip rendering it
   // here if the counter-list element is absent in this layout.
@@ -288,25 +299,29 @@ function render(vm) {
 // height (titlebar + visible cards). Width stays fixed at FIXED_WIDTH; the
 // user can drag the window around but not resize it (frameless = no edge
 // handles). Mirrors the lite version and the companion counter window.
+// Fixed aspect ratio for the main window — the resize handle scales BOTH
+// dimensions together. We don't drive height from scrollHeight here because
+// the damage card's flex layout reflows (chips fit in fewer/more rows as
+// width changes), creating a feedback loop where wider → shorter and vice
+// versa. Aspect locked at BASE_HEIGHT / FIXED_WIDTH = 200/360 ≈ 0.56.
 const FIXED_WIDTH = 360;
+const BASE_HEIGHT = 200;
 let lastResizeH = -1;
 let resizePending = false;
+let currentUiScale = 1.0;
 
 function fitWindowToContent() {
   if (resizePending) return;
   resizePending = true;
   requestAnimationFrame(async () => {
     resizePending = false;
-    // body.scrollHeight = titlebar + main content (including margins/padding).
-    // Min 40 keeps us above the titlebar collapse height (34) so a single
-    // bad measurement can't fully hide the window. Max 900 prevents a
-    // pathological vm from spawning a screen-tall window.
-    const h = Math.max(40, Math.min(900, Math.ceil(document.body.scrollHeight)));
+    const w = Math.round(FIXED_WIDTH * currentUiScale);
+    const h = Math.max(40, Math.min(1400, Math.round(BASE_HEIGHT * currentUiScale)));
     if (h === lastResizeH) return;
     lastResizeH = h;
     const a = window.pywebview && window.pywebview.api;
     if (a) {
-      try { await a.resize_main(FIXED_WIDTH, h); } catch (_) {}
+      try { await a.resize_main(w, h); } catch (_) {}
     }
   });
 }
@@ -360,6 +375,11 @@ window.addEventListener('pywebviewready', async () => {
     try { settings = await a.get_settings(); } catch (_) {}
   }
   applyModeButton();
+  // After settings load, apply the persisted UI scale (set by the
+  // bottom-right resize handle in a previous session).
+  if (typeof window.applyUiScale === 'function') {
+    window.applyUiScale(Number(settings.uiScale) || 1.0);
+  }
 });
 
 $('btn-mode').addEventListener('click', async () => {
@@ -438,4 +458,109 @@ window.addEventListener('keydown', (e) => {
 
   window.addEventListener('mouseup', () => { dragging = false; });
   window.addEventListener('blur', () => { dragging = false; });
+})();
+
+// ── Bottom-right resize handle ─────────────────────────────────────────
+// Apply CSS zoom to scale the entire UI proportionally, then resize the OS
+// window to match. Aspect ratio is preserved automatically because zoom
+// scales all dimensions uniformly. Scale is persisted via the settings API
+// so it survives restarts. Clamped to [0.6, 2.5] — below 0.6 controls
+// become unreadable, above 2.5 the window outgrows typical monitors.
+(function setupResize() {
+  const handle = $('resize-handle');
+  if (!handle) return;
+  const MIN_SCALE = 0.6, MAX_SCALE = 2.5;
+  // Pixels-per-scale-unit: 250px of diagonal drag = +1.0 to scale.
+  const SENSITIVITY = 250;
+
+  let uiScale = 1.0;
+
+  function applyScale(s) {
+    s = Math.max(MIN_SCALE, Math.min(MAX_SCALE, s));
+    uiScale = s;
+    currentUiScale = s;  // module-level so fitWindowToContent picks it up
+    // Use zoom on body — Chromium/WebView2 scales layout visually.
+    document.body.style.zoom = String(s);
+    lastResizeH = -1;
+    fitWindowToContent();
+    return s;
+  }
+
+  // Exposed so the pywebview-ready handler can apply the persisted scale
+  // once settings load (which happens AFTER this IIFE runs).
+  window.applyUiScale = applyScale;
+
+  let dragging = false, startX = 0, startY = 0, startScale = 1;
+  handle.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return;
+    dragging = true;
+    startX = e.screenX;
+    startY = e.screenY;
+    startScale = uiScale;
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    // Use the diagonal — bottom-right drag in either axis grows the window.
+    const dx = e.screenX - startX;
+    const dy = e.screenY - startY;
+    const delta = (dx + dy) / 2 / SENSITIVITY;
+    applyScale(startScale + delta);
+  });
+  window.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    // Persist the new scale so the next launch starts at the same size.
+    const a = window.pywebview && window.pywebview.api;
+    if (a && a.set_setting) {
+      try { a.set_setting('uiScale', uiScale); } catch (_) {}
+    }
+  });
+  window.addEventListener('blur', () => { dragging = false; });
+})();
+
+// ── Auto-update banner ───────────────────────────────────────────────────
+// Python's updater.check_for_update_async fires window.onUpdateAvailable
+// when Gitee returns a manifest newer than the bundled version. The banner
+// stays hidden until then. User clicks "更新" → Python downloads the new
+// exe, verifies SHA256, schedules a swap-and-relaunch, exits the process.
+window.onUpdateAvailable = function (info) {
+  const banner = document.getElementById('update-banner');
+  const verEl = document.getElementById('update-version');
+  if (!banner || !info) return;
+  verEl.textContent = info.version ? `v${info.version}` : '';
+  banner.style.display = 'flex';
+  if (typeof fitWindowToContent === 'function') fitWindowToContent();
+};
+
+(function setupUpdate() {
+  const btn = document.getElementById('update-btn');
+  const dismiss = document.getElementById('update-dismiss');
+  const banner = document.getElementById('update-banner');
+  if (!btn || !dismiss || !banner) return;
+
+  btn.addEventListener('click', async () => {
+    const a = window.pywebview && window.pywebview.api;
+    if (!a || !a.start_update) return;
+    btn.disabled = true;
+    btn.textContent = '下载中…';
+    try {
+      const res = await a.start_update();
+      if (res && res.ok === false) {
+        btn.disabled = false;
+        btn.textContent = '重试';
+        const verEl = document.getElementById('update-version');
+        if (verEl) verEl.textContent = `失败: ${res.error || '未知错误'}`;
+      }
+      // On success the process exits — no follow-up needed.
+    } catch (_) {
+      btn.disabled = false;
+      btn.textContent = '重试';
+    }
+  });
+
+  dismiss.addEventListener('click', () => {
+    banner.style.display = 'none';
+    if (typeof fitWindowToContent === 'function') fitWindowToContent();
+  });
 })();

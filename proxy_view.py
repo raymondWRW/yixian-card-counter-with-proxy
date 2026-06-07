@@ -303,15 +303,25 @@ def build_view_model(state, counter=None, last_battle=None, opp_tracker=None):
     # ── You ──────────────────────────────────────────────────────────────────
     if state.me_index >= 0 and state.me_index < len(state.players):
         me = state.players[state.me_index]
+        # 灵羽 merge: lv2/3 灵羽 placed on the board merges into a lv1 qi/agility
+        # target at battle-time (server-side, no wire signal). Substitute before
+        # building the view-model so the UI/damage sim see the merged result.
+        # Any 灵羽 lv2/3 that finds NO valid target stays as 灵羽 and is logged
+        # in `lingyu_unresolved` so the damage panel can show "unidentified card".
+        lingyu_unresolved = []
         if sh is not None:
+            from lingyu_merge import resolve_lingyu_merges
+            merged_board, lingyu_unresolved = resolve_lingyu_merges(list(sh.board))
             hand = [_card(c) for c in sh.hand if c is not None]
-            board = _board_list(sh.board, unlocked)
+            board = _board_list(merged_board, unlocked)
             xiuwei, tipo, realm = sh.xiuwei, sh.tipo, sh.realm_tier
             rerolls = sh.rerolls
             seasonal = [_card(c) for c in sh.seasonal.values() if c is not None]
         else:
+            from lingyu_merge import resolve_lingyu_merges
+            merged_board, lingyu_unresolved = resolve_lingyu_merges(list(me.board or []))
             hand = [_card(c) for c in me.cards]
-            board = _board_list(me.board, unlocked)
+            board = _board_list(merged_board, unlocked)
             xiuwei, tipo, realm = me.xiuwei, me.tipo, me.realm_tier
             rerolls = getattr(me, "rerolls", 0)
             seasonal = []
@@ -359,6 +369,10 @@ def build_view_model(state, counter=None, last_battle=None, opp_tracker=None):
             "seasonal": seasonal,
             "fates": fates, "fateNames": fate_names,
             "breakthrough": {"available": bool(avail), "threshold": thr, "gate": gate},
+            # Slot indices where a 灵羽 lv2/3 found no eligible lv1 target. When
+            # non-empty, the UI shows "未识别卡片 — 伤害计算不可用" instead of
+            # damage numbers (yisim has no 灵羽 implementation).
+            "lingyuUnresolved": lingyu_unresolved,
         }
 
     # ── Opponent (matchup target) ──────────────────────────────────────────────

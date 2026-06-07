@@ -56,8 +56,12 @@ html, body {
 .tbtn:hover { background: var(--panel); }
 
 /* ── Content ─────────────────────────────────────────────────────────── */
+/* No fixed `height: calc(100% - 34px)` here — when content was pinned to the
+   window's inner height, body.scrollHeight echoed the window size and the
+   resize-handle's height calc went into a feedback loop (only the width
+   appeared to scale). With content sized to its children, scrollHeight
+   reflects the real content height and the auto-fit/zoom flow works. */
 #content {
-  height: calc(100% - 34px);
   overflow-y: auto;
   padding: 8px;
   display: flex;
@@ -196,3 +200,73 @@ html, body {
 /* Minimize: collapse everything except the titlebar (Ctrl+H / − button). */
 body.collapsed > main { display: none; }
 body.collapsed { height: 34px; min-height: 0; }
+
+
+/* ── Bottom-right resize handle ───────────────────────────────────────── */
+/* Frameless windows have no native resize edges. This handle hooks into a
+   JS drag listener that calls pywebview.api.resize_main / resize_counter
+   with the new (width, height). Content is scaled via CSS zoom so the UI
+   stays proportional. */
+#resize-handle {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  z-index: 1000;
+  /* Subtle visual marker — two diagonal lines like a typical grip. */
+  background:
+    linear-gradient(135deg,
+      transparent 0%,
+      transparent 50%,
+      var(--muted) 50%,
+      var(--muted) 60%,
+      transparent 60%,
+      transparent 75%,
+      var(--muted) 75%,
+      var(--muted) 85%,
+      transparent 85%);
+  opacity: .55;
+  -webkit-app-region: no-drag;
+}
+#resize-handle:hover { opacity: 1; }
+
+/* ── Update banner ────────────────────────────────────────────────────── */
+/* Shown above the round bar when the updater discovers a newer version
+   on Gitee at startup. Click "更新" to download + verify + self-replace. */
+.update-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  margin: 0 0 6px 0;
+  background: #2a3344;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  font-size: 12px;
+}
+.update-banner .update-text { flex: 1; }
+.update-banner .update-version {
+  margin-left: 4px;
+  color: var(--muted);
+}
+.update-banner .update-btn,
+.update-banner .update-dismiss {
+  background: var(--accent);
+  color: #11141a;
+  border: none;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.update-banner .update-dismiss {
+  background: transparent;
+  color: var(--muted);
+  padding: 3px 6px;
+  font-size: 14px;
+}
+.update-banner .update-btn:hover { background: #87b8ff; }
+.update-banner .update-btn:disabled { opacity: .6; cursor: wait; }

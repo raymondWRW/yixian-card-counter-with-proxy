@@ -108,3 +108,29 @@ html, body {
   padding: 8px;
   text-align: center;
 }
+
+
+/* ── Bottom-right resize handle (same pattern as the main window) ───── */
+#resize-handle {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
+  z-index: 1000;
+  background:
+    linear-gradient(135deg,
+      transparent 0%,
+      transparent 50%,
+      var(--muted) 50%,
+      var(--muted) 60%,
+      transparent 60%,
+      transparent 75%,
+      var(--muted) 75%,
+      var(--muted) 85%,
+      transparent 85%);
+  opacity: .55;
+  -webkit-app-region: no-drag;
+}
+#resize-handle:hover { opacity: 1; }

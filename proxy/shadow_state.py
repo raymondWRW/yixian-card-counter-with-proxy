@@ -598,11 +598,18 @@ def reset_from_player(player, name_fn=_name_lookup_default, source: str = "?",
     new_board = None
 
     # PRIMARY: team_container from pb["6"]
+    # Present-but-empty hand field ({} from blackboxprotobuf or b"") means
+    # the hand is actually empty (e.g. right after a breakthrough cleared
+    # it). Treat that as authoritative — don't fall through to the stale
+    # f200.7 which lags by a frame.
     if isinstance(team_container, dict):
         b1 = team_container.get("1", b"")
         b2 = team_container.get("2", b"")
-        if isinstance(b1, (bytes, bytearray)) and b1:
-            new_hand = parse_bench_from_varints(b1, name_fn=name_fn)
+        if "1" in team_container:
+            if isinstance(b1, (bytes, bytearray)):
+                new_hand = parse_bench_from_varints(b1, name_fn=name_fn)
+            else:
+                new_hand = []
         if isinstance(b2, (bytes, bytearray)):
             new_board = parse_board_from_varints(b2, name_fn=name_fn)
 
