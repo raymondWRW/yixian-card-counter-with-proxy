@@ -3,12 +3,16 @@ runtime.py
 ──────────
 Wires the ported proxy package to the app. Three entry points:
 
-  start_proxy()           — run mitmproxy's DumpMaster (local/WinDivert mode)
-                            on a background thread; needs admin. Live capture.
+  start_frida_capture()   — frida-spawn the game, hook ProtobufParser, feed
+                            messages into the same decode/shadow/Counter
+                            pipeline. No cert, no admin. Default live source.
   start_consumer(push)    — drain state_queue, build a view-model, push to UI.
   replay(path[, limit])   — feed a captured traffic.jsonl through the same
-                            decode→shadow→state path offline (no admin). For
-                            development / verification.
+                            decode→shadow→state path offline. For development /
+                            verification.
+
+The legacy mitmproxy-based `start_proxy()` lives in
+`proxy[outdated]/proxy_runtime.py` and is opt-in via `YX_PROXY=1`.
 
 CLI:  python runtime.py replay ["path\to\traffic.jsonl"] [limit]
 """
@@ -64,33 +68,83 @@ def start_consumer(push):
             print(f"[consumer] view-model build failed: {e}")
 
 
-# ─── Live proxy via embedded DumpMaster ───────────────────────────────────────
-def start_proxy(listen_port: int = 8080):
-    """Run mitmproxy in local mode on this thread (call from a daemon thread)."""
-    import asyncio
-    from mitmproxy.options import Options
-    from mitmproxy.tools.dump import DumpMaster
+# Live capture via mitmproxy was moved to `proxy[outdated]/proxy_runtime.py`
+# (legacy method — needs cert + admin). The main app now defaults to frida.
 
-    async def _run():
-        # Scope the WinDivert redirect to ONLY YiXianPai.exe so other apps
-        # (browsers, Discord, Steam, banking — anything with cert pinning)
-        # continue working normally while the counter is open.
-        opts = Options(mode=["local:YiXianPai.exe"], listen_port=listen_port)
-        master = DumpMaster(opts, with_termlog=False, with_dumper=False)
-        master.addons.add(addon.YiXianInterceptor())
-        print(f"[proxy] mitmproxy local mode active (port {listen_port}, scope: YiXianPai.exe)")
-        await master.run()
 
-    try:
-        asyncio.run(_run())
-    except Exception as e:
-        print(f"[proxy] stopped: {e}")
+# ─── Live capture via frida (no cert / no admin) ──────────────────────────────
+def start_frida_capture(game_exe: str = None, attach_mode: bool = False):
+    """Spawn YiXianPai through frida and hook ProtobufParser to feed messages
+    into `addon.process_msgpack` — the same pipeline `start_proxy` populates,
+    but bypassing TLS/mitmproxy entirely (no cert, no admin).
+
+    Args:
+        game_exe: Path to YiXianPai.exe. If None, falls back to the
+                  `YX_GAME_EXE` env var.
+        attach_mode: If True, attach to an already-running game instead of
+                     spawning. Counter accuracy depends on attaching BEFORE
+                     the match starts (the opening deal must be observed).
+
+    Designed to be called from a daemon thread; it blocks forever to keep the
+    frida session (and its script's hooks) alive.
+    """
+    import os
+    import time
+    import frida
+
+    capture_agent = BASE_DIR / "native_hud" / "_build" / "capture.agent.js"
+    if not capture_agent.exists():
+        raise FileNotFoundError(f"capture agent not found: {capture_agent}")
+    agent_src = capture_agent.read_text(encoding="utf-8")
+
+    def on_message(msg, _data):
+        """frida → addon.process_msgpack. The agent sends
+        {dir: 'in'|'out', t: typeName, b: base64} for every protobuf
+        encode/decode the game performs."""
+        if msg.get("type") != "send":
+            return
+        p = msg.get("payload") or {}
+        t, b, d = p.get("t"), p.get("b"), p.get("dir", "in")
+        if not t:
+            return
+        try:
+            addon.process_msgpack(["data", {"type": t, "data": b}],
+                                  from_client=(d == "out"))
+        except Exception as e:
+            print(f"[frida] process_msgpack failed: {e}", flush=True)
+
+    if attach_mode:
+        proc = os.environ.get("YX_PROC", "YiXianPai.exe")
+        print(f"[frida] attach {proc}", flush=True)
+        session = frida.attach(proc)
+        pid = None
+    else:
+        if not game_exe:
+            game_exe = os.environ.get("YX_GAME_EXE")
+        if not game_exe or not Path(game_exe).exists():
+            raise FileNotFoundError(
+                "game exe not found; pass game_exe= or set YX_GAME_EXE")
+        print(f"[frida] spawn {game_exe}", flush=True)
+        pid = frida.spawn([game_exe])
+        session = frida.attach(pid)
+
+    script = session.create_script(agent_src, runtime="qjs")
+    script.on("message", on_message)
+    script.load()
+    if pid is not None:
+        frida.resume(pid)
+    print("[frida] capture active (ProtobufParser hooked, "
+          "feeding state_queue)", flush=True)
+    # Keep the session/script alive forever. The on_message callback fires
+    # on frida's internal thread; this loop just blocks the caller thread.
+    while True:
+        time.sleep(60)
 
 
 # ─── Offline replay of a captured traffic.jsonl ───────────────────────────────
-DEFAULT_CAPTURE = Path(
-    r"C:\Users\raymo\OneDrive\Desktop\yixian script\yixian-proxy\output\traffic.jsonl"
-)
+# Default replay source: a capture under the project's (gitignored) proxy/output.
+# Override by passing a path to replay()/the CLI, or via YX_REPLAY_PATH.
+DEFAULT_CAPTURE = BASE_DIR / "proxy" / "output" / "traffic.jsonl"
 
 
 def replay(path=None, limit=0, on_state=None):

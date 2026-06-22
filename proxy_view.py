@@ -78,6 +78,32 @@ def _warn_unmapped_fate(fid: int) -> None:
           file=sys.stderr, flush=True)
 
 
+_derivation_map_cache: dict | None = None
+
+
+def _derivation_name(did: int) -> str:
+    """Look up the Chinese name for a derivation id from
+    tools/derivations_game.json. Returns '#<id>' if unknown."""
+    global _derivation_map_cache
+    if _derivation_map_cache is None:
+        from pathlib import Path
+        import json as _json
+        try:
+            root = Path(__file__).resolve().parent
+            path = root / "tools" / "derivations_game.json"
+            if not path.exists():
+                # Fallback path when proxy/ is the cwd parent
+                path = root.parent / "tools" / "derivations_game.json"
+            data = _json.loads(path.read_text(encoding="utf-8"))
+            _derivation_map_cache = {
+                int(e["id"]): (e.get("name_cn") or e.get("name_en") or "")
+                for e in data.get("entries", []) if e.get("id") is not None
+            }
+        except Exception:
+            _derivation_map_cache = {}
+    return _derivation_map_cache.get(int(did)) or f"#{did}"
+
+
 def _fates_to_talents(fate_ids):
     """Convert a list of fate ids (in PICK ORDER) into (talents, names).
 
@@ -346,6 +372,14 @@ def build_view_model(state, counter=None, last_battle=None, opp_tracker=None):
 
         avail, thr, gate = shadow_state.breakthrough_status(realm, xiuwei, tipo_val)
         fates, fate_names = _build_fates()
+        # Derivations (天衍) — display-only, picked via SimpleClientPact code=47.
+        # Names are looked up from tools/derivations_game.json keyed by id.
+        try:
+            import addon as _addon
+            derivation_ids = list(getattr(_addon, "chosen_derivations", []) or [])
+        except Exception:
+            derivation_ids = []
+        derivation_names = [_derivation_name(did) for did in derivation_ids]
         # Annotate every hand card with how many copies are left in the deck
         # so the deck_tracker.jsonl debug dump shows them inline. `remaining()`
         # is keyed by canonical name (handles paired transform cards).
@@ -354,6 +388,9 @@ def build_view_model(state, counter=None, last_battle=None, opp_tracker=None):
             if isinstance(hc, dict):
                 canon = _canonical(hc.get("name", ""))
                 hc["copiesLeftInDeck"] = remaining_map.get(canon)
+                # Canonical key into counter.remaining, so the counter window
+                # can pin / filter the rows for cards currently in hand.
+                hc["counterKey"] = canon
         vm["me"] = {
             "destiny": me.destiny, "hp": hp_val,
             "hpIsPredicted": hp_is_predicted,
@@ -368,6 +405,8 @@ def build_view_model(state, counter=None, last_battle=None, opp_tracker=None):
             "hand": hand, "board": board,
             "seasonal": seasonal,
             "fates": fates, "fateNames": fate_names,
+            "derivations": derivation_ids,
+            "derivationNames": derivation_names,
             "breakthrough": {"available": bool(avail), "threshold": thr, "gate": gate},
             # Slot indices where a 灵羽 lv2/3 found no eligible lv1 target. When
             # non-empty, the UI shows "未识别卡片 — 伤害计算不可用" instead of
@@ -740,6 +779,16 @@ FREE_REPLACE_CARDS = {
 #   · U+00B7 MIDDLE DOT        — appears at runtime (proxy/card_id_map.json)
 # Normalize to the middle dot so lookups work regardless of source.
 _SEP_NORMALIZE = str.maketrans({"•": "·"})
+# Reverse direction — needed by the native HUD lookup, which keys by the
+# CardConfig.name spelling (sometimes using U+2022).
+_SEP_DENORMALIZE = str.maketrans({"·": "•"})
+
+
+def _sep_variants(name: str) -> set:
+    """Every separator spelling of a card name (U+00B7 · and U+2022 •)."""
+    if not isinstance(name, str) or not name:
+        return set()
+    return {name, name.translate(_SEP_NORMALIZE), name.translate(_SEP_DENORMALIZE)}
 
 
 def _normalize_sep(name):
@@ -775,6 +824,32 @@ PAIRED_CARDS = {
 # Reverse lookup: canonical (merged) name -> one face name. Used for phase
 # lookup. Both faces in a pair share the same phase, so either face works.
 _PAIR_CANONICAL_TO_FACE = {canon: face for face, canon in PAIRED_CARDS.items()}
+
+
+def remaining_with_aliases(remaining) -> dict:
+    """Expand a canonical `remaining` dict into every display-name form the
+    in-game native HUD might look a card up by, all pointing at the same count.
+
+    The Counter keys `remaining` canonically: paired transform cards under one
+    MERGED name (天谕·攻/守) and whatever separator card_id_map.json happened to
+    use (it mixes · and •). The native HUD (native_hud/csharp/Hud.cs) looks
+    cards up by the live CardConfig.name — a single FACE name (天谕·攻) with
+    possibly the OTHER separator spelling — via an EXACT dict match. Without
+    this expansion those lookups miss and the HUD shows "剩?".
+
+    For each (key, count): emit `key` and both separator spellings; if `key`
+    is a merged pair canonical, also emit BOTH faces (and their separator
+    spellings) → the same count (a pair's faces share one deck pool)."""
+    out: dict = {}
+    for key, count in (remaining or {}).items():
+        names = _sep_variants(key)
+        if key in _PAIR_CANONICAL_TO_FACE:
+            for face, canon in PAIRED_CARDS.items():
+                if canon == key:
+                    names |= _sep_variants(face)
+        for nm in names:
+            out[nm] = count
+    return out
 
 
 def _canonical(name):
@@ -1071,18 +1146,27 @@ class Counter:
         self._prev_owned = owned
 
     def remaining(self) -> dict:
-        # Round 12: only show cards currently held in hand or seasonal — once a
-        # card is fully placed/absorbed it shouldn't clog the counter list.
-        # If the user re-draws a copy later, it reappears with its accurate
-        # remaining count (the internal _draws/_reroll_discards tallies persist).
+        # Show every card SEEN this game — held in hand/seasonal, sitting on the
+        # board, OR drawn earlier and since played/absorbed. A real 记牌器 needs
+        # to answer "how many of card X are left in my deck" even when X isn't
+        # currently in hand, so we no longer restrict the list to held cards.
+        # (The per-card _draws/_reroll_discards tallies make every count exact.)
         sh = shadow_state.shadow
         held = set()
         if sh is not None:
+            # cards currently in hand or the seasonal (织梦) holding
             for c in list(sh.hand) + list(getattr(sh, "seasonal", {}).values()):
                 if c is not None and self._is_deck_card(getattr(c, "name", None)):
-                    # Canonicalize so a held face shows up under the merged
-                    # pair name (one row per paired card, not two).
                     held.add(_canonical(c.name))
+            # cards currently placed on the board
+            for c in list(sh.board):
+                if c is not None and self._is_deck_card(getattr(c, "name", None)):
+                    held.add(_canonical(c.name))
+        # every card ever drawn this game (keys are already canonical) — this is
+        # what surfaces cards you've drawn and then played/absorbed.
+        for nm in self._draws:
+            if self._is_deck_card(nm):
+                held.add(nm)
         out = {}
         phase_map = _name_to_phase()
         sidejob_prefix_map = _name_to_sidejob_prefix()
@@ -1133,5 +1217,9 @@ class Counter:
                 self._draws.get(name, 0)
                 + reroll_mult * self._reroll_discards.get(name, 0)
             )
-            out[name] = max(0, max_copies - removed)
+            left = max(0, max_copies - removed)
+            # Exhausted cards (0 left in deck) drop off the list — no point
+            # showing a card you can no longer draw.
+            if left > 0:
+                out[name] = left
         return out

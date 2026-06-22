@@ -374,7 +374,31 @@ function applyRollModeOverrides(game, rollMode) {
 // the turn it was decided on, and the index of the LAST card slot YOU played
 // (used by the UI to highlight that slot win/lose).
 //   outcome: 'win' (opponent dead) | 'lose' (you dead) | 'draw' | 'undecided'
-function runSingleSimulation(player, opponent, rollMode, runtimeWrites = [], maxTurns = 64, oppRuntimeWrites = [], meGoesFirst = true, lastStandSecond = false) {
+function snapshotState(p) {
+  return {
+    hp: p.hp ?? 0,
+    def: p.def ?? 0,
+    physique: p.physique ?? 0,
+    internal_injury: p.internal_injury ?? 0,
+    weaken: p.weaken ?? 0,
+    flaw: p.flaw ?? 0,
+    increase_atk: p.increase_atk ?? 0,
+    qi: p.qi ?? 0,
+    agility: p.agility ?? 0,
+  };
+}
+
+function cardsPlayedInRange(p, fromIdx, toIdx, deckLen, nameLookup) {
+  const out = [];
+  for (let i = fromIdx; i < toIdx; i++) {
+    const slot = i % deckLen;
+    const cid = (p.cards || [])[slot];
+    out.push({ slot, id: cid, name: nameLookup(cid) });
+  }
+  return out;
+}
+
+function runSingleSimulation(player, opponent, rollMode, runtimeWrites = [], maxTurns = 64, oppRuntimeWrites = [], meGoesFirst = true, lastStandSecond = false, verbose = false, nameLookup = null) {
   const game = new GameState();
   Object.assign(game.players[0], { ...player, cards: [...player.cards] });
   Object.assign(game.players[1], { ...opponent, cards: [...opponent.cards] });
@@ -400,11 +424,13 @@ function runSingleSimulation(player, opponent, rollMode, runtimeWrites = [], max
 
   const perTurnDealt = [];
   const perTurnTaken = [];
+  const turnLog = [];
   let endTurn = null;
   let lastSlotMe = null;
   let lastSlotOpp = null;
   const myDeckLen = (game.players[0].cards || []).length || 1;
   const oppDeckLen = (game.players[1].cards || []).length || 1;
+  const lookup = nameLookup || ((cid) => cid);
   for (let turnIndex = 0; turnIndex < maxTurns; turnIndex += 1) {
     const oppBefore = game.players[1].hp ?? 0;
     const myBefore = game.players[0].hp ?? 0;
@@ -414,29 +440,43 @@ function runSingleSimulation(player, opponent, rollMode, runtimeWrites = [], max
     if (meGoesFirst) {
       game.sim_turn();
       lastSlotMe = myAbout % myDeckLen;
+      const myPlayedTo = game.players[0].next_card_index ?? myAbout;
+      const mePlayed = verbose ? cardsPlayedInRange(game.players[0], myAbout, myPlayedTo, myDeckLen, lookup) : null;
       if (game.game_over) {
         perTurnDealt.push(Math.max(0, oppBefore - (game.players[1].hp ?? oppBefore)));
         perTurnTaken.push(0);
+        if (verbose) turnLog.push({ turn: turnIndex + 1, me_played: mePlayed, opp_played: [], me: snapshotState(game.players[0]), opp: snapshotState(game.players[1]), game_over: true });
         endTurn = turnIndex + 1;
         break;
       }
       game.swap_players();
+      const oppPlayBefore = game.players[0].next_card_index ?? oppAbout;
       game.sim_turn();
       lastSlotOpp = oppAbout % oppDeckLen;
+      const oppPlayedTo = game.players[0].next_card_index ?? oppPlayBefore;
+      const oppPlayed = verbose ? cardsPlayedInRange(game.players[0], oppPlayBefore, oppPlayedTo, oppDeckLen, lookup) : null;
       game.swap_players();
+      if (verbose) turnLog.push({ turn: turnIndex + 1, me_played: mePlayed, opp_played: oppPlayed, me: snapshotState(game.players[0]), opp: snapshotState(game.players[1]), game_over: game.game_over });
     } else {
       game.swap_players();
+      const oppPlayBefore = game.players[0].next_card_index ?? oppAbout;
       game.sim_turn();
       lastSlotOpp = oppAbout % oppDeckLen;
+      const oppPlayedTo = game.players[0].next_card_index ?? oppPlayBefore;
+      const oppPlayed = verbose ? cardsPlayedInRange(game.players[0], oppPlayBefore, oppPlayedTo, oppDeckLen, lookup) : null;
       game.swap_players();
       if (game.game_over) {
         perTurnDealt.push(0);
         perTurnTaken.push(Math.max(0, myBefore - (game.players[0].hp ?? myBefore)));
+        if (verbose) turnLog.push({ turn: turnIndex + 1, me_played: [], opp_played: oppPlayed, me: snapshotState(game.players[0]), opp: snapshotState(game.players[1]), game_over: true });
         endTurn = turnIndex + 1;
         break;
       }
       game.sim_turn();
       lastSlotMe = myAbout % myDeckLen;
+      const myPlayedTo = game.players[0].next_card_index ?? myAbout;
+      const mePlayed = verbose ? cardsPlayedInRange(game.players[0], myAbout, myPlayedTo, myDeckLen, lookup) : null;
+      if (verbose) turnLog.push({ turn: turnIndex + 1, me_played: mePlayed, opp_played: oppPlayed, me: snapshotState(game.players[0]), opp: snapshotState(game.players[1]), game_over: game.game_over });
     }
     perTurnDealt.push(Math.max(0, oppBefore - (game.players[1].hp ?? oppBefore)));
     perTurnTaken.push(Math.max(0, myBefore - (game.players[0].hp ?? myBefore)));
@@ -462,7 +502,8 @@ function runSingleSimulation(player, opponent, rollMode, runtimeWrites = [], max
   return { perTurnDealt, perTurnTaken, outcome, endTurn,
            myHp, oppHp, myMaxHp, oppMaxHp, myPhysique, oppPhysique,
            myIncAtk, oppIncAtk, myDef, oppDef,
-           lastSlotMe, lastSlotOpp };
+           lastSlotMe, lastSlotOpp,
+           turnLog: verbose ? turnLog : null };
 }
 
 // Aggregate one or many runs into the result shape the UI consumes.
@@ -597,18 +638,27 @@ async function simulate(slots, options = {}) {
     const runsPerOrder = rollMode === 'average'
       ? Math.max(1, Math.floor(AVERAGE_SIM_RUNS / runOrders.length))
       : 1;
+    const verbose = !!options.verbose;
+    const nameLookup = verbose ? (cid) => {
+      const entry = (Array.isArray(NAMES) ? NAMES : []).find(e => String(e.id) === String(cid));
+      return entry ? (entry.namecn || entry.name || cid) : cid;
+    } : null;
     const runs = [];
     for (const meFirst of runOrders) {
-      for (let i = 0; i < runsPerOrder; i += 1) {
+      const loops = verbose ? 1 : runsPerOrder;
+      for (let i = 0; i < loops; i += 1) {
         runs.push(runSingleSimulation(
           player, opponent,
           rollMode === 'average' ? DEFAULT_ROLL_MODE : rollMode,
           runtimeWrites, maxTurns, oppRuntimeWrites,
-          meFirst, lastStandSecond,
+          meFirst, lastStandSecond, verbose, nameLookup,
         ));
       }
     }
     const summary = summarizeRuns(runs);
+    if (verbose && runs.length > 0 && runs[0].turnLog) {
+      summary.turnLog = runs[0].turnLog;
+    }
     // The verdict / back-damage / win-lose outcome only make sense against a
     // real opponent. In solo mode the dummy opponent never fights back, so
     // suppress those fields.

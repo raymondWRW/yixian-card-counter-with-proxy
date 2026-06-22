@@ -46,6 +46,12 @@ reroll_events: list = []
 # Fate ids the user has chosen this game (breakthrough rewards), in pick order.
 chosen_fates: list = []
 
+# Derivation (天衍 / FateStrategy) ids the user has chosen this game, in pick
+# order. Picked via SimpleClientPact code=47 arg=<derivation_id>. yisim does
+# NOT currently model derivation effects — this is display-only tracking so
+# the review/UI can show which 天衍 derivations applied to a game.
+chosen_derivations: list = []
+
 # Daoyun (道韵) free-grant events for the Counter. Each entry is a card NAME
 # that the server granted (via daoyun pick / 自在随心 random draw). Drained
 # by proxy_view.Counter._drain_daoyun_events so the granted card doesn't
@@ -585,6 +591,14 @@ def _handle_simple_client_pact(mp):
         _note_daoyun_pick(chosen)
         # Don't return here — the regular fate-pending path below would
         # never fire for kind=9 anyway (kind=9 is its own pact category).
+    if kind == 47:
+        # Derivation pick (天衍 / FateStrategy). Track for display only —
+        # yisim doesn't model derivation effects. The chosen value is the
+        # FateStrategy_<id> matching tools/derivations_game.json.
+        if chosen not in chosen_derivations:
+            chosen_derivations.append(chosen)
+        _wake()
+        return f"Derivation chosen: id={chosen}"
     pc = shadow_state.get_pending_choice()
     if pc is not None and getattr(pc, "kind", "") == "fate":
         option_ids = {getattr(o, "id", None) for o in getattr(pc, "options", [])}
@@ -688,6 +702,7 @@ def process_msgpack(mp, from_client: bool):
             new_game_event.set()
             reroll_events.clear()
             chosen_fates.clear()
+            chosen_derivations.clear()
             daoyun_grant_events.clear()
             _team1_snapshot.clear()
             _daoyun_pending_picks.clear()

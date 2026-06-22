@@ -7,7 +7,9 @@
 const $ = (id) => document.getElementById(id);
 const BOARD_SLOTS = 8;
 
-let settings = { damageMode: 'matchup', rollMode: 'average', onTop: true };
+// damageMode is locked to 'solo' — matchup mode and the toggle button have
+// been removed from the UI. Keep the field for downstream callers that read it.
+let settings = { damageMode: 'solo', rollMode: 'average', onTop: true };
 let lastVM = null;
 let lastStateAt = 0;
 
@@ -138,42 +140,22 @@ function renderHand(el, hand, seasonal) {
 }
 
 function renderDamageResult(d) {
-  $('damage-mode-note').textContent = `(${settings.damageMode})`;
+  $('damage-mode-note').textContent = '(solo)';
   const pillEl = $('result-pill');
   if (!d || d.error || d.first8Turns == null) {
-    // R23: damage-total element removed; only the per-turn list + pill render.
     $('damage-turns').innerHTML = d && d.error
       ? `<span class="empty-note">${d.error}</span>` : '';
     pillEl.style.display = 'none';
     applyBoardHighlight($('me-board'), null);
     return;
   }
-
-  // Matchup: emit the WIN @Tn / LOSE @Tn / DRAW chip + highlight the slot.
-  if (d.matchup && d.outcome && d.outcome !== 'undecided') {
-    let label, cls;
-    if (d.outcome === 'win') { label = `WIN @T${d.endTurn ?? '?'}`; cls = 'win'; }
-    else if (d.outcome === 'lose') { label = `LOSE @T${d.endTurn ?? '?'}`; cls = 'lose'; }
-    else { label = `DRAW`; cls = 'draw'; }
-    pillEl.className = 'result-pill ' + cls;
-    pillEl.textContent = label;
-    pillEl.style.display = '';
-  } else if (d.matchup) {
-    pillEl.className = 'result-pill draw';
-    pillEl.textContent = `UNRESOLVED`;
-    pillEl.style.display = '';
-  } else {
-    pillEl.style.display = 'none';
-  }
-
-  // Per-turn list, capped at T8 even if the battle ran longer.
+  // Solo-only: no WIN/LOSE pill, no board highlight (no opponent to compare to).
+  pillEl.style.display = 'none';
   const dealt = (d.cumulativeDamage || []).slice(0, 8);
   $('damage-turns').innerHTML = dealt.map(
     (v, i) => `<span class="turn">T${i + 1} <b>${Math.round(v)}</b></span>`
   ).join('');
-
-  // Highlight the slot the player last played (green if won, red if lost).
-  applyBoardHighlight($('me-board'), d.matchup ? d : null);
+  applyBoardHighlight($('me-board'), null);
 }
 
 // Build the yisim slot/options payload from a view-model and simulate. Guarded
@@ -226,24 +208,10 @@ async function updateDamage(vm) {
       cultivation: me.xiuwei || 0,
     },
     talents: (me.fates || []),
-    mode: settings.damageMode,
+    mode: 'solo',
   };
-  if (settings.damageMode === 'matchup' && vm.opponent && vm.opponent.board) {
-    const opp = vm.opponent;
-    const oppDeckSlots = opp.unlocked || deckSlots;
-    opts.opponentSlots = (opp.board || []).slice(0, oppDeckSlots).map(
-      (c) => (c ? slotFromCard(c) : null)
-    );
-    opts.opponentState = {
-      hp: opp.hp, maxHp: opp.hp,
-      physique: opp.tipo || 0, maxPhysique: opp.tipo || 0,
-      cultivation: opp.xiuwei || 0,
-    };
-    // R26: opponent fates now flow through yisim too. proxy_view emits
-    // `opp.fates` in the same talent-object shape as `me.fates`, so the
-    // simulator's normalizeTalents accepts it directly.
-    opts.opponentTalents = (opp.fates || []);
-  }
+  // Matchup mode is disabled — only solo damage is computed (your board
+  // vs a generic opponent). No opponent slots / state passed to yisim.
   const token = ++_simToken;
   try {
     const result = await window.yisim.simulate(slots, opts);
@@ -254,12 +222,13 @@ async function updateDamage(vm) {
 }
 
 function renderDamage(vm) {
-  $('damage-mode-note').textContent = `(${settings.damageMode})`;
+  $('damage-mode-note').textContent = '(solo)';
   updateDamage(vm);
 }
 
 function render(vm) {
   if (!vm) return;
+  updateReviewButtonVisibility(vm);
   $('round-label').textContent = `Round ${vm.round ?? '—'}`;
   $('phase-label').textContent = vm.phase || '';
 
@@ -365,29 +334,21 @@ async function api() {
   return (window.pywebview && window.pywebview.api) || null;
 }
 
-function applyModeButton() {
-  $('btn-mode').textContent = settings.damageMode;
-}
-
 window.addEventListener('pywebviewready', async () => {
   const a = await api();
   if (a) {
     try { settings = await a.get_settings(); } catch (_) {}
   }
-  applyModeButton();
+  // Force solo regardless of what was persisted in settings.json from an
+  // earlier matchup-capable build.
+  settings.damageMode = 'solo';
   // After settings load, apply the persisted UI scale (set by the
   // bottom-right resize handle in a previous session).
   if (typeof window.applyUiScale === 'function') {
     window.applyUiScale(Number(settings.uiScale) || 1.0);
   }
-});
-
-$('btn-mode').addEventListener('click', async () => {
-  settings.damageMode = settings.damageMode === 'matchup' ? 'solo' : 'matchup';
-  applyModeButton();
-  const a = await api();
-  if (a) a.set_setting('damageMode', settings.damageMode);
-  if (lastVM) renderDamage(lastVM); // M5: re-simulate; for now just relabel
+  // No state yet → we're "waiting for a game" → show the Review button.
+  updateReviewButtonVisibility(null);
 });
 
 $('btn-pin').addEventListener('click', async () => {
@@ -401,6 +362,22 @@ $('btn-quit').addEventListener('click', async () => {
   const a = await api();
   if (a) a.quit();
 });
+
+// Review button: only visible when waiting for a game. Click → open review window.
+$('btn-review').addEventListener('click', async () => {
+  const a = await api();
+  if (a && a.open_review) {
+    try { await a.open_review(); } catch (e) { console.error(e); }
+  }
+});
+
+function updateReviewButtonVisibility(vm) {
+  // "Waiting for a game" = no round / round 0 / no hand+board cards.
+  const btn = $('btn-review');
+  if (!btn) return;
+  const hasGame = vm && vm.round && vm.round > 0;
+  btn.style.display = hasGame ? 'none' : '';
+}
 
 // ── Minimize: collapse the body to just the titlebar (Ctrl+H or − button) ───
 let _collapsed = false;

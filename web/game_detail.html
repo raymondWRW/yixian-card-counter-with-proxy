@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>查看 · 对局详情</title>
+  <link rel="stylesheet" href="review.css">
+  <link rel="stylesheet" href="game_detail.css">
+</head>
+<body>
+  <header id="titlebar">
+    <span class="title">查看 · <span id="game-id"></span></span>
+    <span class="spacer"></span>
+    <button id="btn-quit" class="tbtn" title="Close">✕</button>
+  </header>
+
+  <main id="content">
+    <div id="detail-empty" class="empty-note">Loading…</div>
+    <div id="rounds-list" style="display:none"></div>
+  </main>
+
+  <div id="resize-handle" title="Drag to resize"></div>
+
+  <script src="game_detail.js"></script>
+</body>
+</html>

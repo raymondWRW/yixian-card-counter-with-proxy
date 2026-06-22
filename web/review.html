@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Review</title>
+  <link rel="stylesheet" href="review.css">
+</head>
+<body>
+  <header id="titlebar">
+    <span class="title">Review · 复盘</span>
+    <span class="spacer"></span>
+    <button id="btn-stats" class="tbtn" title="Stats">统计</button>
+    <button id="btn-quit" class="tbtn" title="Close">✕</button>
+  </header>
+
+  <main id="content">
+    <div id="game-list-wrap">
+      <div id="game-list-empty">Loading games…</div>
+      <div id="game-grid" style="display:none"></div>
+    </div>
+
+    <!-- Solution modal: opens when a 解法 button is clicked. -->
+    <div id="sol-modal" class="modal-overlay" style="display:none">
+      <div class="modal">
+        <header class="modal-head">
+          <h2 id="sol-title">解法</h2>
+          <button id="sol-close" class="tbtn">✕</button>
+        </header>
+        <div class="modal-body">
+          <div id="sol-body"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats modal: hidden by default; opens when 统计 is clicked. -->
+    <div id="stats-modal" class="modal-overlay" style="display:none">
+      <div class="modal">
+        <header class="modal-head">
+          <h2>统计</h2>
+          <button id="stats-close" class="tbtn">✕</button>
+        </header>
+        <div class="modal-body">
+          <div class="filter-row">
+            <label>角色:
+              <select id="filter-character"><option value="">全部</option></select>
+            </label>
+            <label>副职:
+              <select id="filter-sidejob"><option value="">全部</option></select>
+            </label>
+            <label>最近:
+              <select id="filter-recent">
+                <option value="0">全部</option>
+                <option value="10">最近10场</option>
+                <option value="25">最近25场</option>
+                <option value="50">最近50场</option>
+              </select>
+            </label>
+          </div>
+          <div id="stats-cards" class="stats-cards"></div>
+          <div id="stats-summary" class="stats-summary"></div>
+          <div id="stats-charts" class="stats-charts">
+            <div class="chart-block">
+              <div class="chart-title">名次分布</div>
+              <div id="placement-hist" class="placement-hist"></div>
+            </div>
+            <div class="chart-block">
+              <div class="chart-title">综合实力 · 净命元/回合（近期加权·对数）</div>
+              <div id="radar-chart"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom-right drag handle. Same pattern as the main window — scales the
+       whole UI via CSS zoom and resizes the OS window to match. -->
+  <div id="resize-handle" title="Drag to resize"></div>
+
+  <script src="review.js"></script>
+</body>
+</html>

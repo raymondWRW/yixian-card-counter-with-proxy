@@ -15,6 +15,7 @@ Run:  .venv/Scripts/python.exe app.py
 """
 import json
 import os
+import sys
 import threading
 from pathlib import Path
 
@@ -24,12 +25,21 @@ BASE_DIR = Path(__file__).resolve().parent
 WEB_DIR = BASE_DIR / "web"
 INDEX_HTML = WEB_DIR / "index.html"
 COUNTER_HTML = WEB_DIR / "counter.html"
+REVIEW_HTML = WEB_DIR / "review.html"
+DETAIL_HTML = WEB_DIR / "game_detail.html"
 
 # Window handles, set in main(); used by the consumer thread to push state.
 # _window      — main window (round bar / damage / boards / hand)
 # _counter_win — companion window (deck counter only, lite-style)
+# _review_win  — review window (game history, stats); opened on demand by the
+#                main window's Review button
+# _detail_win  — game-detail window: per-round boards / fates / winner
 _window = None
 _counter_win = None
+_review_win = None
+_detail_win = None
+# Selected game_id for the detail window — JS reads this on load.
+_detail_game_id = None
 
 # Height of the titlebar in px (must match #titlebar height in app.css). When the
 # user minimizes the window, we resize to this height to leave only the titlebar
@@ -135,15 +145,205 @@ class Api:
         return bool(collapsed)
 
     def quit(self):
-        # Quit both windows so the process exits when either window's ✕ is
+        # Quit all windows so the process exits when any window's ✕ is
         # clicked. pywebview keeps the event loop alive as long as ANY
-        # window is open, so we must destroy them both.
-        if _counter_win is not None:
-            try: _counter_win.destroy()
+        # window is open, so we must destroy them all.
+        for win in (_counter_win, _review_win, _window):
+            if win is not None:
+                try: win.destroy()
+                except Exception: pass
+
+    # ── Review-window helpers (used by web/review.js + main-window button) ──
+    def open_review(self):
+        """Open the review window (lazy — creates it on first click).
+        Called from web/ui.js when the user clicks the Review button."""
+        global _review_win
+        if _review_win is not None:
+            try:
+                _review_win.show()
+                return True
+            except Exception:
+                _review_win = None
+        try:
+            _review_win = webview.create_window(
+                "Review · 复盘",
+                url=str(REVIEW_HTML),
+                width=720, height=520, min_size=(420, 320),
+                resizable=True, frameless=True, easy_drag=False,
+                on_top=False,
+                js_api=self,
+            )
+            return True
+        except Exception as e:
+            print(f"[review] open failed: {e}", flush=True)
+            return False
+
+    def close_review(self):
+        """Hide the review window (from its own ✕ button)."""
+        global _review_win
+        if _review_win is not None:
+            try: _review_win.destroy()
             except Exception: pass
-        if _window is not None:
-            try: _window.destroy()
+            _review_win = None
+
+    def move_review(self, x, y):
+        """Move the review window — review.js calls this from a titlebar drag."""
+        if _review_win is not None:
+            try: _review_win.move(int(x), int(y))
             except Exception: pass
+
+    def resize_review(self, w, h):
+        """Resize the review window — review.js calls this when the user drags
+        the bottom-right handle. Width and height come from the JS side scaled
+        by the persisted reviewScale."""
+        if _review_win is not None:
+            try: _review_win.resize(int(w), int(h))
+            except Exception: pass
+
+    # ── Game-detail window (查看 button) ─────────────────────────────────────
+    def open_game_detail(self, game_id: str):
+        """Open the per-round detail window for a given game (lazy-create)."""
+        global _detail_win, _detail_game_id
+        _detail_game_id = game_id
+        if _detail_win is not None:
+            try:
+                # Reload to pick up the new game_id, then bring to front.
+                _detail_win.load_url(str(DETAIL_HTML))
+                _detail_win.show()
+                return True
+            except Exception:
+                _detail_win = None
+        try:
+            _detail_win = webview.create_window(
+                "查看",
+                url=str(DETAIL_HTML),
+                width=900, height=640, min_size=(560, 380),
+                resizable=True, frameless=True, easy_drag=False,
+                on_top=False, js_api=self,
+            )
+            return True
+        except Exception as e:
+            print(f"[detail] open failed: {e}", flush=True)
+            return False
+
+    def close_detail(self):
+        """Close the detail window (✕ button)."""
+        global _detail_win
+        if _detail_win is not None:
+            try: _detail_win.destroy()
+            except Exception: pass
+            _detail_win = None
+
+    def move_detail(self, x, y):
+        if _detail_win is not None:
+            try: _detail_win.move(int(x), int(y))
+            except Exception: pass
+
+    def resize_detail(self, w, h):
+        if _detail_win is not None:
+            try: _detail_win.resize(int(w), int(h))
+            except Exception: pass
+
+    def get_detail_game_id(self):
+        """game_detail.js reads this on load to know which game to render."""
+        return _detail_game_id
+
+    def game_detail(self, game_id: str):
+        """Return per-round detail (ME / OPP boards, fates, winner)."""
+        try:
+            sys.path.insert(0, str(BASE_DIR / "proxy"))
+            import game_archive
+            d = game_archive.game_detail(game_id)
+            return d or {"error": "game not found", "rounds": []}
+        except Exception as e:
+            return {"error": str(e), "rounds": []}
+
+    def list_games(self):
+        """Return the list of recorded games for the review UI."""
+        try:
+            sys.path.insert(0, str(BASE_DIR / "proxy"))
+            import game_archive
+            return game_archive.list_games()
+        except Exception as e:
+            print(f"[review] list_games failed: {e}", flush=True)
+            return []
+
+    def review_game(self, game_id: str):
+        """For each lost round in this folder-format game, run yisim against
+        random permutations of the played board to find a winning arrangement.
+
+        Pulls per-round state (ME + OPPONENT board, fates, hp/tipo/xiuwei) from
+        the recorded deck_tracker.jsonl, builds a payload identical to the one
+        yisim_review.js consumes, and reports which lost rounds were winnable.
+        """
+        try:
+            sys.path.insert(0, str(BASE_DIR / "proxy"))
+            import game_archive
+            # Counter recordings have a battle_log/<id>/ folder; imported games
+            # (from recentBattleDatas) don't — for those the payload is built
+            # straight from the recent record instead.
+            folder = BASE_DIR / "battle_log" / game_id
+            is_folder = folder.is_dir()
+            g = game_archive.load_game(game_id)
+            if not g:
+                return {"error": "load_game returned None",
+                        "id": game_id, "winnable_rounds": [], "lost_rounds": []}
+            lost = [r["round"] for r in g.get("rounds", [])
+                    if not r.get("won", False) and r.get("round")]
+            if not lost:
+                return {"id": game_id, "lost_rounds": [],
+                        "winnable_rounds": [], "details": []}
+
+            import subprocess
+            import json as _json
+            review_js = str(BASE_DIR / "tools" / "yisim_review.js")
+            winnable = []
+            details = []
+            for rn in lost:
+                payload = (game_archive.build_review_payload(folder, rn)
+                           if is_folder
+                           else game_archive.build_recent_review_payload(game_id, rn))
+                if not payload:
+                    details.append({"round": rn,
+                                    "skipped": "no per-round state recorded"})
+                    continue
+                try:
+                    proc = subprocess.run(
+                        ["node", review_js],
+                        input=_json.dumps({"round": payload, "max_perms": 300}),
+                        capture_output=True, text=True,
+                        encoding="utf-8", timeout=60,
+                    )
+                    out = _json.loads(proc.stdout or "{}")
+                except Exception as e:
+                    details.append({"round": rn, "error": str(e)})
+                    continue
+                if out.get("win"):
+                    winnable.append(rn)
+                    details.append({
+                        "round": rn, "win": True,
+                        "tried": out.get("tried"),
+                        "end_turn": out.get("end_turn"),
+                        "winning_slots": out.get("winning_slots"),
+                        "used_hand": out.get("used_hand"),
+                    })
+                else:
+                    details.append({
+                        "round": rn, "win": False,
+                        "tried": out.get("tried"),
+                        "closest_gap": out.get("closest_dmg_gap"),
+                        "outcome": out.get("outcome"),
+                    })
+            return {
+                "id": game_id,
+                "lost_rounds": lost,
+                "winnable_rounds": winnable,
+                "details": details,
+            }
+        except Exception as e:
+            import traceback
+            print(f"[review] {traceback.format_exc()}", flush=True)
+            return {"error": str(e), "winnable_rounds": [], "lost_rounds": []}
 
     # ── Counter-window helpers (used by web/counter.js) ─────────────────────
     def move_counter(self, x, y):
@@ -178,7 +378,8 @@ def _settings_path() -> Path:
 
 
 _DEFAULT_SETTINGS = {
-    "damageMode": "matchup",   # "matchup" | "solo"
+    # damageMode is locked to "solo" — matchup mode was removed from the UI.
+    "damageMode": "solo",
     "rollMode": "average",     # "average" | "high" | "low"
     "onTop": True,
     # UI scale persisted per-window. The bottom-right drag handle in each
@@ -186,6 +387,10 @@ _DEFAULT_SETTINGS = {
     # startup and applies CSS zoom so the layout stays proportional.
     "uiScale": 1.0,
     "counterScale": 1.0,
+    "reviewScale": 1.0,
+    "detailScale": 1.0,
+    # Counter window: when True, collapse to show only the cards in hand.
+    "counterHandOnly": False,
 }
 
 
@@ -278,9 +483,14 @@ def _push_update_notice(manifest: dict):
 def _start_workers():
     """Start the data source feeding the UI.
 
-    YX_DEMO   — push one static demo view-model (no proxy).
-    YX_REPLAY — play back a captured traffic.jsonl into the UI (no admin).
-    default   — live mitmproxy capture + consumer (needs admin / WinDivert).
+    YX_DEMO   — push one static demo view-model (no source connected).
+    YX_REPLAY — play back a captured traffic.jsonl into the UI.
+    YX_PROXY  — opt-in legacy: mitmproxy TLS MITM (needs admin + CA cert).
+                Loads from proxy[outdated]/ — see its README. Useful when
+                frida is blocked.
+    default   — frida hook on the game's ProtobufParser (no cert, no admin).
+                Set YX_GAME_EXE for a one-off path override, or YX_ATTACH=1
+                to attach to an already-running game.
     """
     # Auto-update: fire-and-forget Gitee check on startup. Short timeout +
     # daemon thread so an offline / slow network never delays the window.
@@ -304,14 +514,86 @@ def _start_workers():
         ).start()
         return
 
-    threading.Thread(target=runtime.start_proxy, daemon=True, name="proxy").start()
+    # YX_PROXY=1 → legacy mitmproxy path. Loaded on demand from the outdated
+    # folder so the default build doesn't ship mitmproxy at all.
+    if os.environ.get("YX_PROXY"):
+        # Add proxy[outdated]/ to sys.path so we can import the legacy bits.
+        outdated_dir = BASE_DIR / "proxy[outdated]"
+        if str(outdated_dir) not in sys.path:
+            sys.path.insert(0, str(outdated_dir))
+        try:
+            import cert_setup
+            status = cert_setup.ensure_cert_trusted(
+                lambda *a: print(*a, flush=True))
+            print(f"[cert] {status}", flush=True)
+        except Exception as e:
+            print(f"[cert] setup skipped: {e}", flush=True)
+        from proxy_runtime import start_proxy as _legacy_start_proxy
+        threading.Thread(target=_legacy_start_proxy,
+                         daemon=True, name="proxy").start()
+        threading.Thread(
+            target=runtime.start_consumer, args=(push_state,),
+            daemon=True, name="consumer",
+        ).start()
+        return
+
+    # Default: frida hook on the game's ProtobufParser. No cert, no admin.
+    attach = os.environ.get("YX_ATTACH", "0") != "0"
+    game_exe = os.environ.get("YX_GAME_EXE")
+    if not game_exe and not attach:
+        # Fallback: the same config file the native HUD uses.
+        cfg_path = BASE_DIR / "native_hud" / "bridge" / "YiXianHUD_config.json"
+        if cfg_path.exists():
+            try:
+                game_exe = json.loads(cfg_path.read_text(encoding="utf-8")
+                                      ).get("game_exe")
+            except Exception:
+                pass
     threading.Thread(
-        target=runtime.start_consumer, args=(push_state,), daemon=True, name="consumer"
+        target=runtime.start_frida_capture,
+        kwargs={"game_exe": game_exe, "attach_mode": attach},
+        daemon=True, name="frida-capture",
     ).start()
+    threading.Thread(
+        target=runtime.start_consumer, args=(push_state,),
+        daemon=True, name="consumer",
+    ).start()
+
+
+def _patch_winforms_on_top():
+    """Fix a pywebview freeze: its winforms ``set_on_top`` writes ``Form.TopMost``
+    directly from the JS-API worker thread (``js_bridge_call`` runs every API call
+    off the UI thread). Toggling TopMost off-thread makes WinForms recreate the
+    window handle on the wrong thread, which breaks the message pump and FREEZES
+    the window — exactly what clicking the 📌 pin did. Every other window op
+    (move/resize/show) marshals onto the UI thread via ``Invoke``; ``set_on_top``
+    is the one that forgot to. Patch it to do the same. No-op off Windows / if the
+    backend isn't winforms."""
+    if not sys.platform.startswith("win"):
+        return
+    try:
+        from webview.platforms import winforms as wf
+        from System import Func, Type
+
+        def _set_on_top(uid, on_top):
+            form = wf.BrowserView.instances.get(uid)
+            if form is None:
+                return
+            def _apply():
+                form.TopMost = on_top
+            if form.InvokeRequired:
+                form.Invoke(Func[Type](_apply))   # marshal to the UI thread
+            else:
+                _apply()
+
+        wf.set_on_top = _set_on_top
+    except Exception as e:
+        print(f"[on_top patch skipped] {e}", flush=True)
 
 
 def main():
     global _window, _counter_win
+    _patch_winforms_on_top()
     api = Api()
     # Main window — round bar + damage card only. (YOU / OPPONENT / HAND
     # sections moved to the counter window, so this can start short and
@@ -357,7 +639,10 @@ def main():
         # Lowered to match the lite window's MIN_SCALE=0.6: 260 * 0.6 = 156.
         min_size=(150, 30),
     )
-    webview.start(_start_workers, debug=bool(os.environ.get("YX_DEBUG")))
+    # Open the WebView2 dev tools only when YX_DEVTOOLS is set — NOT on
+    # YX_DEBUG (that one just enables battle_log storage), so the normal
+    # debug/storage run doesn't pop dev tools every launch.
+    webview.start(_start_workers, debug=bool(os.environ.get("YX_DEVTOOLS")))
 
 
 if __name__ == "__main__":

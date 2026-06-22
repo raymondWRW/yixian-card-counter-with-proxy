@@ -1,0 +1,15 @@
+# C# build dirs
+**/bin/
+**/obj/
+
+# _build: ship only the runtime artefacts the exe/launcher load; ignore the rest
+# (old HUD iterations, frida-compiled agents are regenerated, feed dumps, logs).
+_build/*
+!_build/capture.agent.js
+!_build/bot_glue3.agent.js
+!_build/YiXianHud23.dll
+!_build/YiXianSimData.dll
+
+# NOTE: _refs/ (DarkSun.HotUpdate.dll + DummyDll) ARE committed so the repo builds
+# self-contained. They are extracted from the game (see README) — the game's
+# copyright, included here by the repo owner's choice.

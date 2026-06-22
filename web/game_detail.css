@@ -1,0 +1,89 @@
+/* game_detail.css — per-round detail of one game. Layered on review.css. */
+#content { padding: 12px 14px 16px; }
+#detail-empty { color: var(--muted); padding: 28px; text-align: center;
+  font-style: italic; }
+
+#rounds-list { display: flex; flex-direction: column; gap: 10px; }
+
+.round-row {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 8px;
+  align-items: center;
+}
+.round-row.lost { border-color: #6e3845; box-shadow: inset 0 0 0 1px #6e384540; }
+.round-row.won  { border-color: #2d5a35; box-shadow: inset 0 0 0 1px #2d5a3540; }
+
+.round-side {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 8px;
+  align-items: center;
+}
+.round-side.opp { grid-template-columns: 1fr 32px; }
+.round-side.opp .side-meta { text-align: right; }
+.round-side.opp .row-cards { justify-content: flex-end; }
+
+.round-side .avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #11131a center / cover no-repeat;
+  border: 1px solid var(--line);
+}
+.round-side .avatar.placeholder { background-image: linear-gradient(135deg, #2a3140, #1b1e25); }
+
+.side-meta .name {
+  font-weight: 600; font-size: 12px;
+  display: flex; align-items: center; gap: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.round-side.opp .side-meta .name { justify-content: flex-end; }
+.side-meta .stats {
+  display: flex; gap: 6px; font-size: 10px; color: var(--muted); margin-top: 1px;
+}
+.round-side.opp .side-meta .stats { justify-content: flex-end; }
+.side-meta .stats b { color: var(--text); margin-right: 1px; }
+
+.row-cards {
+  display: flex; flex-wrap: wrap; gap: 2px 4px; margin-top: 4px;
+}
+.card-chip {
+  display: inline-flex; align-items: center; gap: 2px;
+  background: #1a1d25; border: 1px solid #2a3140; border-radius: 3px;
+  padding: 1px 4px; font-size: 10px; color: #cdd6f4;
+}
+.card-chip .lv {
+  background: #f9e2af; color: #1a1d25; border-radius: 2px;
+  padding: 0 3px; font-size: 9px; font-weight: 700; margin-left: 2px;
+}
+.card-chip .dream { color: #cba6f7; }
+
+.row-fates {
+  display: flex; flex-wrap: wrap; gap: 2px 4px; margin-top: 3px;
+}
+.round-side.opp .row-fates { justify-content: flex-end; }
+.fate-chip {
+  display: inline-flex; align-items: center; gap: 3px;
+  background: #1f2433; border: 1px solid #2a3140; border-radius: 3px;
+  padding: 1px 5px 1px 3px; font-size: 10px; color: #94a3b8;
+}
+.fate-chip img { width: 14px; height: 14px; }
+
+.round-vs {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 2px; min-width: 70px;
+}
+.round-num {
+  font-weight: 700; font-size: 13px; color: var(--text);
+  letter-spacing: .04em;
+}
+.round-outcome {
+  font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 8px;
+  letter-spacing: .04em;
+}
+.round-outcome.won  { color: var(--win); background: #1d2e21; }
+.round-outcome.lost { color: var(--lose); background: #3a1d22; }
+.round-delta { font-size: 10px; color: var(--muted); font-family: ui-monospace, monospace; }

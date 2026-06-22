@@ -25,18 +25,26 @@ spec = HERE / "YiXianCounter.spec"
 if spec.exists():
     spec.unlink()
 
+icon_arg = []
+for cand in ("icon.ico", "native_hud/icon.ico"):
+    if (HERE / cand).exists():
+        icon_arg = ["--icon", cand]
+        break
+
 cmd = [
     sys.executable, "-m", "PyInstaller",
     "--noconfirm",
     "--onefile",
     "--windowed",
     "--name", "YiXianCounter",
-    "--icon", "small_card_counter/icon.ico",
+    *icon_arg,
     # The main app's web/ folder + the shared proxy/ + the yisim bundle.
     "--add-data", f"web{SEP}web",
     "--add-data", f"proxy{SEP}proxy",
     "--add-data", f"tools{SEP}tools",
-    "--collect-all", "mitmproxy",
+    # frida capture agent (loaded by runtime.start_frida_capture).
+    "--add-data", f"native_hud/_build/capture.agent.js{SEP}native_hud/_build",
+    "--collect-all", "frida",
     "--collect-all", "blackboxprotobuf",
     "--collect-all", "webview",
     "--hidden-import", "addon",
@@ -53,6 +61,7 @@ cmd = [
     "--hidden-import", "lingyu_merge",
     "--hidden-import", "proxy_view",
     "--hidden-import", "runtime",
+    "--hidden-import", "frida",
     "app.py",
 ]
 print("Running:", " ".join(cmd))

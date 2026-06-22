@@ -11,6 +11,8 @@
     "esbuild": "^0.24.0"
   },
   "dependencies": {
+    "frida-compile": "^19.0.5",
+    "frida-il2cpp-bridge": "^0.13.1",
     "seedrandom": "^3.0.5"
   }
 }

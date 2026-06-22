@@ -1,0 +1,275 @@
+/* Review window — companion to main + counter. Same dark palette as app.css. */
+:root {
+  --bg: #16181d;
+  --panel: #1e2128;
+  --panel-2: #232730;
+  --text: #cdd6f4;
+  --muted: #7f849c;
+  --accent: #89b4fa;
+  --win: #a6e3a1;
+  --lose: #f38ba8;
+  --warn: #f9e2af;
+  --line: #2a3140;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
+  font-family: "Microsoft YaHei", -apple-system, "Segoe UI", sans-serif;
+  font-size: 13px; user-select: none; }
+
+/* Hero band with a subtle title and a frosted feel. */
+#titlebar {
+  height: 38px; padding: 0 12px; display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(180deg, #131620 0%, #11131a 100%);
+  border-bottom: 1px solid var(--line);
+  -webkit-app-region: drag;
+  position: sticky; top: 0; z-index: 20;
+}
+#titlebar .title {
+  font-weight: 700; letter-spacing: .04em;
+  background: linear-gradient(90deg, #89b4fa 0%, #cba6f7 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+#titlebar .spacer { flex: 1; }
+.tbtn {
+  -webkit-app-region: no-drag;
+  background: transparent; color: var(--text); border: 1px solid var(--line);
+  border-radius: 4px; padding: 3px 9px; cursor: pointer; font-size: 12px;
+  transition: background .15s, border-color .15s;
+}
+.tbtn:hover { background: #2a3140; border-color: var(--accent); }
+
+#content { padding: 12px 14px 16px; }
+
+#game-list-empty { color: var(--muted); padding: 24px; text-align: center;
+  font-style: italic; }
+
+/* ─── Game card list (one per row) ────────────────────────────────────────── */
+#game-grid {
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+.game-card {
+  --accent-row: var(--accent);
+  position: relative; overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent-row);
+  border-radius: 6px;
+  padding: 10px 12px 10px 14px;
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  transition: transform .15s, box-shadow .15s, border-color .15s;
+}
+.game-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0,0,0,.35);
+  border-color: var(--accent-row);
+}
+
+/* Portrait — small framed thumbnail; expands on hover to a popover preview. */
+.game-portrait {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #11131a center / cover no-repeat;
+  border: 2px solid var(--accent-row);
+  position: relative;
+  flex-shrink: 0;
+}
+.game-portrait.no-portrait { background-image: linear-gradient(135deg, #2a3140, #1b1e25); }
+
+/* Middle column: name + sect + sidejob + meta */
+.game-meta { min-width: 0; }
+.game-meta .row-1 { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.game-meta .name { font-weight: 600; color: var(--text); font-size: 14px; }
+.game-meta .ts { color: var(--muted); font-family: ui-monospace, monospace; font-size: 11px; }
+.game-meta .row-2 {
+  display: flex; align-items: center; gap: 8px; margin-top: 4px;
+  color: var(--muted); font-size: 11px;
+}
+.game-meta .row-2 img { width: 14px; height: 14px; object-fit: contain; }
+.game-meta .row-2 .sect-name { color: #94a3b8; }
+.game-meta .row-2 .side-name { color: #f9e2af; }
+.game-meta .row-3 {
+  display: flex; gap: 10px; margin-top: 6px; font-size: 11px;
+}
+.game-meta .row-3 .pip { color: var(--muted); }
+.game-meta .row-3 .pip b { color: var(--text); margin-right: 2px; }
+.game-meta .row-3 .pip.win b { color: var(--win); }
+.game-meta .row-3 .pip.lose b { color: var(--lose); }
+
+/* Placement color: gold #1 · green shades #2-4 · red shades #5-8. */
+.game-meta .row-3 .pip.placement b { font-weight: 800; }
+.game-meta .row-3 .pip.p1 b { color: #f9d71c; text-shadow: 0 0 6px #f9d71c40; }
+.game-meta .row-3 .pip.p2 b { color: #a6e3a1; }
+.game-meta .row-3 .pip.p3 b { color: #74c980; }
+.game-meta .row-3 .pip.p4 b { color: #4e9a5a; }
+.game-meta .row-3 .pip.p5 b { color: #f6a87a; }
+.game-meta .row-3 .pip.p6 b { color: #f08597; }
+.game-meta .row-3 .pip.p7 b { color: #df5d6e; }
+.game-meta .row-3 .pip.p8 b { color: #c23b50; }
+
+/* Right column: review + view + 解法 buttons (stacked). */
+.game-action {
+  display: flex; flex-direction: column; gap: 4px; align-items: stretch;
+  min-width: 100px; max-width: 160px;
+}
+.btn-view {
+  background: #2a2433; color: #cba6f7; border: 1px solid var(--line);
+  border-radius: 5px; padding: 5px 10px; font-size: 11px; cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.btn-view:hover { background: #352c44; border-color: #cba6f7; }
+.btn-review {
+  background: #243247; color: var(--accent); border: 1px solid var(--line);
+  border-radius: 5px; padding: 6px 10px; font-size: 11px; cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.btn-review:hover:not(:disabled) { background: #2c3b54; border-color: var(--accent); }
+.btn-review:disabled { color: var(--muted); cursor: default; background: transparent; }
+.btn-review.reviewed { color: var(--win); border-color: #2c5530; background: #19341d; }
+.btn-review.none-found { color: var(--muted); }
+
+/* 解法 (solution) buttons — appear under 复盘 after a successful search. */
+.btn-solution {
+  background: #2d2419; color: #fab387; border: 1px solid #5a3a1f;
+  border-radius: 5px; padding: 4px 10px; font-size: 11px; cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s, border-color .15s;
+}
+.btn-solution:hover { background: #3a2d1f; border-color: #fab387; }
+
+/* Solution modal — shows the winning 8-slot board arrangement. */
+.sol-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+  margin-top: 4px;
+}
+.sol-slot {
+  background: #1a1d25; border: 1px solid var(--line);
+  border-radius: 5px; padding: 8px 8px 8px 22px; position: relative;
+  font-size: 12px; color: var(--text);
+  display: flex; align-items: center; gap: 6px;
+}
+.sol-slot.empty { color: var(--muted); font-style: italic; }
+.sol-slot.dream .cname { color: #cba6f7; }
+.sol-slot .pos {
+  position: absolute; left: 4px; top: 4px;
+  font-size: 10px; color: var(--muted); font-weight: 700;
+}
+.sol-slot .lv {
+  background: #f9e2af; color: #1a1d25; border-radius: 3px;
+  padding: 0 5px; font-size: 10px; font-weight: 700; margin-left: auto;
+}
+
+/* ─── Stats modal ───────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.65);
+  backdrop-filter: blur(2px);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 40px 20px; z-index: 50;
+}
+.modal {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  width: min(720px, 100%); max-height: 86vh; overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,.7);
+}
+.modal-head {
+  display: flex; align-items: center; padding: 8px 14px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, #1a1d25 0%, #1e2128 100%);
+}
+.modal-head h2 {
+  margin: 0; font-size: 14px; flex: 1; font-weight: 700;
+  background: linear-gradient(90deg, #f9e2af 0%, #fab387 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.modal-body { padding: 12px 16px; overflow: auto; }
+.filter-row { display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  margin-bottom: 14px; }
+.filter-row label { font-size: 12px; color: var(--muted); }
+.filter-row select {
+  background: #11131a; color: var(--text); border: 1px solid var(--line);
+  border-radius: 4px; padding: 3px 8px; margin-left: 4px;
+  outline: none; cursor: pointer;
+}
+.filter-row select:focus { border-color: var(--accent); }
+.stats-summary {
+  color: var(--text); font-size: 13px; margin-bottom: 14px;
+  padding: 10px 12px; background: var(--panel-2); border-radius: 6px;
+  border-left: 3px solid var(--accent);
+}
+.stats-summary b { color: #cba6f7; }
+
+/* Headline placement metric cards. */
+.stats-cards { display: flex; gap: 8px; margin-bottom: 12px; }
+.stat-card {
+  flex: 1; background: var(--panel-2); border-radius: 6px;
+  padding: 10px 8px; text-align: center;
+}
+.stat-card .sc-value { font-size: 22px; font-weight: 800; color: #cba6f7; line-height: 1.1; }
+.stat-card .sc-label { font-size: 12px; color: var(--text); margin-top: 3px; }
+.stat-card .sc-sub   { font-size: 10px; color: var(--muted); margin-top: 1px; }
+.stat-empty {
+  flex: 1; color: var(--muted); text-align: center; padding: 18px;
+  border: 1px dashed var(--line); border-radius: 6px; font-style: italic;
+}
+
+/* Placement histogram (#1..#8). */
+.chart-block { background: var(--panel-2); border-radius: 6px; padding: 10px 12px; }
+.chart-title { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+.placement-hist {
+  display: flex; align-items: flex-end; gap: 6px; height: 120px;
+}
+.ph-col { flex: 1; display: flex; flex-direction: column; align-items: center;
+  height: 100%; }
+.ph-count { font-size: 11px; color: var(--text); height: 14px; line-height: 14px; }
+.ph-bar-wrap { flex: 1; width: 100%; display: flex; align-items: flex-end; }
+.ph-bar {
+  width: 100%; min-height: 2px; border-radius: 3px 3px 0 0;
+  background: var(--muted); transition: height .15s ease;
+}
+.ph-place { font-size: 11px; color: var(--muted); margin-top: 4px; font-weight: 700; }
+/* Combat-strength radar. */
+#radar-chart { display: flex; justify-content: center; }
+.radar-svg { width: 100%; max-width: 230px; overflow: visible; }
+.radar-grid { fill: none; stroke: var(--line); stroke-width: 0.6; }
+.radar-neutral { fill: none; stroke: var(--muted); stroke-width: 0.8; stroke-dasharray: 2 2; }
+.radar-axis { stroke: var(--line); stroke-width: 0.5; }
+.radar-area { fill: rgba(203,166,247,.20); stroke: #cba6f7; stroke-width: 1.6;
+  stroke-linejoin: round; }
+.radar-dot { fill: #cba6f7; }
+.radar-label { fill: var(--text); font-size: 9px; font-weight: 700; text-anchor: middle; }
+.radar-val { font-size: 8px; text-anchor: middle; }
+.radar-val.pos { fill: var(--win); }
+.radar-val.neg { fill: var(--lose); }
+
+/* Match the game-card placement colors: gold #1 · green #2-4 · red #5-8. */
+.ph-bar.p1 { background: #f9d71c; box-shadow: 0 0 8px #f9d71c55; }
+.ph-bar.p2 { background: #a6e3a1; }
+.ph-bar.p3 { background: #74c980; }
+.ph-bar.p4 { background: #4e9a5a; }
+.ph-bar.p5 { background: #f6a87a; }
+.ph-bar.p6 { background: #f08597; }
+.ph-bar.p7 { background: #df5d6e; }
+.ph-bar.p8 { background: #c23b50; }
+
+/* Bottom-right drag handle — drag to resize/zoom. */
+#resize-handle {
+  position: fixed; right: 0; bottom: 0; width: 16px; height: 16px;
+  cursor: nwse-resize; z-index: 1000;
+  background:
+    linear-gradient(135deg,
+      transparent 0%, transparent 50%,
+      var(--muted) 50%, var(--muted) 60%,
+      transparent 60%, transparent 75%,
+      var(--muted) 75%, var(--muted) 85%,
+      transparent 85%);
+  opacity: .55;
+  -webkit-app-region: no-drag;
+}
+#resize-handle:hover { opacity: 1; }
