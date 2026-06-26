@@ -175,8 +175,25 @@ function slotFromCard(c) {
     ? { name: c.name, level: c.level, phase: c.level, isDream: true }
     : { name: c.name, level: c.level, isDream: false };
 }
+// Render a Yi Xian Oracle MATCHUP result (the game's own engine): WIN/LOSE pill by
+// destiny (命) damage, plus 命 / board-HP / turns. d = {win, hpDelta, turns, lifeDamage}.
+function renderOracleResult(d) {
+  $('damage-mode-note').textContent = '(oracle · 对战)';
+  const pillEl = $('result-pill');
+  const sign = d.lifeDamage > 0 ? 1 : d.lifeDamage < 0 ? -1 : 0;
+  pillEl.style.display = '';
+  pillEl.textContent = sign > 0 ? 'WIN' : sign < 0 ? 'LOSE' : 'DRAW';
+  pillEl.className = 'pill ' + (sign > 0 ? 'win' : sign < 0 ? 'lose' : 'draw');
+  const f = (v) => (v > 0 ? '+' : '') + v;
+  $('damage-turns').innerHTML =
+    `<span class="turn">命 <b>${f(d.lifeDamage)}</b></span>` +
+    `<span class="turn">HP <b>${f(d.hpDelta)}</b></span>` +
+    `<span class="turn">回合 <b>${d.turns}</b></span>`;
+  applyBoardHighlight($('me-board'), null);
+}
+
 async function updateDamage(vm) {
-  if (!window.yisim || !vm || !vm.me) return;
+  if (!vm || !vm.me) return;
   const me = vm.me;
   // 灵羽 (Spirit Feather) on board with no eligible lv1 merge target → yisim
   // has no implementation for it, so the damage sim would silently treat it
@@ -186,6 +203,22 @@ async function updateDamage(vm) {
     renderDamageResult({ error: '未识别卡片 (灵羽) — 伤害计算不可用' });
     return;
   }
+
+  // Prefer the Yi Xian Oracle (the game's OWN combat engine) for a real matchup
+  // vs the opponent's board, when both boards + the Python API are available. It
+  // handles every card/fate natively (no yisim lag). Falls back to yisim solo.
+  const api = window.pywebview && window.pywebview.api;
+  const mo = me.oracle, oo = vm.opponent && vm.opponent.oracle;
+  if (api && api.oracle_matchup && mo && oo &&
+      (mo.usedCards || []).some((x) => x) && (oo.usedCards || []).some((x) => x)) {
+    const token = ++_simToken;
+    try {
+      const r = await api.oracle_matchup(mo, oo, false);
+      if (token !== _simToken) return;
+      if (r && !r.error && r.lifeDamage != null) { renderOracleResult(r); return; }
+    } catch (e) { /* fall through to yisim */ }
+  }
+  if (!window.yisim) return;
 
   // Deck size = unlocked board slots (locked slots are excluded by the slice).
   // Empty UNLOCKED slots stay as nulls so yisim plays them as 普通攻击
@@ -363,7 +396,7 @@ $('btn-quit').addEventListener('click', async () => {
   if (a) a.quit();
 });
 
-// Review button: only visible when waiting for a game. Click → open review window.
+// Review button: always visible (in a game or not). Click → open review window.
 $('btn-review').addEventListener('click', async () => {
   const a = await api();
   if (a && a.open_review) {
@@ -372,11 +405,9 @@ $('btn-review').addEventListener('click', async () => {
 });
 
 function updateReviewButtonVisibility(vm) {
-  // "Waiting for a game" = no round / round 0 / no hand+board cards.
+  // The 复盘 button stays visible at all times, including mid-game.
   const btn = $('btn-review');
-  if (!btn) return;
-  const hasGame = vm && vm.round && vm.round > 0;
-  btn.style.display = hasGame ? 'none' : '';
+  if (btn) btn.style.display = '';
 }
 
 // ── Minimize: collapse the body to just the titlebar (Ctrl+H or − button) ───

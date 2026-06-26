@@ -1,0 +1,8686 @@
+[
+  {
+    "id": 1,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      0,
+      75,
+      50
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 2,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      0,
+      50,
+      75
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      3
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 3,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      25,
+      25,
+      50
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      8
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 4,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      75,
+      25,
+      0
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      1,
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 5,
+    "category": 2,
+    "sect": 0,
+    "weights": [
+      75,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      4000001,
+      4000002,
+      4000003,
+      4000004,
+      4000005,
+      4000006
+    ],
+    "countParam": 6,
+    "otherParams": [
+      1,
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 6,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      0,
+      75,
+      50
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 7,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      75,
+      25,
+      0
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      3,
+      3
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 8,
+    "category": 4,
+    "sect": 0,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      188
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 9,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      0,
+      75,
+      50
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 10,
+    "category": 2,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 11,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      75,
+      25,
+      0
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 12,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      100,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 5,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 13,
+    "category": 2,
+    "sect": 0,
+    "weights": [
+      100,
+      0,
+      0
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 14,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      75,
+      25,
+      0
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 15,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      75,
+      25,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      1000003,
+      2000003,
+      3000002,
+      3000005
+    ],
+    "countParam": 0,
+    "otherParams": [
+      10
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 16,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      0,
+      100,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      4000001,
+      4000002,
+      4000003,
+      4000004,
+      4000005,
+      4000006
+    ],
+    "countParam": 0,
+    "otherParams": [
+      1,
+      20,
+      20
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 17,
+    "category": 5,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      46
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 18,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      0,
+      75,
+      50
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 19,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      100,
+      0,
+      0
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      1000001
+    ],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 20,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      0,
+      50,
+      50
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      6
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 21,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      100,
+      0,
+      0
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 22,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      50,
+      50,
+      0
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      5
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 23,
+    "category": 1,
+    "sect": 4,
+    "weights": [
+      100,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      5
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 26,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": false,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 27,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      12
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 28,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      0,
+      100,
+      0
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 29,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      4
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 30,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      50,
+      50,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 31,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      0,
+      50,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      7
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 32,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      0,
+      20,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      3
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 33,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      0,
+      20,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 36,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      0,
+      20,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 37,
+    "category": 2,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      5
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Card_6000010"
+  },
+  {
+    "id": 38,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      50
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 39,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      100,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      2,
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 40,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      75,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      4
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 41,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      0,
+      50,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      3
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 24,
+    "category": 1,
+    "sect": 1,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 34,
+    "category": 1,
+    "sect": 1,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 42,
+    "category": 1,
+    "sect": 1,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 43,
+    "category": 1,
+    "sect": 1,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 44,
+    "category": 1,
+    "sect": 1,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 25,
+    "category": 2,
+    "sect": 1,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 35,
+    "category": 2,
+    "sect": 1,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 45,
+    "category": 1,
+    "sect": 2,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 46,
+    "category": 1,
+    "sect": 2,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 47,
+    "category": 1,
+    "sect": 2,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 48,
+    "category": 1,
+    "sect": 2,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 49,
+    "category": 1,
+    "sect": 2,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 50,
+    "category": 1,
+    "sect": 3,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 51,
+    "category": 1,
+    "sect": 3,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 52,
+    "category": 1,
+    "sect": 3,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 53,
+    "category": 1,
+    "sect": 3,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 54,
+    "category": 1,
+    "sect": 3,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 55,
+    "category": 2,
+    "sect": 3,
+    "weights": [
+      0,
+      0,
+      200
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 56,
+    "category": 1,
+    "sect": 4,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 57,
+    "category": 1,
+    "sect": 4,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 58,
+    "category": 1,
+    "sect": 4,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 59,
+    "category": 1,
+    "sect": 4,
+    "weights": [
+      0,
+      50,
+      0
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 60,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      0,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 61,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      0,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 62,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 264,
+    "category": 2,
+    "sect": 1,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 265,
+    "category": 2,
+    "sect": 1,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 266,
+    "category": 2,
+    "sect": 3,
+    "weights": [
+      0,
+      0,
+      200
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 267,
+    "category": 2,
+    "sect": 2,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 268,
+    "category": 2,
+    "sect": 2,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 269,
+    "category": 2,
+    "sect": 4,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 270,
+    "category": 2,
+    "sect": 4,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 271,
+    "category": 2,
+    "sect": 4,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 63,
+    "category": 4,
+    "sect": 0,
+    "weights": [
+      30,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      53,
+      5
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 64,
+    "category": 4,
+    "sect": 0,
+    "weights": [
+      30,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      59
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 65,
+    "category": 4,
+    "sect": 0,
+    "weights": [
+      30,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      9
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 66,
+    "category": 4,
+    "sect": 0,
+    "weights": [
+      30,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      6
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 67,
+    "category": 4,
+    "sect": 0,
+    "weights": [
+      30,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      13
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 68,
+    "category": 4,
+    "sect": 1,
+    "weights": [
+      30,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      70
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 69,
+    "category": 4,
+    "sect": 1,
+    "weights": [
+      30,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      69
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 70,
+    "category": 4,
+    "sect": 1,
+    "weights": [
+      30,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      16
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 71,
+    "category": 4,
+    "sect": 1,
+    "weights": [
+      30,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      57
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 72,
+    "category": 4,
+    "sect": 2,
+    "weights": [
+      30,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      30
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 73,
+    "category": 4,
+    "sect": 2,
+    "weights": [
+      30,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      31
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 74,
+    "category": 4,
+    "sect": 2,
+    "weights": [
+      0,
+      30,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      103
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 75,
+    "category": 4,
+    "sect": 2,
+    "weights": [
+      30,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      120
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 76,
+    "category": 4,
+    "sect": 3,
+    "weights": [
+      30,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      102
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 77,
+    "category": 4,
+    "sect": 3,
+    "weights": [
+      30,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      128
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 78,
+    "category": 4,
+    "sect": 4,
+    "weights": [
+      30,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      146,
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 79,
+    "category": 4,
+    "sect": 4,
+    "weights": [
+      30,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      145,
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 80,
+    "category": 4,
+    "sect": 4,
+    "weights": [
+      30,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      150
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 81,
+    "category": 4,
+    "sect": 4,
+    "weights": [
+      30,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      149
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 82,
+    "category": 1,
+    "sect": 1,
+    "weights": [
+      0,
+      100,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 83,
+    "category": 5,
+    "sect": 1,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_17"
+  },
+  {
+    "id": 84,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_66"
+  },
+  {
+    "id": 85,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_18"
+  },
+  {
+    "id": 86,
+    "category": 5,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_22"
+  },
+  {
+    "id": 87,
+    "category": 5,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      3
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_23"
+  },
+  {
+    "id": 88,
+    "category": 1,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      3,
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_19"
+  },
+  {
+    "id": 89,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1,
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 90,
+    "category": 5,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      16
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_86"
+  },
+  {
+    "id": 91,
+    "category": 5,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      15
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_85"
+  },
+  {
+    "id": 92,
+    "category": 5,
+    "sect": 1,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      331
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_218"
+  },
+  {
+    "id": 93,
+    "category": 5,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      332
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_219"
+  },
+  {
+    "id": 94,
+    "category": 5,
+    "sect": 1,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      8
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 4,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_44"
+  },
+  {
+    "id": 95,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_129"
+  },
+  {
+    "id": 96,
+    "category": 5,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      9
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 11,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_46"
+  },
+  {
+    "id": 97,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_15"
+  },
+  {
+    "id": 98,
+    "category": 5,
+    "sect": 1,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      36
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Card_36"
+  },
+  {
+    "id": 99,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 100,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 101,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 102,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 103,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 104,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_92"
+  },
+  {
+    "id": 105,
+    "category": 1,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 106,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 107,
+    "category": 1,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      3
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_189"
+  },
+  {
+    "id": 108,
+    "category": 5,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      213
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 12,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_193"
+  },
+  {
+    "id": 109,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1,
+      5,
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 110,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_29"
+  },
+  {
+    "id": 111,
+    "category": 5,
+    "sect": 2,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      12
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_63"
+  },
+  {
+    "id": 112,
+    "category": 5,
+    "sect": 2,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      5
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_35"
+  },
+  {
+    "id": 113,
+    "category": 1,
+    "sect": 2,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      3
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_114"
+  },
+  {
+    "id": 114,
+    "category": 5,
+    "sect": 2,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      28
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 6,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_121"
+  },
+  {
+    "id": 115,
+    "category": 5,
+    "sect": 2,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      29
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_122"
+  },
+  {
+    "id": 116,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      3
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_37"
+  },
+  {
+    "id": 117,
+    "category": 5,
+    "sect": 2,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      6
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 6,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_39"
+  },
+  {
+    "id": 118,
+    "category": 5,
+    "sect": 2,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      7
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_40"
+  },
+  {
+    "id": 119,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      10
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_48"
+  },
+  {
+    "id": 120,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_52"
+  },
+  {
+    "id": 121,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 122,
+    "category": 5,
+    "sect": 2,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      10
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 7,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_50"
+  },
+  {
+    "id": 123,
+    "category": 5,
+    "sect": 2,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      23
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 11,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_106"
+  },
+  {
+    "id": 124,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_141"
+  },
+  {
+    "id": 125,
+    "category": 5,
+    "sect": 2,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      22
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_104"
+  },
+  {
+    "id": 126,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      4
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_30"
+  },
+  {
+    "id": 127,
+    "category": 6,
+    "sect": 3,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      258
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 128,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 129,
+    "category": 5,
+    "sect": 3,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      13
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 5,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_81"
+  },
+  {
+    "id": 130,
+    "category": 5,
+    "sect": 3,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      31
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 14,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_123"
+  },
+  {
+    "id": 131,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      150,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_110"
+  },
+  {
+    "id": 132,
+    "category": 1,
+    "sect": 3,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_109"
+  },
+  {
+    "id": 133,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      5
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 134,
+    "category": 5,
+    "sect": 3,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      32
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_124"
+  },
+  {
+    "id": 135,
+    "category": 2,
+    "sect": 3,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u7075\u9635"
+      }
+    ],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 136,
+    "category": 5,
+    "sect": 3,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      20
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_98"
+  },
+  {
+    "id": 137,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 138,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_255"
+  },
+  {
+    "id": 139,
+    "category": 5,
+    "sect": 3,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      17
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_90"
+  },
+  {
+    "id": 140,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      10
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_125"
+  },
+  {
+    "id": 141,
+    "category": 5,
+    "sect": 3,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      21
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_100"
+  },
+  {
+    "id": 142,
+    "category": 5,
+    "sect": 3,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      38
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 6,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_132"
+  },
+  {
+    "id": 143,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      4
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_88"
+  },
+  {
+    "id": 144,
+    "category": 5,
+    "sect": 3,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      18
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_91"
+  },
+  {
+    "id": 145,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_136"
+  },
+  {
+    "id": 146,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_253"
+  },
+  {
+    "id": 147,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 148,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 149,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 150,
+    "category": 5,
+    "sect": 4,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      45
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 4,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_152"
+  },
+  {
+    "id": 151,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      2,
+      5
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 152,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 153,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      40
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_174"
+  },
+  {
+    "id": 154,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_170"
+  },
+  {
+    "id": 155,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 156,
+    "category": 5,
+    "sect": 4,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      70
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_172"
+  },
+  {
+    "id": 157,
+    "category": 5,
+    "sect": 4,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      73
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 5,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_180"
+  },
+  {
+    "id": 158,
+    "category": 5,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      74
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_181"
+  },
+  {
+    "id": 159,
+    "category": 5,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      75
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 12,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_182"
+  },
+  {
+    "id": 160,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 161,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_179"
+  },
+  {
+    "id": 162,
+    "category": 5,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      82
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_187"
+  },
+  {
+    "id": 163,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 164,
+    "category": 2,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 165,
+    "category": 5,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      81
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 8,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_185"
+  },
+  {
+    "id": 166,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_183"
+  },
+  {
+    "id": 167,
+    "category": 5,
+    "sect": 4,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      221
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_205"
+  },
+  {
+    "id": 168,
+    "category": 5,
+    "sect": 4,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      219
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Card_219"
+  },
+  {
+    "id": 169,
+    "category": 5,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      222
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_207"
+  },
+  {
+    "id": 170,
+    "category": 3,
+    "sect": 1,
+    "weights": [
+      100,
+      50,
+      25
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      1,
+      1000042,
+      122
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u4E91\u6CC9\u9053\u8336"
+      },
+      {
+        "type": 4,
+        "param": "4"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 171,
+    "category": 3,
+    "sect": 1,
+    "weights": [
+      0,
+      100,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      3,
+      1000043,
+      123
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u5D29\u96EA"
+      },
+      {
+        "type": 4,
+        "param": "3"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 172,
+    "category": 3,
+    "sect": 1,
+    "weights": [
+      100,
+      50,
+      25
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [
+      16,
+      1000065,
+      124
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u4E5D\u9704\u73B2\u73D1\u956F"
+      },
+      {
+        "type": 4,
+        "param": "4"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 173,
+    "category": 3,
+    "sect": 1,
+    "weights": [
+      100,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      8,
+      1000035,
+      125
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u732B\u722A"
+      },
+      {
+        "type": 4,
+        "param": "1"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 174,
+    "category": 3,
+    "sect": 1,
+    "weights": [
+      100,
+      50,
+      25
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      1000025,
+      1000064,
+      126
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 175,
+    "category": 3,
+    "sect": 1,
+    "weights": [
+      100,
+      50,
+      25
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      213,
+      1000065,
+      388
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u66F3\u5F71\u5251\u9635"
+      },
+      {
+        "type": 4,
+        "param": "4"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 176,
+    "category": 3,
+    "sect": 2,
+    "weights": [
+      100,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      12,
+      4000042,
+      127
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u98DE\u9E3F\u8E0F\u96EA"
+      },
+      {
+        "type": 4,
+        "param": "3"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 177,
+    "category": 3,
+    "sect": 2,
+    "weights": [
+      100,
+      50,
+      25
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      28,
+      4000045,
+      128
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u65E0\u6781\u5366\u76D8"
+      },
+      {
+        "type": 4,
+        "param": "2"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 178,
+    "category": 3,
+    "sect": 2,
+    "weights": [
+      100,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      6,
+      4000059,
+      129
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u706F\u7130\u98DE\u821E"
+      },
+      {
+        "type": 4,
+        "param": "2"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 179,
+    "category": 3,
+    "sect": 2,
+    "weights": [
+      100,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      10,
+      4000062,
+      130
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u661F\u7206\u672F"
+      },
+      {
+        "type": 4,
+        "param": "2"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 180,
+    "category": 3,
+    "sect": 2,
+    "weights": [
+      100,
+      50,
+      25
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 5,
+    "otherParams": [
+      23,
+      4000014,
+      131
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u661F\u6708\u6298\u6247"
+      },
+      {
+        "type": 4,
+        "param": "4"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 181,
+    "category": 3,
+    "sect": 2,
+    "weights": [
+      100,
+      50,
+      25
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 5,
+    "otherParams": [
+      215,
+      4000038,
+      389
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u5B64\u865A\u91D1\u4E66"
+      },
+      {
+        "type": 4,
+        "param": "4"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 182,
+    "category": 3,
+    "sect": 3,
+    "weights": [
+      100,
+      50,
+      25
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      13,
+      7000073,
+      132
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u60A0\u7136\u846B\u82A6"
+      },
+      {
+        "type": 4,
+        "param": "2"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 183,
+    "category": 3,
+    "sect": 3,
+    "weights": [
+      100,
+      50,
+      25
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      32,
+      7000058,
+      133
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u53CC\u9E33\u9006\u514B"
+      },
+      {
+        "type": 4,
+        "param": "3"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 184,
+    "category": 3,
+    "sect": 3,
+    "weights": [
+      100,
+      50,
+      25
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [
+      17,
+      7000043,
+      134
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u6625\u96E8"
+      },
+      {
+        "type": 4,
+        "param": "3"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 185,
+    "category": 3,
+    "sect": 3,
+    "weights": [
+      100,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      38,
+      7000009,
+      135
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u951F\u94FB\u91D1\u73AF"
+      },
+      {
+        "type": 4,
+        "param": "2"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 186,
+    "category": 3,
+    "sect": 3,
+    "weights": [
+      100,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      7000072,
+      7000038,
+      136
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u6C34\u7075\u79D8\u5370"
+      },
+      {
+        "type": 4,
+        "param": "4"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 187,
+    "category": 3,
+    "sect": 3,
+    "weights": [
+      100,
+      50,
+      25
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 5,
+    "otherParams": [
+      218,
+      7000067,
+      390
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u5FD8\u5FE7"
+      },
+      {
+        "type": 4,
+        "param": "4"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 188,
+    "category": 3,
+    "sect": 4,
+    "weights": [
+      100,
+      50,
+      25
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [
+      45,
+      10000052,
+      137
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u953B\u4F53\u4E0D\u606F"
+      },
+      {
+        "type": 4,
+        "param": "1"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 189,
+    "category": 3,
+    "sect": 4,
+    "weights": [
+      100,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      70,
+      10000068,
+      138
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u76DB\u6C14\u51CC\u4EBA"
+      },
+      {
+        "type": 4,
+        "param": "1"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 190,
+    "category": 3,
+    "sect": 4,
+    "weights": [
+      100,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [
+      74,
+      10000050,
+      139
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u51A5\u591C"
+      },
+      {
+        "type": 4,
+        "param": "3"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 191,
+    "category": 3,
+    "sect": 4,
+    "weights": [
+      100,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [
+      81,
+      10000003,
+      140
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u51A5\u5FC3\u5165\u7384"
+      },
+      {
+        "type": 4,
+        "param": "3"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 192,
+    "category": 3,
+    "sect": 4,
+    "weights": [
+      100,
+      50,
+      25
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 5,
+    "otherParams": [
+      222,
+      10000045,
+      391
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u8F6C\u52BF"
+      },
+      {
+        "type": 4,
+        "param": "3"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 193,
+    "category": 3,
+    "sect": 4,
+    "weights": [
+      100,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      383,
+      10000050,
+      392
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u5FA1\u98CE\u98DE\u95EA"
+      },
+      {
+        "type": 4,
+        "param": "3"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 194,
+    "category": 6,
+    "sect": 1,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      260
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 195,
+    "category": 6,
+    "sect": 1,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 8,
+    "otherParams": [
+      261
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 196,
+    "category": 6,
+    "sect": 1,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      262
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 197,
+    "category": 6,
+    "sect": 1,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      264
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 198,
+    "category": 6,
+    "sect": 2,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      265
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 199,
+    "category": 6,
+    "sect": 2,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      266
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 200,
+    "category": 6,
+    "sect": 2,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      269
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 201,
+    "category": 6,
+    "sect": 3,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 8,
+    "otherParams": [
+      270
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 202,
+    "category": 6,
+    "sect": 3,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      271
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 203,
+    "category": 6,
+    "sect": 3,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      3000004
+    ],
+    "countParam": 8,
+    "otherParams": [
+      272
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 204,
+    "category": 6,
+    "sect": 3,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      3000003
+    ],
+    "countParam": 6,
+    "otherParams": [
+      273
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 205,
+    "category": 6,
+    "sect": 4,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 8,
+    "otherParams": [
+      275
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 206,
+    "category": 6,
+    "sect": 4,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      277
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 207,
+    "category": 6,
+    "sect": 4,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      4000002,
+      4000006
+    ],
+    "countParam": 6,
+    "otherParams": [
+      278
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 208,
+    "category": 6,
+    "sect": 1,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      288
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 209,
+    "category": 6,
+    "sect": 2,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      294
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 210,
+    "category": 6,
+    "sect": 3,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 8,
+    "otherParams": [
+      295
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 12,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 211,
+    "category": 6,
+    "sect": 4,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      4000005
+    ],
+    "countParam": 6,
+    "otherParams": [
+      296
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 212,
+    "category": 6,
+    "sect": 4,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      4000002
+    ],
+    "countParam": 8,
+    "otherParams": [
+      297
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 12,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 213,
+    "category": 6,
+    "sect": 2,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      2000002,
+      2000006
+    ],
+    "countParam": 8,
+    "otherParams": [
+      298
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 12,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 214,
+    "category": 6,
+    "sect": 3,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      3000003,
+      3000006
+    ],
+    "countParam": 8,
+    "otherParams": [
+      274
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 12,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 215,
+    "category": 6,
+    "sect": 2,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 8,
+    "otherParams": [
+      307
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 216,
+    "category": 6,
+    "sect": 4,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      308
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 217,
+    "category": 6,
+    "sect": 1,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      263
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 218,
+    "category": 6,
+    "sect": 2,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      268
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 219,
+    "category": 6,
+    "sect": 3,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      3000004
+    ],
+    "countParam": 8,
+    "otherParams": [
+      292
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 12,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 220,
+    "category": 6,
+    "sect": 4,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      4000003,
+      4000004
+    ],
+    "countParam": 8,
+    "otherParams": [
+      291
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 221,
+    "category": 6,
+    "sect": 2,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      289
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 222,
+    "category": 6,
+    "sect": 1,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      309
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 223,
+    "category": 6,
+    "sect": 4,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      310
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 224,
+    "category": 6,
+    "sect": 1,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 8,
+    "otherParams": [
+      312
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 12,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 225,
+    "category": 6,
+    "sect": 3,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      316
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 226,
+    "category": 6,
+    "sect": 3,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      3000005
+    ],
+    "countParam": 8,
+    "otherParams": [
+      317
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 227,
+    "category": 6,
+    "sect": 4,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      319
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 228,
+    "category": 6,
+    "sect": 2,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 8,
+    "otherParams": [
+      320
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 12,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 229,
+    "category": 6,
+    "sect": 1,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      325
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 230,
+    "category": 6,
+    "sect": 3,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      3000003,
+      3000006
+    ],
+    "countParam": 8,
+    "otherParams": [
+      315
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 231,
+    "category": 6,
+    "sect": 4,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 8,
+    "otherParams": [
+      318
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 232,
+    "category": 6,
+    "sect": 1,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 8,
+    "otherParams": [
+      323
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 233,
+    "category": 6,
+    "sect": 2,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [
+      2000002,
+      2000003,
+      2000005
+    ],
+    "countParam": 6,
+    "otherParams": [
+      324
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 234,
+    "category": 6,
+    "sect": 1,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      47
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 235,
+    "category": 6,
+    "sect": 1,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      48
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 236,
+    "category": 6,
+    "sect": 1,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      49
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 237,
+    "category": 6,
+    "sect": 1,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 8,
+    "otherParams": [
+      50
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 12,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 238,
+    "category": 6,
+    "sect": 2,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      51
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 239,
+    "category": 6,
+    "sect": 2,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      52
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 240,
+    "category": 6,
+    "sect": 2,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      53
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 241,
+    "category": 6,
+    "sect": 2,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      54
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 242,
+    "category": 6,
+    "sect": 3,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 8,
+    "otherParams": [
+      55
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 243,
+    "category": 6,
+    "sect": 3,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      56
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 244,
+    "category": 6,
+    "sect": 3,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      57
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 245,
+    "category": 6,
+    "sect": 3,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 8,
+    "otherParams": [
+      58
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 12,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 246,
+    "category": 6,
+    "sect": 4,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      336
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 247,
+    "category": 6,
+    "sect": 4,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 8,
+    "otherParams": [
+      337
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 248,
+    "category": 6,
+    "sect": 4,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 8,
+    "otherParams": [
+      338
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 12,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 249,
+    "category": 6,
+    "sect": 4,
+    "weights": [
+      0,
+      30,
+      40
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 6,
+    "otherParams": [
+      339
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 250,
+    "category": 6,
+    "sect": 0,
+    "weights": [
+      50,
+      25,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      2000015
+    ],
+    "exprs": [
+      {
+        "type": 3,
+        "param": "1"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 251,
+    "category": 6,
+    "sect": 0,
+    "weights": [
+      50,
+      25,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      2000013
+    ],
+    "exprs": [
+      {
+        "type": 3,
+        "param": "1"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 252,
+    "category": 6,
+    "sect": 0,
+    "weights": [
+      50,
+      25,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      3000015
+    ],
+    "exprs": [
+      {
+        "type": 3,
+        "param": "2"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 253,
+    "category": 6,
+    "sect": 0,
+    "weights": [
+      25,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      3000013
+    ],
+    "exprs": [
+      {
+        "type": 3,
+        "param": "2"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 254,
+    "category": 6,
+    "sect": 0,
+    "weights": [
+      25,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      5000014
+    ],
+    "exprs": [
+      {
+        "type": 3,
+        "param": "3"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 255,
+    "category": 6,
+    "sect": 0,
+    "weights": [
+      50,
+      25,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      5000015
+    ],
+    "exprs": [
+      {
+        "type": 3,
+        "param": "3"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 256,
+    "category": 6,
+    "sect": 0,
+    "weights": [
+      50,
+      25,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      6000013
+    ],
+    "exprs": [
+      {
+        "type": 3,
+        "param": "4"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 257,
+    "category": 6,
+    "sect": 0,
+    "weights": [
+      50,
+      25,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      6000012
+    ],
+    "exprs": [
+      {
+        "type": 3,
+        "param": "4"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 258,
+    "category": 6,
+    "sect": 0,
+    "weights": [
+      50,
+      25,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      8000014
+    ],
+    "exprs": [
+      {
+        "type": 3,
+        "param": "5"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 259,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [
+      {
+        "type": 3,
+        "param": "5"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 260,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      50,
+      25,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [
+      {
+        "type": 3,
+        "param": "6"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 261,
+    "category": 6,
+    "sect": 0,
+    "weights": [
+      25,
+      50,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      9000015
+    ],
+    "exprs": [
+      {
+        "type": 3,
+        "param": "6"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 262,
+    "category": 6,
+    "sect": 0,
+    "weights": [
+      50,
+      25,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      11000018
+    ],
+    "exprs": [
+      {
+        "type": 3,
+        "param": "7"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 263,
+    "category": 6,
+    "sect": 0,
+    "weights": [
+      50,
+      25,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 4,
+    "otherParams": [
+      11000021
+    ],
+    "exprs": [
+      {
+        "type": 3,
+        "param": "7"
+      }
+    ],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 272,
+    "category": 2,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 273,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 274,
+    "category": 1,
+    "sect": 0,
+    "weights": [
+      100,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 275,
+    "category": 7,
+    "sect": 1,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1000035,
+      1000066
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 276,
+    "category": 7,
+    "sect": 1,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1000040,
+      1000042
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 277,
+    "category": 7,
+    "sect": 1,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1000036,
+      1000045
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 278,
+    "category": 7,
+    "sect": 1,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1000037,
+      1000044
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 279,
+    "category": 7,
+    "sect": 1,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1000064,
+      1000025
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 280,
+    "category": 7,
+    "sect": 3,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      7000061,
+      7000043
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 281,
+    "category": 7,
+    "sect": 3,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      7000038,
+      7000056
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 282,
+    "category": 7,
+    "sect": 3,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      7000033,
+      7000053
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 283,
+    "category": 7,
+    "sect": 3,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      7000034,
+      7000042
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 284,
+    "category": 7,
+    "sect": 3,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      7000030,
+      7000057
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 285,
+    "category": 7,
+    "sect": 3,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      7000066,
+      7000058
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 286,
+    "category": 7,
+    "sect": 2,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      4000039,
+      4000045
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 287,
+    "category": 7,
+    "sect": 2,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      4000014,
+      4000026
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 288,
+    "category": 7,
+    "sect": 2,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      4000027,
+      4000060
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 289,
+    "category": 7,
+    "sect": 2,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      4000036,
+      4000066
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 290,
+    "category": 7,
+    "sect": 2,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      4000059,
+      4000095
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 291,
+    "category": 7,
+    "sect": 4,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      10000037,
+      10000047
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 292,
+    "category": 7,
+    "sect": 4,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      10000044,
+      10000045
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 293,
+    "category": 7,
+    "sect": 4,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      10000042,
+      10000051
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 294,
+    "category": 7,
+    "sect": 4,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      10000040,
+      10000041
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 295,
+    "category": 7,
+    "sect": 4,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      10000039,
+      10000038
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 296,
+    "category": 5,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      5
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      99000210
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 14,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 297,
+    "category": 5,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      1
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      79
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": false,
+    "effectRound": 15,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 298,
+    "category": 2,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 299,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_194"
+  },
+  {
+    "id": 300,
+    "category": 5,
+    "sect": 2,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      214
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_196"
+  },
+  {
+    "id": 301,
+    "category": 2,
+    "sect": 2,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      216,
+      217
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 302,
+    "category": 5,
+    "sect": 3,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      371
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 5,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_262"
+  },
+  {
+    "id": 303,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 12,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_264"
+  },
+  {
+    "id": 304,
+    "category": 5,
+    "sect": 4,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [
+      381
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 7,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Card_381"
+  },
+  {
+    "id": 305,
+    "category": 5,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      382
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 9,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_268"
+  },
+  {
+    "id": 306,
+    "category": 5,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      383
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 10,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_269"
+  },
+  {
+    "id": 307,
+    "category": 5,
+    "sect": 3,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      259
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 5,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_201"
+  },
+  {
+    "id": 308,
+    "category": 5,
+    "sect": 3,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      218
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 12,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_203"
+  },
+  {
+    "id": 309,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_199"
+  },
+  {
+    "id": 310,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_202"
+  },
+  {
+    "id": 311,
+    "category": 8,
+    "sect": 1,
+    "weights": [
+      0,
+      50,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1000026,
+      1000096
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 312,
+    "category": 8,
+    "sect": 1,
+    "weights": [
+      0,
+      50,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1000020,
+      1000097
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 313,
+    "category": 8,
+    "sect": 2,
+    "weights": [
+      0,
+      50,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      4000027,
+      4000098
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 314,
+    "category": 8,
+    "sect": 2,
+    "weights": [
+      0,
+      50,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      4000040,
+      4000099
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 315,
+    "category": 8,
+    "sect": 3,
+    "weights": [
+      0,
+      50,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      7000029,
+      7000104
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 316,
+    "category": 8,
+    "sect": 3,
+    "weights": [
+      0,
+      50,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      7000028,
+      7000105
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 317,
+    "category": 8,
+    "sect": 4,
+    "weights": [
+      0,
+      50,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      10000026,
+      10000098
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 318,
+    "category": 8,
+    "sect": 4,
+    "weights": [
+      0,
+      50,
+      50
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      10000028,
+      10000099
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 319,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 320,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 321,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 322,
+    "category": 2,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 323,
+    "category": 2,
+    "sect": 1,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 324,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      5
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 325,
+    "category": 0,
+    "sect": 1,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      1000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 326,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      20
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 327,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 328,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": false,
+    "effectRound": 12,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 329,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 330,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      3
+    ],
+    "exprs": [
+      {
+        "type": 0,
+        "param": "\u7B97\u65E0\u9057\u7B56"
+      }
+    ],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 331,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      7
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 332,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 333,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      150,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000004
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_254"
+  },
+  {
+    "id": 334,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 335,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      3
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 336,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      5
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 337,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 338,
+    "category": 5,
+    "sect": 2,
+    "weights": [
+      0,
+      150,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000006
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [
+      215
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 13,
+    "isSpecialBuild": true,
+    "overrideSpritePath": "Icon_Talent_198"
+  },
+  {
+    "id": 339,
+    "category": 1,
+    "sect": 2,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 1,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_42"
+  },
+  {
+    "id": 340,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      20,
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 341,
+    "category": 1,
+    "sect": 2,
+    "weights": [
+      150,
+      0,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 2,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 12,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 342,
+    "category": 0,
+    "sect": 2,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      2000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      3
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 343,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_133"
+  },
+  {
+    "id": 344,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      20
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 345,
+    "category": 0,
+    "sect": 3,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      3000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      1
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 346,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000001
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_151"
+  },
+  {
+    "id": 347,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000002
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 348,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      0,
+      0,
+      150
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000003
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      9
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 349,
+    "category": 0,
+    "sect": 4,
+    "weights": [
+      0,
+      150,
+      0
+    ],
+    "isGeneric": false,
+    "includeCharacters": [
+      4000005
+    ],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      3
+    ],
+    "exprs": [],
+    "isBattleEffect": true,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 350,
+    "category": 2,
+    "sect": 0,
+    "weights": [
+      50,
+      0,
+      0
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [
+      2,
+      3
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 351,
+    "category": 2,
+    "sect": 0,
+    "weights": [
+      0,
+      50,
+      0
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [
+      4,
+      4
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 352,
+    "category": 2,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      50
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 3,
+    "otherParams": [
+      6,
+      5
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": null
+  },
+  {
+    "id": 353,
+    "category": 0,
+    "sect": 0,
+    "weights": [
+      0,
+      0,
+      100
+    ],
+    "isGeneric": true,
+    "includeCharacters": [],
+    "excludeCharacters": [],
+    "countParam": 0,
+    "otherParams": [
+      18,
+      2,
+      2
+    ],
+    "exprs": [],
+    "isBattleEffect": false,
+    "isAvailable": true,
+    "effectRound": 0,
+    "isSpecialBuild": false,
+    "overrideSpritePath": "Icon_Talent_8"
+  }
+]

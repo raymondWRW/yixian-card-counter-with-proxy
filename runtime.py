@@ -135,10 +135,84 @@ def start_frida_capture(game_exe: str = None, attach_mode: bool = False):
         frida.resume(pid)
     print("[frida] capture active (ProtobufParser hooked, "
           "feeding state_queue)", flush=True)
+
+    # Optional: authoritative hand source via the in-game API (game-api branch).
+    # When YX_API_HAND=1 AND native_hud/_build/YiXianApi.dll is present, load the
+    # API on THIS session and poll placement.board() for exact mid-round draw
+    # detection (catches derivation draws the wire best-effort can miss). Skips
+    # cleanly if the DLL is absent or the API fails — capture is unaffected.
+    if os.environ.get("YX_API_HAND"):
+        dll = BASE_DIR / "native_hud" / "_build" / "YiXianApi.dll"
+        if not dll.exists():
+            print(f"[api] YX_API_HAND set but {dll.name} not found — "
+                  "skipping authoritative hand (wire best-effort stays on)",
+                  flush=True)
+        else:
+            try:
+                if str(BASE_DIR) not in sys.path:
+                    sys.path.insert(0, str(BASE_DIR))
+                from native_hud.api import connect_via_session
+                client = connect_via_session(session)
+                threading.Thread(target=_api_hand_poller, args=(client,),
+                                 daemon=True, name="api-hand-poller").start()
+                print("[api] authoritative hand poller active "
+                      "(placement.board)", flush=True)
+            except Exception as e:
+                print(f"[api] hand poller unavailable ({e}); "
+                      "wire best-effort stays on", flush=True)
+
     # Keep the session/script alive forever. The on_message callback fires
     # on frida's internal thread; this loop just blocks the caller thread.
     while True:
         time.sleep(60)
+
+
+def _api_hand_poller(client, interval: float = 0.2):
+    """Poll the in-game `placement.board()` for the authoritative current hand
+    and emit a draw_event for each card that newly entered the hand this
+    placement phase — exact, including duplicate draws and derivation draws
+    (云剑大师 / 斩道之法 …) that the wire snapshot diff can miss.
+
+    Baseline = the hand at the START of each placement phase (the round deal,
+    already counted by the GameStatus snapshot diff); only ADDITIONS past that
+    baseline are emitted as draws. `placement.board()` errors outside 修炼阶段,
+    which we treat as "not placing" and reset the baseline.
+
+    The Counter's _drain_draw_events counts each (and pre-credits _prev_owned so
+    the snapshot diff doesn't double-count). Sets addon.api_hand_active so the
+    wire team1 best-effort stands down.
+    """
+    import addon
+    from game_state import card_name
+    addon.api_hand_active = True
+    baseline: dict = {}
+    seen_round = None
+    while True:
+        time.sleep(interval)
+        try:
+            board = client.placement.board()      # raises outside 修炼阶段
+        except Exception:
+            seen_round = None                     # left placement → re-baseline
+            continue
+        try:
+            rnd = (client.state.round() or {}).get("round")
+        except Exception:
+            rnd = seen_round
+        cur: dict = {}
+        for c in (board.get("hand") or []):
+            nm = card_name(c.get("id"))
+            if nm:
+                cur[nm] = cur.get(nm, 0) + 1
+        if seen_round != rnd:
+            baseline = dict(cur)                   # new placement phase → baseline
+            seen_round = rnd
+            continue
+        for nm, cnt in cur.items():
+            prev = baseline.get(nm, 0)
+            if cnt > prev:
+                for _ in range(cnt - prev):
+                    addon.draw_events.append({"name": nm})
+                baseline[nm] = cnt
 
 
 # ─── Offline replay of a captured traffic.jsonl ───────────────────────────────

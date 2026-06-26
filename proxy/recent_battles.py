@@ -454,6 +454,44 @@ def game_rounds(start_local: str):
     return None, None, None, []
 
 
+def round_stat_b64(start_local: str, rn: int):
+    """Raw bytes of one round's RecentBattleInfo roundStat (field [100] element whose
+    [7]==rn), base64-encoded, for priming the Yi Xian Oracle. Returns
+    (me_side, b64) or (None, None), where me_side is "p1"/"p2" matching the Oracle's
+    p1=slot1 / p2=slot2 (verified) — derived from the account UID, so it's correct
+    even in mirror matches (both fighters the same character). The roundStat is
+    exactly what the Oracle's RecentBattleInfo.roundStats element deserializes."""
+    import base64
+    for d in _recent_dirs():
+        account_id = d.parent.name
+        for f in d.glob("*.bin"):
+            try:
+                top = _parse(f.read_bytes())
+            except Exception:
+                continue
+            if _first(top, 2) != RANKED_MODE:
+                continue
+            ms = _first(top, 4)
+            if not isinstance(ms, int):
+                continue
+            if datetime.datetime.fromtimestamp(ms / 1000).strftime(
+                    "%Y-%m-%d_%H%M%S") != start_local:
+                continue
+            for rb in top.get(100, []):
+                rb = bytes(rb)
+                r = _parse(rb)
+                if _first(r, 7) != rn:
+                    continue
+                me_side = None
+                for slot in (1, 2):
+                    pm = _first(r, slot)
+                    if pm and _s(_first(_player_core(pm), 1)) == account_id:
+                        me_side = "p1" if slot == 1 else "p2"
+                return me_side, base64.b64encode(rb).decode("ascii")
+            return None, None
+    return None, None
+
+
 def board_by_round_near(ts_ms: int, tol_sec: int = 150):
     """Find the recent game whose start time is within tol_sec of ts_ms and
     return {round_number: {"me": [{name, level}], "opp": [{name, level}]}}.

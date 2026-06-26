@@ -107,6 +107,13 @@ window.addEventListener('DOMContentLoaded', () => {
     try { await window.pywebview.api.quit(); } catch (_) {}
   });
   $('btn-hand-only').addEventListener('click', () => applyHandOnly(!handOnly, true));
+  // 复盘 (Review) — opens the review window (moved here from the main window,
+  // which is hidden in counter-only mode).
+  const rev = $('btn-review');
+  if (rev) rev.addEventListener('click', async () => {
+    const a = window.pywebview && window.pywebview.api;
+    if (a && a.open_review) { try { await a.open_review(); } catch (e) { console.error(e); } }
+  });
   setTimeout(fitWindowToContent, 50);
 });
 

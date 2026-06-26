@@ -102,6 +102,9 @@ html, body {
 }
 .counter-row.in-hand.low { border-left: 2px solid var(--warn); }
 .counter-row.in-hand .counter-name { color: #cfe2ff; font-weight: 600; }
+/* A card you HOLD but have no copies left to draw (0) stays fully visible —
+   you still have it in hand, so don't dim it like a played-out card. */
+.counter-row.in-hand.zero { opacity: 1; }
 
 /* Separator between the pinned hand group and the rest of the deck. */
 .counter-divider {

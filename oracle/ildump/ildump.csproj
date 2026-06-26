@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Standalone IL inspector for the game DLL (replaces the deleted FacadeGen dump/inspect diagnostics)
+       without touching the main worker's Oracle project. Uses the vendored Mono.Cecil. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>ildump</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ILRuntime.Mono.Cecil">
+      <HintPath>..\ILRuntime\Dependencies\netstandard2.0\ILRuntime.Mono.Cecil.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

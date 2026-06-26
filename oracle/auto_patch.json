@@ -1,0 +1,14 @@
+[
+  {
+    "type": "CardItem",
+    "method": "LevelDown",
+    "sig": "",
+    "action": "survive"
+  },
+  {
+    "type": "BattleCharacterUI",
+    "method": "EnableDemonEffect",
+    "sig": "",
+    "action": "survive"
+  }
+]

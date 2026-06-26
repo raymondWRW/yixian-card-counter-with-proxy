@@ -13,6 +13,13 @@ import subprocess
 import sys
 from pathlib import Path
 
+# The final SHA banner uses box-drawing chars; force utf-8 stdout so it doesn't
+# crash on a cp1252 console (the build itself succeeds either way).
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+
 HERE = Path(__file__).resolve().parent
 SEP = ";" if sys.platform.startswith("win") else ":"
 
@@ -31,6 +38,15 @@ for cand in ("icon.ico", "native_hud/icon.ico"):
         icon_arg = ["--icon", cand]
         break
 
+# Bundle node.exe so the 复盘 (review) yisim sim runs WITHOUT the user having
+# node installed (the exe has no Oracle engine, so review falls back to yisim).
+node_arg = []
+NODE = shutil.which("node") or r"C:\Program Files\nodejs\node.exe"
+if Path(NODE).exists():
+    node_arg = ["--add-binary", f"{NODE}{SEP}."]
+else:
+    print("[!] node.exe not found — review will need a system node.", flush=True)
+
 cmd = [
     sys.executable, "-m", "PyInstaller",
     "--noconfirm",
@@ -38,6 +54,7 @@ cmd = [
     "--windowed",
     "--name", "YiXianCounter",
     *icon_arg,
+    *node_arg,
     # The main app's web/ folder + the shared proxy/ + the yisim bundle.
     "--add-data", f"web{SEP}web",
     "--add-data", f"proxy{SEP}proxy",

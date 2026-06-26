@@ -158,10 +158,49 @@ def _build_fates():
 
 
 def _card(c):
-    """ZoneCard | CardState | None → {name, level} | None."""
+    """ZoneCard | CardState | None → {name, level, id} | None."""
     if c is None:
         return None
-    return {"name": getattr(c, "name", "?"), "level": int(getattr(c, "level", 1) or 1)}
+    return {"name": getattr(c, "name", "?"), "level": int(getattr(c, "level", 1) or 1),
+            "id": getattr(c, "id", None)}
+
+
+def _signed64(v):
+    """Wire uint64 → signed (extraMaxHp can be negative, e.g. -5 == 2^64-5)."""
+    v = int(v or 0)
+    return v - (1 << 64) if v >= (1 << 63) else v
+
+
+def _oracle_side(ps, board_dicts):
+    """Build the Yi Xian Oracle fixture-player fields for one side from its live
+    PlayerState (+ the view-model board dicts, which carry card ids). These are
+    the SAME fields the recorded round-stat carries, read off the wire:
+      characterId = publicData[12], realm = realm_tier, extraMaxHp = publicData[4],
+      talents = the f200[5]/[13] list (PlayerState.fates), fateStrategies = f200[16].
+    Returns None if there's no usable identity (so callers can skip the Oracle)."""
+    if ps is None:
+        return None
+    raw = getattr(ps, "raw", None) or {}
+    f200 = raw.get("200") or raw.get("200-1") or {}
+    if not isinstance(f200, dict):
+        f200 = {}
+    fate_strats = []
+    fb = f200.get("16")
+    if isinstance(fb, (bytes, bytearray)) and fb:
+        try:
+            fate_strats = [int(x) for x in shadow_state.decode_varint_list(bytes(fb))]
+        except Exception:
+            fate_strats = []
+    used = [int(c["id"]) if (c and c.get("id")) else 0 for c in (board_dicts or [])]
+    return {
+        "characterId": int(raw.get("12") or 0),
+        "level": int(getattr(ps, "realm_tier", 1) or 1),
+        "extraMaxHp": _signed64(raw.get("4")),
+        "talents": [int(t) for t in (getattr(ps, "fates", []) or [])],
+        "fateStrategies": fate_strats,
+        "usedCards": used,
+        "unlockGrids": 8, "sect": 0, "career": 0, "life": 100,
+    }
 
 
 def _board_list(board, unlocked):
@@ -412,6 +451,8 @@ def build_view_model(state, counter=None, last_battle=None, opp_tracker=None):
             # non-empty, the UI shows "未识别卡片 — 伤害计算不可用" instead of
             # damage numbers (yisim has no 灵羽 implementation).
             "lingyuUnresolved": lingyu_unresolved,
+            # Yi Xian Oracle fixture-player fields (ids the real engine consumes).
+            "oracle": _oracle_side(state.players[state.me_index] if state.me_index >= 0 else None, board),
         }
 
     # ── Opponent (matchup target) ──────────────────────────────────────────────
@@ -461,6 +502,7 @@ def build_view_model(state, counter=None, last_battle=None, opp_tracker=None):
             "board": board,
             "boardFromRound": from_round,
             "fates": opp_fates, "fateNames": opp_fate_names,
+            "oracle": _oracle_side(opp, board),
         }
 
     # R27: one-shot per-frame console probe so the user can read both
@@ -503,10 +545,10 @@ DEFAULT_COPIES = 8  # each card has 8 copies in the deck unless specified
 PHASE5_COPIES = 6   # phase-5 (latest-patch) cards: 6 copies instead of 8
 
 # Cards with non-default deck size. Add new entries here as we learn them.
-# Note: The 3 dans (洗髓丹/悟道丹/锻体玄丹) used to live here but are now
-# managed entirely by the sidejob-pool system (added via SIDEJOB_BONUSES
-# when the player picks 炼丹师 / reaches certain realm tiers). SPECIAL_COPIES
-# stays for any future non-sidejob cards with custom deck sizes.
+# Note: the reduced-count dans (洗髓丹/悟道丹/锻体玄丹) are managed by the
+# sidejob-pool system via SIDEJOB_BONUSES selection_overrides when the player
+# picks 炼丹师. SPECIAL_COPIES stays for any future non-sidejob cards with
+# custom deck sizes.
 SPECIAL_COPIES: dict[str, int] = {}
 
 
@@ -539,13 +581,16 @@ SIDEJOB_PREFIXES = set(CAREER_TO_SIDEJOB_PREFIX.values())
 # no overrides and no breakthrough bonuses.
 SIDEJOB_BONUSES: dict[int, dict[str, dict[str, int]]] = {
     2: {  # 炼丹师 Elixirist
+        # Elixir now behaves like every other sidejob: all cards at the phase
+        # default (8, or 6 for phase-5) with only these per-card overrides — no
+        # realm-tier breakthrough bonuses (the old realm_3_to_4 / realm_4_to_5
+        # extra dans were removed).
         "selection_overrides": {
-            "洗髓丹":  3,
-            "悟道丹":  3,
-            "锻体玄丹": 3,
+            "洗髓丹":     3,   # 修为丹 ([炼化]→+修为), phase 4 — 3 not 8
+            "悟道丹":     3,   # phase 5 — 3 not 6
+            "锻体玄丹":   3,   # phase 5 — 3 not 6
+            "冰灵护体丹": 6,   # phase 5 — 6 (= phase-5 default; explicit)
         },
-        "realm_3_to_4": {"小还丹": 1, "培元丹": 1, "地灵丹": 1, "飞云丹": 1, "神力丹": 1},
-        "realm_4_to_5": {"驱邪丹": 1, "飞云丹": 1, "疗伤丹": 1, "神力丹": 1, "大还丹": 2},
     },
     # 符咒师 / 琴师 / 画师 / 阵法师 / 灵植师 / 命理师: no per-card overrides,
     # no breakthrough bonuses — every card defaults to 8 (or 6 if phase 5).
@@ -861,6 +906,31 @@ def _canonical(name):
     return PAIRED_CARDS.get(_normalize_sep(name), name)
 
 
+# Lazy-load: derivation (天衍 / FateStrategy) pool-injection map.
+# {fate_strategy_id: {canonical_name: copies}} — the cards each pool-injection
+# derivation adds to the deck. These cards have 0 copies until the derivation
+# is picked (parallels SIDEJOB_BONUSES). Source: tools/derivation_pool.json,
+# generated from FateStrategyConfig (the game's own config).
+_DERIVATION_POOL_CACHE: dict | None = None
+
+
+def _derivation_pool_map() -> dict:
+    global _DERIVATION_POOL_CACHE
+    if _DERIVATION_POOL_CACHE is None:
+        out: dict = {}
+        try:
+            import json as _json
+            p = Path(__file__).resolve().parent / "tools" / "derivation_pool.json"
+            for did, entry in _json.loads(p.read_text(encoding="utf-8")).items():
+                cards = {_canonical(nm): int(cnt)
+                         for nm, cnt in (entry.get("cards") or {}).items()}
+                out[int(did)] = cards
+        except Exception:
+            out = {}
+        _DERIVATION_POOL_CACHE = out
+    return _DERIVATION_POOL_CACHE
+
+
 class Counter:
     """Tracks how many copies of each card remain in the user's deck.
 
@@ -916,9 +986,16 @@ class Counter:
         # picks start at `phase` (the realm reached when 副职兼修 was picked).
         self._applied_secondary_picks: list = []
         self._prev_realm = 0        # last observed realm_tier (primary)
+        # Derivation (天衍) pool. Like sidejob cards, derivation-only cards
+        # (幻•X / 云剑•X / …) have 0 deck copies by default; picking a
+        # pool-injection derivation adds its copies (DERIVATION_POOL).
+        self._derivation_pool = {}   # canonical_name -> copies added by chosen derivations
+        self._applied_derivations: set = set()  # FateStrategy ids already folded in
 
     @staticmethod
-    def _is_deck_card(name) -> bool:
+    def _is_base_deck_card(name) -> bool:
+        """True for cards that belong to the base sect/sidejob deck (excludes
+        dream cards and personal/fate-granted cards with id < 1_000_000)."""
         # Dream cards (梦…) are not drawn from the normal deck.
         if not name or str(name).startswith("梦"):
             return False
@@ -927,6 +1004,16 @@ class Counter:
         # or special grants and have no fixed copy count. Exclude them so the
         # counter never shows "N copies remaining" for them.
         return _canonical(_normalize_sep(str(name))) not in _personal_card_names()
+
+    def _is_deck_card(self, name) -> bool:
+        """A card is countable if it's a base deck card OR a derivation-only
+        card whose pool-injection derivation the player has actually picked
+        (so derivation cards stay hidden/0 until their 天衍 is chosen)."""
+        if Counter._is_base_deck_card(name):
+            return True
+        if name and not str(name).startswith("梦"):
+            return _canonical(name) in self._derivation_pool
+        return False
 
     def _owned_multiset(self) -> dict:
         sh = shadow_state.shadow
@@ -967,6 +1054,30 @@ class Counter:
             key = _canonical(nm)
             self._pending_grants[key] = self._pending_grants.get(key, 0) + 1
 
+    def _drain_draw_events(self):
+        """Drain mid-round DRAW events (addon.draw_events): a new card entered
+        the hand mid-round and isn't a known grant → a real deck draw. Caught
+        per-PlayerData via the team_container[1] diff, so derivation draws (云剑
+        大师 / 斩道之法 / 副职大师 …) are counted even if the card is played or
+        merged before the next GameStatus.
+
+        Pre-credit `_prev_owned` for each so the GameStatus owned-multiset diff
+        in observe() doesn't ALSO count the same card (same mechanism as the
+        reroll-in pre-credit)."""
+        try:
+            import addon
+            events = addon.draw_events
+        except Exception:
+            return
+        while events:
+            ev = events.pop(0)
+            nm = ev.get("name")
+            if not self._is_deck_card(nm):
+                continue
+            key = _canonical(nm)
+            self._draws[key] = self._draws.get(key, 0) + 1
+            self._prev_owned[key] = self._prev_owned.get(key, 0) + 1
+
     def _drain_reroll_events(self):
         try:
             import addon
@@ -996,6 +1107,29 @@ class Counter:
                 # The discarded card leaves the owned set; reflect that so its
                 # departure isn't later misread.
                 self._prev_owned[old_key] = max(0, self._prev_owned.get(old_key, 0) - 1)
+
+    def _apply_derivation_events(self):
+        """Fold each newly-picked pool-injection derivation (天衍) into
+        `_derivation_pool`. Idempotent per id via `_applied_derivations`.
+        Reads `addon.chosen_derivations` (FateStrategy ids in pick order)."""
+        try:
+            import addon
+            chosen = list(getattr(addon, "chosen_derivations", []) or [])
+        except Exception:
+            return
+        pmap = _derivation_pool_map()
+        for did in chosen:
+            try:
+                did = int(did)
+            except (TypeError, ValueError):
+                continue
+            if did in self._applied_derivations:
+                continue
+            inj = pmap.get(did)
+            if inj:
+                for canon, cnt in inj.items():
+                    self._derivation_pool[canon] = self._derivation_pool.get(canon, 0) + cnt
+            self._applied_derivations.add(did)
 
     def _apply_sidejob_events(self, state):
         """Detect sidejob selection (primary + each 副职兼修 secondary) and
@@ -1124,7 +1258,9 @@ class Counter:
     def observe(self, state):
         self._drain_reroll_events()
         self._drain_daoyun_events()
+        self._drain_draw_events()
         self._apply_sidejob_events(state)
+        self._apply_derivation_events()
         owned = self._owned_multiset()
         # Any net increase in owned copies (not from a reroll-in or a free
         # grant) is a deal/draw. Free grants (daoyun, 自在随心, etc.) sit in
@@ -1153,11 +1289,14 @@ class Counter:
         # (The per-card _draws/_reroll_discards tallies make every count exact.)
         sh = shadow_state.shadow
         held = set()
+        in_hand = set()   # cards you currently hold in hand — shown even at 0 left
         if sh is not None:
             # cards currently in hand or the seasonal (织梦) holding
             for c in list(sh.hand) + list(getattr(sh, "seasonal", {}).values()):
                 if c is not None and self._is_deck_card(getattr(c, "name", None)):
-                    held.add(_canonical(c.name))
+                    key = _canonical(c.name)
+                    held.add(key)
+                    in_hand.add(key)
             # cards currently placed on the board
             for c in list(sh.board):
                 if c is not None and self._is_deck_card(getattr(c, "name", None)):
@@ -1194,7 +1333,11 @@ class Counter:
             face_for_lookup = _normalize_sep(_PAIR_CANONICAL_TO_FACE.get(name, name))
             sidejob_prefix = sidejob_prefix_map.get(face_for_lookup)
 
-            if sidejob_prefix in SIDEJOB_PREFIXES:
+            if not Counter._is_base_deck_card(name):
+                # Derivation-only card (幻•X / 云剑•X / …): 0 in the base deck;
+                # every copy comes from a picked pool-injection 天衍 (added below).
+                max_copies = 0
+            elif sidejob_prefix in SIDEJOB_PREFIXES:
                 # Side-job card. Pool is 0 unless this is one of the picked
                 # sidejobs (primary OR secondary via 副职兼修) AND the card
                 # has had bonuses applied.
@@ -1212,6 +1355,10 @@ class Counter:
                 else:
                     max_copies = DEFAULT_COPIES
 
+            # 天衍 pool-injection: picked derivations add copies on top (covers
+            # both derivation-only cards and dual sect/sidejob cards a 天衍 boosts).
+            max_copies += self._derivation_pool.get(name, 0)
+
             reroll_mult = 0 if name in NO_REROLL_PENALTY else 3
             removed = (
                 self._draws.get(name, 0)
@@ -1219,7 +1366,9 @@ class Counter:
             )
             left = max(0, max_copies - removed)
             # Exhausted cards (0 left in deck) drop off the list — no point
-            # showing a card you can no longer draw.
-            if left > 0:
+            # showing a card you can no longer draw — UNLESS you're currently
+            # holding one in hand, in which case keep it visible at 0 so you can
+            # see you have it but can't draw any more.
+            if left > 0 or name in in_hand:
                 out[name] = left
         return out

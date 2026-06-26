@@ -1,7 +1,7 @@
 {
   "_comment_": "Live at https://gitee.com/hiddensquid12321/yixian-card-counter-with-proxy/raw/master/dist_share/version.json. This is the MAIN app manifest (lite uses small_card_counter/dist_share/version.json). Bump `version` + `url` + `sha256` per release (build.py prints a paste-ready snippet).",
-  "version": "1.0.0",
-  "url": "https://gitee.com/hiddensquid12321/yixian-card-counter-with-proxy/releases/download/main-v1.0.0/YiXianCounter.exe",
-  "sha256": "REPLACE_WITH_SHA256_OF_THE_RELEASE_EXE",
-  "notes": "First release."
+  "version": "1.1.0",
+  "url": "https://gitee.com/hiddensquid12321/yixian-card-counter-with-proxy/releases/download/main-v1.1.0/YiXianCounter.exe",
+  "sha256": "d568b464a98a2da45d076285559934f7f810a834d9a699f5d2cffc8bead352d1",
+  "notes": "记牌器窗口独立显示，隐藏伤害计算器；复盘按钮移至记牌器窗口。新增天衍衍生牌池统计（幻•X / 云剑•X 等衍生牌默认0张，选择对应天衍后才计入牌池）。复盘内置 node，无需另装。"
 }

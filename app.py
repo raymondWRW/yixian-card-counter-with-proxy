@@ -22,6 +22,16 @@ from pathlib import Path
 import webview
 
 BASE_DIR = Path(__file__).resolve().parent
+
+
+def _node_exe() -> str:
+    """node executable: the one bundled inside the frozen exe (PyInstaller
+    _MEIPASS), else system `node` on PATH. Used by the 复盘 yisim review."""
+    if getattr(sys, "frozen", False):
+        cand = Path(getattr(sys, "_MEIPASS", str(BASE_DIR))) / "node.exe"
+        if cand.exists():
+            return str(cand)
+    return "node"
 WEB_DIR = BASE_DIR / "web"
 INDEX_HTML = WEB_DIR / "index.html"
 COUNTER_HTML = WEB_DIR / "counter.html"
@@ -38,6 +48,13 @@ _window = None
 _counter_win = None
 _review_win = None
 _detail_win = None
+# Counter-only mode: hide the damage-calculator (main) window and run just the
+# card counter + review. Auto-on in the packaged exe (the live calculator needs
+# the Yi Xian Oracle engine, which the distributed build doesn't bundle). Dev
+# runs show both windows; force either way with YX_COUNTER_ONLY=1 / =0.
+_counter_only = (os.environ.get("YX_COUNTER_ONLY") == "1"
+                 or (getattr(sys, "frozen", False)
+                     and os.environ.get("YX_COUNTER_ONLY") != "0"))
 # Selected game_id for the detail window — JS reads this on load.
 _detail_game_id = None
 
@@ -297,41 +314,68 @@ class Api:
             import subprocess
             import json as _json
             review_js = str(BASE_DIR / "tools" / "yisim_review.js")
+            # Engine: for IMPORTED (recentBattleDatas) games we have the bit-exact
+            # record, so run the Yi Xian Oracle (the game's own combat code) over
+            # board permutations. Folder games (counter recordings) have no record,
+            # so they stay on yisim. Oracle unavailable (not built) → yisim fallback.
+            import oracle_sim
+            use_oracle = (not is_folder) and oracle_sim.available()
             winnable = []
             details = []
             for rn in lost:
-                payload = (game_archive.build_review_payload(folder, rn)
-                           if is_folder
-                           else game_archive.build_recent_review_payload(game_id, rn))
-                if not payload:
-                    details.append({"round": rn,
-                                    "skipped": "no per-round state recorded"})
-                    continue
-                try:
-                    proc = subprocess.run(
-                        ["node", review_js],
-                        input=_json.dumps({"round": payload, "max_perms": 300}),
-                        capture_output=True, text=True,
-                        encoding="utf-8", timeout=60,
-                    )
-                    out = _json.loads(proc.stdout or "{}")
-                except Exception as e:
-                    details.append({"round": rn, "error": str(e)})
-                    continue
+                out = None
+                if use_oracle:
+                    try:
+                        import recent_battles
+                        me_side, b64 = recent_battles.round_stat_b64(game_id, rn)
+                        if b64:
+                            out = oracle_sim.whatif_from_stat(b64, me_side, deck_slots=8)
+                    except Exception as e:
+                        print(f"[review] oracle round {rn} failed: {e}", flush=True)
+                        out = None
+                if out is None:
+                    # yisim path (folder games, or oracle miss/fallback)
+                    payload = (game_archive.build_review_payload(folder, rn)
+                               if is_folder
+                               else game_archive.build_recent_review_payload(game_id, rn))
+                    if not payload:
+                        details.append({"round": rn,
+                                        "skipped": "no per-round state recorded"})
+                        continue
+                    try:
+                        proc = subprocess.run(
+                            [_node_exe(), review_js],
+                            input=_json.dumps({"round": payload, "max_perms": 300}),
+                            capture_output=True, text=True,
+                            encoding="utf-8", timeout=60,
+                        )
+                        out = _json.loads(proc.stdout or "{}")
+                    except Exception as e:
+                        details.append({"round": rn, "error": str(e)})
+                        continue
+                engine = "oracle" if (use_oracle and "my_side" in out) else "yisim"
                 if out.get("win"):
                     winnable.append(rn)
                     details.append({
-                        "round": rn, "win": True,
+                        "round": rn, "win": True, "engine": engine,
                         "tried": out.get("tried"),
                         "end_turn": out.get("end_turn"),
                         "winning_slots": out.get("winning_slots"),
                         "used_hand": out.get("used_hand"),
                     })
+                elif out.get("already_won"):
+                    # The real engine says this matchup was actually won/drawn (the displayed
+                    # "lost" flag comes from a coarser life-drop heuristic). Not a loss to fix.
+                    details.append({
+                        "round": rn, "win": False, "already_won": True, "engine": engine,
+                        "original_life": out.get("original_life"),
+                    })
                 else:
                     details.append({
-                        "round": rn, "win": False,
+                        "round": rn, "win": False, "engine": engine,
                         "tried": out.get("tried"),
-                        "closest_gap": out.get("closest_dmg_gap"),
+                        "closest_gap": out.get("closest_hpDelta", out.get("closest_dmg_gap")),
+                        "closest_life": out.get("closest_life"),
                         "outcome": out.get("outcome"),
                     })
             return {
@@ -344,6 +388,30 @@ class Api:
             import traceback
             print(f"[review] {traceback.format_exc()}", flush=True)
             return {"error": str(e), "winnable_rounds": [], "lost_rounds": []}
+
+    def oracle_matchup(self, me: dict, opp: dict, marginal: bool = True):
+        """Live matchup of MY board vs the OPPONENT's board via the Yi Xian Oracle
+        (the game's own combat engine). Each side dict carries:
+          {usedCards:[card ids], characterId, level(realm 1..5), extraMaxHp,
+           talents:[ids], fateStrategies:[ids], sect, career, life, unlockGrids}
+        Returns {win, hpDelta, turns, lifeDamage, marginal:{slot: hp}} or {error}.
+
+        Board ids come from the view-model (now carried on each card). For full
+        damage accuracy the caller should also pass the live `talents` +
+        `fateStrategies` the game derived (captured from the wire) — without them
+        the engine still runs real combat but omits fate/talent scaling.
+        """
+        try:
+            sys.path.insert(0, str(BASE_DIR / "proxy"))
+            import oracle_sim
+            if not oracle_sim.available():
+                return {"error": "oracle not available"}
+            r = oracle_sim.matchup(me or {}, opp or {}, marginal=bool(marginal))
+            return r or {"error": "matchup returned None"}
+        except Exception as e:
+            import traceback
+            print(f"[oracle] {traceback.format_exc()}", flush=True)
+            return {"error": str(e)}
 
     # ── Counter-window helpers (used by web/counter.js) ─────────────────────
     def move_counter(self, x, y):
@@ -423,7 +491,10 @@ def push_state(view_model: dict):
     """
     payload = json.dumps(view_model, ensure_ascii=False)
     js = f"window.onState && window.onState({payload})"
-    for w in (_window, _counter_win):
+    # In counter-only mode the main window is hidden — don't push to it (skips
+    # the now-invisible damage sim entirely).
+    targets = (_counter_win,) if _counter_only else (_window, _counter_win)
+    for w in targets:
         if w is None:
             continue
         try:
@@ -558,6 +629,14 @@ def _start_workers():
         target=runtime.start_consumer, args=(push_state,),
         daemon=True, name="consumer",
     ).start()
+    # Pre-spawn the Yi Xian Oracle worker so the first live matchup is instant
+    # (pays the ~3.4s cold-start now, in the background, instead of on first use).
+    try:
+        sys.path.insert(0, str(BASE_DIR / "proxy"))
+        import oracle_sim
+        oracle_sim.warmup()
+    except Exception:
+        pass
 
 
 def _patch_winforms_on_top():
@@ -595,9 +674,27 @@ def main():
     global _window, _counter_win
     _patch_winforms_on_top()
     api = Api()
-    # Main window — round bar + damage card only. (YOU / OPPONENT / HAND
-    # sections moved to the counter window, so this can start short and
-    # auto-resize from there.)
+    # Counter window — deck counter + 复盘. Created FIRST so it's the master
+    # (webview.windows[0]) and therefore always visible: in counter-only mode
+    # the main window is hidden, and a hidden MASTER misbehaves on some backends.
+    # Lite-style: small, frameless, always-on-top; counter.js auto-resizes it.
+    _counter_win = webview.create_window(
+        title="YiXian Counter — Cards Left",
+        url=COUNTER_HTML.as_uri(),
+        js_api=api,
+        width=260,
+        height=100,          # short start; counter.js auto-resizes to content
+        x=420, y=40,
+        frameless=True,
+        easy_drag=False,
+        on_top=api.settings.get("onTop", True),
+        background_color="#11141a",
+        # Lowered to match the lite window's MIN_SCALE=0.6: 260 * 0.6 = 156.
+        min_size=(150, 30),
+    )
+    # Main window — round bar + damage calculator. Hidden in counter-only mode
+    # (the live calc needs the Oracle engine, which the exe doesn't bundle). It
+    # still exists so the shared js_api + update-notice plumbing keep working.
     _window = webview.create_window(
         title="YiXian Counter",
         url=INDEX_HTML.as_uri(),
@@ -610,35 +707,15 @@ def main():
         on_top=api.settings.get("onTop", True),
         background_color="#11141a",
         # R23: min-height lowered to TITLEBAR_HEIGHT so the minimize button
-        # can actually shrink the window to a titlebar-only strip. The old
-        # (300, 400) min was clamping `_window.resize(width, 34)` and leaving
-        # a ~366px black widget below the titlebar. Frameless=True means
-        # the user can't drag-resize edges, so a small min is safe.
-        # min_size width lowered (300 → 200) so MIN_SCALE=0.6 in the JS
-        # resize handle doesn't clamp the window at the bottom of its range.
+        # can actually shrink the window to a titlebar-only strip. Frameless
+        # means the user can't drag-resize edges, so a small min is safe.
         min_size=(200, TITLEBAR_HEIGHT),
+        hidden=_counter_only,
     )
     # Stash the Api on the window so _push_update_notice can write the
     # pending manifest back into it (avoids a re-fetch when the user clicks
     # "更新" on the banner).
     _window._js_api_instance = api
-    # Counter window — same JS API instance (shared settings, shared quit).
-    # Lite-style: small, frameless, always-on-top. Auto-resizes height to
-    # fit the counter list via Api.resize_counter() called from counter.js.
-    _counter_win = webview.create_window(
-        title="YiXian Counter — Cards Left",
-        url=COUNTER_HTML.as_uri(),
-        js_api=api,
-        width=260,
-        height=100,          # short start; counter.js auto-resizes to content
-        x=420, y=40,         # placed to the right of the main window
-        frameless=True,
-        easy_drag=False,
-        on_top=api.settings.get("onTop", True),
-        background_color="#11141a",
-        # Lowered to match the lite window's MIN_SCALE=0.6: 260 * 0.6 = 156.
-        min_size=(150, 30),
-    )
     # Open the WebView2 dev tools only when YX_DEVTOOLS is set — NOT on
     # YX_DEBUG (that one just enables battle_log storage), so the normal
     # debug/storage run doesn't pop dev tools every launch.

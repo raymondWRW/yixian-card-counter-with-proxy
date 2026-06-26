@@ -93,3 +93,22 @@ Desktop.ini
 *.tmp
 *.bak
 *.orig
+
+# ── Yi Xian Oracle ─────────────────────────────────────────────────────────
+# Engine SOURCE under oracle/ IS committed. The rest is heavy/derived/game-owned.
+# (gitignore has no inline comments — keep patterns on their own lines.)
+# extracted game DLL + config .dat (game-owned, ~12MB):
+oracle/data/
+# DummyDll dump (derived from the game):
+oracle/tools/Il2CppDumper/
+# build output + facade DLLs (regenerable):
+oracle/**/bin/
+oracle/**/obj/
+oracle/UnityStubs/bin/
+oracle/UnityStubs/obj/
+# third-party Cecil DLLs (binary):
+oracle/ILRuntime/
+
+# Built exe is 100MB+ (node bundled) — distributed via Gitee releases, not git.
+/YiXianCounter.exe
+/dist_share/YiXianCounter.exe

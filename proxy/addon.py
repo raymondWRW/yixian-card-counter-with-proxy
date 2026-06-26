@@ -58,6 +58,21 @@ chosen_derivations: list = []
 # count as a deck draw when it next appears in the hand.
 daoyun_grant_events: list = []
 
+# Mid-round DRAW events for the Counter. Each entry is a card NAME that newly
+# entered team_container[1] (the hand) mid-round and is NOT a known grant — i.e.
+# a real deck draw, including derivation draws (云剑大师 / 斩道之法 / 副职大师 …)
+# the round-boundary snapshot diff would miss if the card is played/merged
+# before the next GameStatus. Drained by proxy_view.Counter._drain_draw_events,
+# which counts it as a deck draw (pre-crediting so the snapshot diff doesn't
+# double-count).
+draw_events: list = []
+
+# Set True by the optional game-API hand poller (runtime._api_hand_poller) when
+# it's feeding authoritative mid-round draws from placement.board(). While
+# active, the wire team_container[1] best-effort below stands down (the poller
+# is the exact source) — they must not both populate draw_events.
+api_hand_active: bool = False
+
 # Snapshot of team_container[1] ids (set of int). RESETS at every GameStatus;
 # diffed at every PlayerData to find new entries. ONLY actual daoyun grants
 # get emitted — see _emit_daoyun_grants_from_team1.
@@ -139,21 +154,35 @@ def _emit_daoyun_grants_from_team1(b):
             continue
         daoyun_grant_events.append({"name": nm, "id": int(cid)})
     _daoyun_pending_picks -= resolved_explicit
-    # 自在随心 random pick: USER RULE — count the granted card as a real deck
-    # draw, not a free grant. We do nothing here so the new id sits in
-    # team_container[1] and Counter.observe() picks it up via the standard
-    # hand-grew path. (Was previously credited as a free grant.)
+    # 自在随心 random pick: USER RULE — the granted card counts as a real deck
+    # draw, not a free grant; it falls into the `remaining` draw path below.
     if _daoyun_random_pending:
         _daoyun_random_pending = False
-    # 剑池问心 fate (ids 119 / 10119 / 20119 / 30119): when active, the cards
-    # it adds to the hand are NOT pulled from the deck pool. Credit any
-    # remaining new id as a free grant so it doesn't decrement remaining().
+    remaining = new_ids - resolved_explicit
     if _JIANCHI_FATE_IDS & set(chosen_fates):
-        remaining = new_ids - resolved_explicit
+        # 剑池问心 fate (ids 119 / 10119 / 20119 / 30119): when active, the cards
+        # it adds to the hand are NOT pulled from the deck pool. Credit any
+        # remaining new id as a free grant so it doesn't decrement remaining().
         for cid in remaining:
             try:
                 nm = card_name(int(cid))
                 daoyun_grant_events.append({"name": nm, "id": int(cid)})
+            except Exception:
+                pass
+    elif not api_hand_active:
+        # Any OTHER new card in the hand mid-round is a deck DRAW. This is the
+        # path that catches derivation draws (云剑大师 / 斩道之法 / 副职大师 …)
+        # which the round-boundary snapshot diff misses when the drawn card is
+        # played/merged before the next GameStatus. The Counter pre-credits each
+        # so the snapshot diff doesn't also count it. (team1 is a SET, so a 2nd
+        # copy of a card already in hand isn't caught here — the snapshot diff
+        # still handles those, best-effort.)
+        # Skipped when the game-API hand poller is active — it's the exact
+        # source and feeds draw_events itself; running both would double-count.
+        for cid in remaining:
+            try:
+                nm = card_name(int(cid))
+                draw_events.append({"name": nm, "id": int(cid)})
             except Exception:
                 pass
 
@@ -348,6 +377,11 @@ def _handle_replace_card_resp(mp):
     new_id = int(new_info.get("3", 0) or 0)
     if not new_id:
         return
+    # The reroll-in card enters the hand, so it'll appear as a NEW id in
+    # team_container[1]. Pre-seed the team1 snapshot with it so the mid-round
+    # draw detector (_emit_daoyun_grants_from_team1) does NOT also count it as a
+    # draw — rerolls are already counted via reroll_events.
+    _team1_snapshot.add(new_id)
     # NB: the server omits `slot` on most prep-phase rerolls (e.g. Painter
     # side-job rerolls), so we must NOT gate on `slot` — that previously
     # dropped half the ReplaceCardResps and corrupted the shadow board.
@@ -704,6 +738,7 @@ def process_msgpack(mp, from_client: bool):
             chosen_fates.clear()
             chosen_derivations.clear()
             daoyun_grant_events.clear()
+            draw_events.clear()
             _team1_snapshot.clear()
             _daoyun_pending_picks.clear()
             globals()["_daoyun_random_pending"] = False
