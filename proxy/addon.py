@@ -20,7 +20,13 @@ import sys
 import threading
 from pathlib import Path
 
-from mitmproxy import ctx
+# mitmproxy is only used for ctx.log on the LEGACY YX_PROXY path; the default
+# frida path doesn't need it (and the packaged exe doesn't bundle it). _log()
+# below already falls back to print() when ctx is None.
+try:
+    from mitmproxy import ctx
+except Exception:
+    ctx = None
 
 from decoder import decode_frame
 from game_state import parse_game_state, CardState, card_name

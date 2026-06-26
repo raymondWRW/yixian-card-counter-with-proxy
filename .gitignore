@@ -112,3 +112,12 @@ oracle/ILRuntime/
 # Built exe is 100MB+ (node bundled) — distributed via Gitee releases, not git.
 /YiXianCounter.exe
 /dist_share/YiXianCounter.exe
+
+# Oracle publish staging (build artifact)
+/_oracle_pub/
+
+# Hand-zipped share bundles (100MB+) and Oracle runtime markers (per-machine).
+/dist_share.zip
+dist_share/*.zip
+oracle/.oracle_version
+oracle/UnityStubs/bin/facades-gen/.gakey

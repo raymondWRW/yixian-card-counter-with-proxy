@@ -26,7 +26,13 @@ from pathlib import Path
 _BASE = Path(__file__).resolve().parent           # proxy/
 _REPO = _BASE.parent
 _ORACLE_SCRIPTS = _REPO / "oracle" / "scripts"
-_ORACLE_EXE = _REPO / "oracle" / "Oracle" / "bin" / "Release" / "net8.0" / "Oracle.exe"
+
+
+def _oracle_exe() -> Path:
+    """Path to Oracle.exe: ORACLE_EXE env (set by oracle_bootstrap — the bundled
+    self-contained exe when frozen) wins; else the dev build under oracle/."""
+    return Path(os.environ.get("ORACLE_EXE")
+                or (_REPO / "oracle" / "Oracle" / "bin" / "Release" / "net8.0" / "Oracle.exe"))
 
 # ── card id → {name, level} (for rendering winning_slots the UI understands) ──────────────────
 _card_map = None
@@ -74,7 +80,7 @@ def _get_worker():
     global _worker, _worker_failed
     if _worker is not None:
         return _worker
-    if _worker_failed or not _ORACLE_EXE.exists():
+    if _worker_failed or not _oracle_exe().exists():
         _worker_failed = True
         return None
     # Lock the spawn too, so a warmup thread and a matchup call can't create two
@@ -89,7 +95,7 @@ def _get_worker():
             _worker = OracleWorker()
             return _worker
         except Exception as e:
-            print(f"[oracle] worker unavailable ({e}); falling back to yisim", flush=True)
+            print(f"[oracle] worker unavailable ({e}); Oracle unavailable", flush=True)
             _worker_failed = True
             return None
 
@@ -98,7 +104,7 @@ def warmup():
     """Spawn the Oracle worker in the background so the first live matchup is instant
     (the ~3.4s DLL-load + config cold-start is paid here, off the UI path). No-op if
     the Oracle isn't built. Safe to call once at app startup."""
-    if _worker is not None or _worker_failed or not _ORACLE_EXE.exists():
+    if _worker is not None or _worker_failed or not _oracle_exe().exists():
         return
 
     def _go():
@@ -207,6 +213,12 @@ def _player(side: dict) -> dict:
         "usedCards": list(side.get("usedCards", [])),
         "talents": list(side.get("talents", [])),
         "fateStrategies": list(side.get("fateStrategies", [])),
+        # Per-battle buff/talent instance state (closes most of the state gap vs a bare board).
+        "usedKeYinCards": list(side.get("usedKeYinCards", [])),
+        "permanentBuffTempDatas": dict(side.get("permanentBuffTempDatas", {})),
+        "talentTempDatas": dict(side.get("talentTempDatas", {})),
+        "resonanceTalentFlags": dict(side.get("resonanceTalentFlags", {})),
+        "talentDatas": dict(side.get("talentDatas", {})),
     }
 
 

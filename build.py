@@ -38,14 +38,47 @@ for cand in ("icon.ico", "native_hud/icon.ico"):
         icon_arg = ["--icon", cand]
         break
 
-# Bundle node.exe so the 复盘 (review) yisim sim runs WITHOUT the user having
-# node installed (the exe has no Oracle engine, so review falls back to yisim).
-node_arg = []
-NODE = shutil.which("node") or r"C:\Program Files\nodejs\node.exe"
-if Path(NODE).exists():
-    node_arg = ["--add-binary", f"{NODE}{SEP}."]
-else:
-    print("[!] node.exe not found — review will need a system node.", flush=True)
+# ── Yi Xian Oracle engine (the ONLY damage/review engine — no yisim/node) ────────────────────
+# Publish a self-contained Oracle.exe (.NET runtime included) + bundle the facades, auto_patch,
+# and Il2CppDumper. We do NOT bundle the game DLL/configs — oracle_bootstrap extracts those from
+# the user's own install at first run (no game-code redistribution; auto-current with patches).
+ORACLE = HERE / "oracle"
+PUB = HERE / "_oracle_pub"
+shutil.rmtree(PUB, ignore_errors=True)
+print("Publishing self-contained Oracle.exe …", flush=True)
+pub = subprocess.run(
+    ["dotnet", "publish", str(ORACLE / "Oracle" / "Oracle.csproj"), "-c", "Release",
+     "-r", "win-x64", "--self-contained", "true", "-o", str(PUB)],
+    cwd=str(HERE))
+if pub.returncode != 0 or not (PUB / "Oracle.exe").exists():
+    sys.exit("Oracle publish failed")
+
+# Stamp the bundled facades-gen with the builder's GameAssembly key, so a user on the SAME game
+# version reuses these facades; a different version triggers a self-heal regen (Il2CppDumper).
+def _ga_key():
+    game = r"C:\Program Files (x86)\Steam\steamapps\common\YiXianPai"
+    try:
+        ga = (Path(game) / "GameAssembly.dll").stat().st_size
+        md = (Path(game) / "YiXianPai_Data" / "il2cpp_data" / "Metadata" / "global-metadata.dat").stat().st_size
+        return f"{ga}:{md}"
+    except Exception:
+        return ""
+gen = ORACLE / "UnityStubs" / "bin" / "facades-gen"
+if gen.exists() and _ga_key():
+    (gen / ".gakey").write_text(_ga_key(), encoding="utf-8")
+
+oracle_data = [
+    ("_oracle_pub", "oracle/Oracle"),                                  # self-contained Oracle.exe + runtime + Cecil
+    ("oracle/UnityStubs/bin/facades", "oracle/UnityStubs/bin/facades"),         # hand facades
+    ("oracle/UnityStubs/bin/facades-gen", "oracle/UnityStubs/bin/facades-gen"), # generated facades (+ .gakey)
+    ("oracle/auto_patch.json", "oracle"),
+    ("oracle/scripts/oracle_pool.py", "oracle/scripts"),               # warm-worker manager (oracle_sim imports it)
+    ("oracle/tools/Il2CppDumper/v6.7.46/Il2CppDumper.exe", "oracle/tools/Il2CppDumper/v6.7.46"),
+    ("oracle/tools/Il2CppDumper/v6.7.46/config.json", "oracle/tools/Il2CppDumper/v6.7.46"),
+]
+oracle_args = []
+for src, dst in oracle_data:
+    oracle_args += ["--add-data", f"{src}{SEP}{dst}"]
 
 cmd = [
     sys.executable, "-m", "PyInstaller",
@@ -54,8 +87,8 @@ cmd = [
     "--windowed",
     "--name", "YiXianCounter",
     *icon_arg,
-    *node_arg,
-    # The main app's web/ folder + the shared proxy/ + the yisim bundle.
+    *oracle_args,
+    # The main app's web/ folder + the shared proxy/ + tools (card maps, derivation data).
     "--add-data", f"web{SEP}web",
     "--add-data", f"proxy{SEP}proxy",
     "--add-data", f"tools{SEP}tools",
@@ -64,6 +97,8 @@ cmd = [
     "--collect-all", "frida",
     "--collect-all", "blackboxprotobuf",
     "--collect-all", "webview",
+    "--collect-all", "UnityPy",          # oracle_bootstrap extracts game data with UnityPy
+    "--collect-all", "msgpack",
     "--hidden-import", "addon",
     "--hidden-import", "shadow_state",
     "--hidden-import", "game_state",
@@ -72,13 +107,16 @@ cmd = [
     "--hidden-import", "battle_log",
     "--hidden-import", "decoder",
     "--hidden-import", "msgpack",
-    "--collect-all", "msgpack",
     "--hidden-import", "updater",
     "--hidden-import", "version",
     "--hidden-import", "lingyu_merge",
     "--hidden-import", "proxy_view",
     "--hidden-import", "runtime",
     "--hidden-import", "frida",
+    "--hidden-import", "oracle_bootstrap",
+    "--hidden-import", "oracle_sim",
+    "--hidden-import", "recent_battles",
+    "--hidden-import", "game_archive",
     "app.py",
 ]
 print("Running:", " ".join(cmd))
@@ -92,7 +130,7 @@ if built_exe.exists():
     if target_exe.exists():
         target_exe.unlink()
     shutil.move(str(built_exe), str(target_exe))
-for d in ("build", "dist"):
+for d in ("build", "dist", "_oracle_pub"):
     shutil.rmtree(HERE / d, ignore_errors=True)
 if spec.exists():
     spec.unlink()

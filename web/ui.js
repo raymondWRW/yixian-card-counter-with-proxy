@@ -195,60 +195,26 @@ function renderOracleResult(d) {
 async function updateDamage(vm) {
   if (!vm || !vm.me) return;
   const me = vm.me;
-  // 灵羽 (Spirit Feather) on board with no eligible lv1 merge target → yisim
-  // has no implementation for it, so the damage sim would silently treat it
-  // as 普通攻击 (3 dmg/turn) and under-count damage. Surface this explicitly
-  // instead of running the sim with bad data.
-  if (Array.isArray(me.lingyuUnresolved) && me.lingyuUnresolved.length > 0) {
-    renderDamageResult({ error: '未识别卡片 (灵羽) — 伤害计算不可用' });
-    return;
-  }
 
-  // Prefer the Yi Xian Oracle (the game's OWN combat engine) for a real matchup
-  // vs the opponent's board, when both boards + the Python API are available. It
-  // handles every card/fate natively (no yisim lag). Falls back to yisim solo.
+  // Damage is computed ONLY by the Yi Xian Oracle (the game's own combat engine,
+  // kept current with the installed game) — a real matchup of your board vs the
+  // opponent's last-seen board. No yisim: a fast-but-wrong estimate is worse than
+  // none when the game rebalances cards.
   const api = window.pywebview && window.pywebview.api;
   const mo = me.oracle, oo = vm.opponent && vm.opponent.oracle;
-  if (api && api.oracle_matchup && mo && oo &&
-      (mo.usedCards || []).some((x) => x) && (oo.usedCards || []).some((x) => x)) {
-    const token = ++_simToken;
-    try {
-      const r = await api.oracle_matchup(mo, oo, false);
-      if (token !== _simToken) return;
-      if (r && !r.error && r.lifeDamage != null) { renderOracleResult(r); return; }
-    } catch (e) { /* fall through to yisim */ }
+  if (!(api && api.oracle_matchup)) { renderDamageResult({ error: '' }); return; }
+  if (!(mo && oo && (mo.usedCards || []).some((x) => x) && (oo.usedCards || []).some((x) => x))) {
+    // No opponent board to fight yet (e.g. round 1, or opponent not seen).
+    renderDamageResult({ error: '等待对手棋盘…' });
+    return;
   }
-  if (!window.yisim) return;
-
-  // Deck size = unlocked board slots (locked slots are excluded by the slice).
-  // Empty UNLOCKED slots stay as nulls so yisim plays them as 普通攻击
-  // (Normal Attack, 3 dmg/turn) — that matches what the real game does for
-  // unfilled-but-unlocked slots.
-  const deckSlots = me.unlocked || 8;
-  // Dream cards (梦•X) use `phase` (1..5) instead of `level` to pick the
-  // right variant inside yisim. For regular cards `level` is what yisim wants.
-  // Pass BOTH so the engine resolves correctly either way.
-  const slots = (me.board || []).slice(0, deckSlots).map(
-    (c) => (c ? slotFromCard(c) : null)
-  );
-  const opts = {
-    rollMode: settings.rollMode || 'average',
-    deckSlots,
-    maxTurns: 64,
-    playerState: {
-      hp: me.hp, maxHp: me.hp,
-      physique: me.tipo || 0, maxPhysique: me.tipo || 0,
-      cultivation: me.xiuwei || 0,
-    },
-    talents: (me.fates || []),
-    mode: 'solo',
-  };
-  // Matchup mode is disabled — only solo damage is computed (your board
-  // vs a generic opponent). No opponent slots / state passed to yisim.
   const token = ++_simToken;
   try {
-    const result = await window.yisim.simulate(slots, opts);
-    if (token === _simToken) renderDamageResult(result);
+    // Pass the current round: the destiny (命) damage scales with round number.
+    const r = await api.oracle_matchup(mo, oo, false, vm.round || 8);
+    if (token !== _simToken) return;
+    if (r && !r.error && r.lifeDamage != null) renderOracleResult(r);
+    else renderDamageResult({ error: r && r.error ? '引擎准备中…' : '' });
   } catch (e) {
     if (token === _simToken) renderDamageResult({ error: String(e) });
   }

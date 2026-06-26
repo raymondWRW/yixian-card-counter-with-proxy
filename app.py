@@ -22,16 +22,6 @@ from pathlib import Path
 import webview
 
 BASE_DIR = Path(__file__).resolve().parent
-
-
-def _node_exe() -> str:
-    """node executable: the one bundled inside the frozen exe (PyInstaller
-    _MEIPASS), else system `node` on PATH. Used by the 复盘 yisim review."""
-    if getattr(sys, "frozen", False):
-        cand = Path(getattr(sys, "_MEIPASS", str(BASE_DIR))) / "node.exe"
-        if cand.exists():
-            return str(cand)
-    return "node"
 WEB_DIR = BASE_DIR / "web"
 INDEX_HTML = WEB_DIR / "index.html"
 COUNTER_HTML = WEB_DIR / "counter.html"
@@ -286,21 +276,18 @@ class Api:
             return []
 
     def review_game(self, game_id: str):
-        """For each lost round in this folder-format game, run yisim against
-        random permutations of the played board to find a winning arrangement.
-
-        Pulls per-round state (ME + OPPONENT board, fates, hp/tipo/xiuwei) from
-        the recorded deck_tracker.jsonl, builds a payload identical to the one
-        yisim_review.js consumes, and reports which lost rounds were winnable.
+        """For each lost round, replay the recorded matchup through the Yi Xian
+        Oracle (the game's own combat code) over board permutations to find a
+        winning arrangement. Oracle-only — the engine is always current with the
+        installed game (oracle_bootstrap keeps it synced), so there's no yisim
+        fallback. Imported (recentBattleDatas) games carry the bit-exact record
+        the Oracle needs; counter-only folder games without a record are skipped.
         """
         try:
             sys.path.insert(0, str(BASE_DIR / "proxy"))
             import game_archive
-            # Counter recordings have a battle_log/<id>/ folder; imported games
-            # (from recentBattleDatas) don't — for those the payload is built
-            # straight from the recent record instead.
-            folder = BASE_DIR / "battle_log" / game_id
-            is_folder = folder.is_dir()
+            import oracle_sim
+            import recent_battles
             g = game_archive.load_game(game_id)
             if not g:
                 return {"error": "load_game returned None",
@@ -310,54 +297,31 @@ class Api:
             if not lost:
                 return {"id": game_id, "lost_rounds": [],
                         "winnable_rounds": [], "details": []}
+            if not oracle_sim.available():
+                return {"id": game_id, "lost_rounds": lost, "winnable_rounds": [],
+                        "details": [{"round": rn, "skipped": "engine preparing — try again shortly"}
+                                    for rn in lost],
+                        "error": "oracle not ready"}
 
-            import subprocess
-            import json as _json
-            review_js = str(BASE_DIR / "tools" / "yisim_review.js")
-            # Engine: for IMPORTED (recentBattleDatas) games we have the bit-exact
-            # record, so run the Yi Xian Oracle (the game's own combat code) over
-            # board permutations. Folder games (counter recordings) have no record,
-            # so they stay on yisim. Oracle unavailable (not built) → yisim fallback.
-            import oracle_sim
-            use_oracle = (not is_folder) and oracle_sim.available()
             winnable = []
             details = []
             for rn in lost:
                 out = None
-                if use_oracle:
-                    try:
-                        import recent_battles
-                        me_side, b64 = recent_battles.round_stat_b64(game_id, rn)
-                        if b64:
-                            out = oracle_sim.whatif_from_stat(b64, me_side, deck_slots=8)
-                    except Exception as e:
-                        print(f"[review] oracle round {rn} failed: {e}", flush=True)
-                        out = None
+                try:
+                    me_side, b64 = recent_battles.round_stat_b64(game_id, rn)
+                    if b64:
+                        out = oracle_sim.whatif_from_stat(b64, me_side, deck_slots=8)
+                except Exception as e:
+                    print(f"[review] oracle round {rn} failed: {e}", flush=True)
+                    out = None
                 if out is None:
-                    # yisim path (folder games, or oracle miss/fallback)
-                    payload = (game_archive.build_review_payload(folder, rn)
-                               if is_folder
-                               else game_archive.build_recent_review_payload(game_id, rn))
-                    if not payload:
-                        details.append({"round": rn,
-                                        "skipped": "no per-round state recorded"})
-                        continue
-                    try:
-                        proc = subprocess.run(
-                            [_node_exe(), review_js],
-                            input=_json.dumps({"round": payload, "max_perms": 300}),
-                            capture_output=True, text=True,
-                            encoding="utf-8", timeout=60,
-                        )
-                        out = _json.loads(proc.stdout or "{}")
-                    except Exception as e:
-                        details.append({"round": rn, "error": str(e)})
-                        continue
-                engine = "oracle" if (use_oracle and "my_side" in out) else "yisim"
+                    details.append({"round": rn,
+                                    "skipped": "no in-game record for this round"})
+                    continue
                 if out.get("win"):
                     winnable.append(rn)
                     details.append({
-                        "round": rn, "win": True, "engine": engine,
+                        "round": rn, "win": True, "engine": "oracle",
                         "tried": out.get("tried"),
                         "end_turn": out.get("end_turn"),
                         "winning_slots": out.get("winning_slots"),
@@ -367,16 +331,15 @@ class Api:
                     # The real engine says this matchup was actually won/drawn (the displayed
                     # "lost" flag comes from a coarser life-drop heuristic). Not a loss to fix.
                     details.append({
-                        "round": rn, "win": False, "already_won": True, "engine": engine,
+                        "round": rn, "win": False, "already_won": True, "engine": "oracle",
                         "original_life": out.get("original_life"),
                     })
                 else:
                     details.append({
-                        "round": rn, "win": False, "engine": engine,
+                        "round": rn, "win": False, "engine": "oracle",
                         "tried": out.get("tried"),
-                        "closest_gap": out.get("closest_hpDelta", out.get("closest_dmg_gap")),
+                        "closest_gap": out.get("closest_hpDelta"),
                         "closest_life": out.get("closest_life"),
-                        "outcome": out.get("outcome"),
                     })
             return {
                 "id": game_id,
@@ -389,24 +352,25 @@ class Api:
             print(f"[review] {traceback.format_exc()}", flush=True)
             return {"error": str(e), "winnable_rounds": [], "lost_rounds": []}
 
-    def oracle_matchup(self, me: dict, opp: dict, marginal: bool = True):
+    def oracle_matchup(self, me: dict, opp: dict, marginal: bool = True, rnd: int = 8):
         """Live matchup of MY board vs the OPPONENT's board via the Yi Xian Oracle
         (the game's own combat engine). Each side dict carries:
           {usedCards:[card ids], characterId, level(realm 1..5), extraMaxHp,
            talents:[ids], fateStrategies:[ids], sect, career, life, unlockGrids}
+        `rnd` is the current round (destiny/命 damage scales with it).
         Returns {win, hpDelta, turns, lifeDamage, marginal:{slot: hp}} or {error}.
 
-        Board ids come from the view-model (now carried on each card). For full
-        damage accuracy the caller should also pass the live `talents` +
-        `fateStrategies` the game derived (captured from the wire) — without them
-        the engine still runs real combat but omits fate/talent scaling.
+        Talents + fateStrategies (the 天衍 derivations the game derived) are
+        captured from the wire on each side, so the real engine applies every
+        derivation/fate/talent effect during combat — no card-implementation lag.
         """
         try:
             sys.path.insert(0, str(BASE_DIR / "proxy"))
             import oracle_sim
             if not oracle_sim.available():
                 return {"error": "oracle not available"}
-            r = oracle_sim.matchup(me or {}, opp or {}, marginal=bool(marginal))
+            r = oracle_sim.matchup(me or {}, opp or {}, marginal=bool(marginal),
+                                   rnd=int(rnd) if rnd else 8)
             return r or {"error": "matchup returned None"}
         except Exception as e:
             import traceback
@@ -620,6 +584,21 @@ def _start_workers():
                                       ).get("game_exe")
             except Exception:
                 pass
+    # Out-of-box fallback (esp. the packaged exe): if the game is already running,
+    # ATTACH to it (no double-launch); otherwise spawn the default Steam install.
+    if not game_exe and not attach:
+        try:
+            import subprocess
+            out = subprocess.run(["tasklist", "/FI", "IMAGENAME eq YiXianPai.exe"],
+                                 capture_output=True, text=True, timeout=10).stdout
+            if "YiXianPai.exe" in out:
+                attach = True
+        except Exception:
+            pass
+        if not attach:
+            default_exe = r"C:\Program Files (x86)\Steam\steamapps\common\YiXianPai\YiXianPai.exe"
+            if Path(default_exe).exists():
+                game_exe = default_exe
     threading.Thread(
         target=runtime.start_frida_capture,
         kwargs={"game_exe": game_exe, "attach_mode": attach},
@@ -629,14 +608,29 @@ def _start_workers():
         target=runtime.start_consumer, args=(push_state,),
         daemon=True, name="consumer",
     ).start()
-    # Pre-spawn the Yi Xian Oracle worker so the first live matchup is instant
-    # (pays the ~3.4s cold-start now, in the background, instead of on first use).
-    try:
-        sys.path.insert(0, str(BASE_DIR / "proxy"))
-        import oracle_sim
-        oracle_sim.warmup()
-    except Exception:
-        pass
+    # Yi Xian Oracle: sync its game data to the installed game (extract DLL/configs,
+    # self-heal facades if the game's IL2CPP core changed), THEN warm the worker so
+    # the first live matchup is instant. Runs on a background thread — the first run
+    # / a post-patch run takes ~20-120s, but the UI stays responsive meanwhile.
+    def _oracle_startup():
+        try:
+            sys.path.insert(0, str(BASE_DIR / "proxy"))
+            import oracle_bootstrap
+            status = oracle_bootstrap.ensure_current(game_exe)
+            print(f"[oracle-sync] {status}", flush=True)
+            import oracle_sim
+            oracle_sim.warmup()
+        except Exception:
+            # --windowed swallows stdout — log the traceback to a file.
+            try:
+                import os as _os, traceback as _tb
+                lf = Path(_os.environ.get("LOCALAPPDATA", str(BASE_DIR))) / "YiXianCounter" / "oracle-sync.log"
+                lf.parent.mkdir(parents=True, exist_ok=True)
+                with lf.open("a", encoding="utf-8") as f:
+                    f.write("STARTUP EXCEPTION:\n" + _tb.format_exc() + "\n")
+            except Exception:
+                pass
+    threading.Thread(target=_oracle_startup, daemon=True, name="oracle-startup").start()
 
 
 def _patch_winforms_on_top():
@@ -670,8 +664,27 @@ def _patch_winforms_on_top():
         print(f"[on_top patch skipped] {e}", flush=True)
 
 
+def _setup_frozen_logging():
+    """The packaged exe is --windowed (no console), so stdout/stderr vanish and
+    any startup exception is invisible. Redirect both to a log file so problems
+    are diagnosable."""
+    if not getattr(sys, "frozen", False):
+        return
+    try:
+        log = Path(os.environ.get("LOCALAPPDATA", str(BASE_DIR))) / "YiXianCounter" / "app.log"
+        log.parent.mkdir(parents=True, exist_ok=True)
+        f = open(log, "a", encoding="utf-8", buffering=1)
+        sys.stdout = f
+        sys.stderr = f
+        import datetime
+        print(f"\n=== launch {datetime.datetime.now():%Y-%m-%d %H:%M:%S} v{globals().get('__version__','?')} ===", flush=True)
+    except Exception:
+        pass
+
+
 def main():
     global _window, _counter_win
+    _setup_frozen_logging()
     _patch_winforms_on_top()
     api = Api()
     # Counter window — deck counter + 复盘. Created FIRST so it's the master
@@ -719,7 +732,13 @@ def main():
     # Open the WebView2 dev tools only when YX_DEVTOOLS is set — NOT on
     # YX_DEBUG (that one just enables battle_log storage), so the normal
     # debug/storage run doesn't pop dev tools every launch.
-    webview.start(_start_workers, debug=bool(os.environ.get("YX_DEVTOOLS")))
+    def _start_workers_logged():
+        try:
+            _start_workers()
+        except Exception:
+            import traceback
+            print("[_start_workers EXCEPTION]\n" + traceback.format_exc(), flush=True)
+    webview.start(_start_workers_logged, debug=bool(os.environ.get("YX_DEVTOOLS")))
 
 
 if __name__ == "__main__":

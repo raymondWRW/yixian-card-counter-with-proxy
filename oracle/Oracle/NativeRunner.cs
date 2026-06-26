@@ -1029,6 +1029,22 @@ static class NativeRunner
                 if (o is System.Collections.IList l) foreach (var x in l) r.Add(Convert.ToInt32(x));
                 return r;
             }
+            Dictionary<string, int> IntDict(object? o)
+            {
+                var r = new Dictionary<string, int>();
+                if (o is System.Collections.IDictionary d)
+                    foreach (System.Collections.DictionaryEntry e in d)
+                        r[Convert.ToString(e.Key)!] = Convert.ToInt32(e.Value);
+                return r;
+            }
+            Dictionary<string, List<int>> TalentDatas(object? o)
+            {
+                var r = new Dictionary<string, List<int>>();
+                if (o is System.Collections.IDictionary d)
+                    foreach (System.Collections.DictionaryEntry e in d)
+                        r[Convert.ToString(e.Key)!] = IntList(e.Value != null ? NGet(e.Value, "commonParams") : null);
+                return r;
+            }
             object? SideInfo(string side)
             {
                 var p = NGet(br, side); if (p == null) return null;
@@ -1045,6 +1061,13 @@ static class NativeRunner
                     talents = IntList(NGet(pub, "talents")),
                     fateStrategies = IntList(lrd != null ? NGet(lrd, "fateStrategies") : null),
                     usedCards = IntList(lrd != null ? NGet(lrd, "usedCards") : null),
+                    // Per-battle buff/talent instance state — the recorded round carries it; passing it
+                    // back into a from-scratch fixture closes most of the state gap (RNG remains).
+                    usedKeYinCards = IntList(lrd != null ? NGet(lrd, "usedKeYinCards") : null),
+                    permanentBuffTempDatas = IntDict(lrd != null ? NGet(lrd, "permanentBuffTempDatas") : null),
+                    talentTempDatas = IntDict(lrd != null ? NGet(lrd, "talentTempDatas") : null),
+                    resonanceTalentFlags = IntDict(NGet(pub, "resonanceTalentFlags")),
+                    talentDatas = TalentDatas(lrd != null ? NGet(lrd, "talentDatas") : null),
                 };
             }
             Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new {
