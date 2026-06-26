@@ -39,9 +39,18 @@ for cand in ("icon.ico", "native_hud/icon.ico"):
         break
 
 # ── Yi Xian Oracle engine (the ONLY damage/review engine — no yisim/node) ────────────────────
-# Publish a self-contained Oracle.exe (.NET runtime included) + bundle the facades, auto_patch,
-# and Il2CppDumper. We do NOT bundle the game DLL/configs — oracle_bootstrap extracts those from
-# the user's own install at first run (no game-code redistribution; auto-current with patches).
+# The heavy engine (self-contained Oracle.exe + .NET runtime + facades + Il2CppDumper, ~100MB /
+# ~42MB zipped) does NOT fit a 100MB release limit alongside the app, so it is shipped as a
+# SEPARATE dist_share/oracle-engine-v{VER}.zip. oracle_bootstrap downloads + sha-verifies +
+# extracts it on first run (from the url in the bundled engine.json). The exe stays ~30MB.
+# The game DLL/configs are never bundled — extracted from the user's own install at runtime.
+import json as _json
+try:
+    sys.path.insert(0, str(HERE)); from version import VERSION
+except Exception:
+    VERSION = "0.0.0"
+GITEE = "https://gitee.com/hiddensquid12321/yixian-card-counter-with-proxy/releases/download"
+
 ORACLE = HERE / "oracle"
 PUB = HERE / "_oracle_pub"
 shutil.rmtree(PUB, ignore_errors=True)
@@ -53,8 +62,8 @@ pub = subprocess.run(
 if pub.returncode != 0 or not (PUB / "Oracle.exe").exists():
     sys.exit("Oracle publish failed")
 
-# Stamp the bundled facades-gen with the builder's GameAssembly key, so a user on the SAME game
-# version reuses these facades; a different version triggers a self-heal regen (Il2CppDumper).
+# Stamp facades-gen with the builder's GameAssembly key, so a user on the SAME game version
+# reuses these facades; a different version triggers a self-heal regen (Il2CppDumper) at runtime.
 def _ga_key():
     game = r"C:\Program Files (x86)\Steam\steamapps\common\YiXianPai"
     try:
@@ -67,17 +76,38 @@ gen = ORACLE / "UnityStubs" / "bin" / "facades-gen"
 if gen.exists() and _ga_key():
     (gen / ".gakey").write_text(_ga_key(), encoding="utf-8")
 
-oracle_data = [
-    ("_oracle_pub", "oracle/Oracle"),                                  # self-contained Oracle.exe + runtime + Cecil
-    ("oracle/UnityStubs/bin/facades", "oracle/UnityStubs/bin/facades"),         # hand facades
-    ("oracle/UnityStubs/bin/facades-gen", "oracle/UnityStubs/bin/facades-gen"), # generated facades (+ .gakey)
-    ("oracle/auto_patch.json", "oracle"),
-    ("oracle/scripts/oracle_pool.py", "oracle/scripts"),               # warm-worker manager (oracle_sim imports it)
-    ("oracle/tools/Il2CppDumper/v6.7.46/Il2CppDumper.exe", "oracle/tools/Il2CppDumper/v6.7.46"),
-    ("oracle/tools/Il2CppDumper/v6.7.46/config.json", "oracle/tools/Il2CppDumper/v6.7.46"),
-]
+# Stage the engine bundle (Oracle + facades + Il2CppDumper + auto_patch) and zip it into dist_share.
+ESTAGE = HERE / "_engine_stage"
+shutil.rmtree(ESTAGE, ignore_errors=True)
+shutil.copytree(PUB, ESTAGE / "Oracle")
+shutil.copytree(ORACLE / "UnityStubs" / "bin" / "facades", ESTAGE / "UnityStubs" / "bin" / "facades")
+shutil.copytree(ORACLE / "UnityStubs" / "bin" / "facades-gen", ESTAGE / "UnityStubs" / "bin" / "facades-gen")
+shutil.copytree(ORACLE / "tools" / "Il2CppDumper" / "v6.7.46", ESTAGE / "tools" / "Il2CppDumper" / "v6.7.46",
+                ignore=shutil.ignore_patterns("DummyDll"))
+shutil.copy2(ORACLE / "auto_patch.json", ESTAGE / "auto_patch.json")
+
+share = HERE / "dist_share"
+share.mkdir(exist_ok=True)
+engine_zip = share / f"oracle-engine-v{VERSION}.zip"
+if engine_zip.exists():
+    engine_zip.unlink()
+print("Zipping engine bundle …", flush=True)
+shutil.make_archive(str(engine_zip)[:-4], "zip", str(ESTAGE))
+_eh = hashlib.sha256()
+with engine_zip.open("rb") as f:
+    for chunk in iter(lambda: f.read(65536), b""):
+        _eh.update(chunk)
+engine_sha = _eh.hexdigest()
+engine_url = f"{GITEE}/main-v{VERSION}/oracle-engine-v{VERSION}.zip"
+# engine.json — the only Oracle artifact bundled in the exe; the bootstrap reads url+sha here.
+(ORACLE / "engine.json").write_text(
+    _json.dumps({"version": VERSION, "url": engine_url, "sha256": engine_sha}, indent=2), encoding="utf-8")
+print(f"  engine: {engine_zip.name}  {round(engine_zip.stat().st_size/1048576,1)}MB  sha={engine_sha[:12]}")
+
+# Only the tiny engine.json + oracle_pool.py go into the exe; the engine itself is downloaded.
 oracle_args = []
-for src, dst in oracle_data:
+for src, dst in [("oracle/engine.json", "oracle"),
+                 ("oracle/scripts/oracle_pool.py", "oracle/scripts")]:
     oracle_args += ["--add-data", f"{src}{SEP}{dst}"]
 
 cmd = [
@@ -130,7 +160,7 @@ if built_exe.exists():
     if target_exe.exists():
         target_exe.unlink()
     shutil.move(str(built_exe), str(target_exe))
-for d in ("build", "dist", "_oracle_pub"):
+for d in ("build", "dist", "_oracle_pub", "_engine_stage"):
     shutil.rmtree(HERE / d, ignore_errors=True)
 if spec.exists():
     spec.unlink()
@@ -152,19 +182,22 @@ try:
 except Exception:
     VERSION = "?"
 
-print(f"\nBuilt: {target_exe}")
+print(f"\nBuilt: {target_exe}  ({round(target_exe.stat().st_size/1048576,1)}MB)")
+print(f"Engine: {engine_zip}  ({round(engine_zip.stat().st_size/1048576,1)}MB)")
 print(f"Share folder ready: {share}")
-print(f"\n── Release SHA256 ──")
-print(f"  version: {VERSION}")
-print(f"  sha256:  {sha256}")
+print(f"\n── Release main-v{VERSION} — attach BOTH files (each < 100MB) ──")
+print(f"  exe sha256:    {sha256}")
+print(f"  engine sha256: {engine_sha}")
 print("\nPaste this into dist_share/version.json:")
 print(
     "{\n"
     f'  "version": "{VERSION}",\n'
-    f'  "url": "https://gitee.com/hiddensquid12321/yixian-card-counter-with-proxy/releases/download/main-v{VERSION}/YiXianCounter.exe",\n'
+    f'  "url": "{GITEE}/main-v{VERSION}/YiXianCounter.exe",\n'
     f'  "sha256": "{sha256}",\n'
     '  "notes": "What changed in this release."\n'
     "}"
 )
-print("\nThen create Gitee Release tagged 'main-v" + VERSION + "' and attach the exe.")
+print(f"\nCreate Gitee Release 'main-v{VERSION}' and attach BOTH:")
+print(f"  - {target_exe.name}        (the app; updater downloads this)")
+print(f"  - {engine_zip.name}  (the engine; the app downloads this on first run)")
 sys.exit(0)

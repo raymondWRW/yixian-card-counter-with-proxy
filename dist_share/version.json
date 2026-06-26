@@ -2,6 +2,6 @@
   "_comment_": "Live at https://gitee.com/hiddensquid12321/yixian-card-counter-with-proxy/raw/master/dist_share/version.json. This is the MAIN app manifest (lite uses small_card_counter/dist_share/version.json). Bump `version` + `url` + `sha256` per release (build.py prints a paste-ready snippet).",
   "version": "1.2.0",
   "url": "https://gitee.com/hiddensquid12321/yixian-card-counter-with-proxy/releases/download/main-v1.2.0/YiXianCounter.exe",
-  "sha256": "ef86ede44b17a2c14fc7c4db8cf88b1cef4470146c6d39848a1c258d9e178d1f",
-  "notes": "伤害与复盘全部改用游戏自身的战斗引擎（Yi Xian Oracle），不再使用 yisim。启动时自动同步已安装游戏的数据（提取战斗 DLL/配置，游戏核心更新时自动重建 facades），卡牌改动后始终准确、无需手动更新。内置自包含 Oracle 引擎与 Il2CppDumper。"
+  "sha256": "614700a1d931d8a7f09afe4d8933070eb44c9c35bafca71edef3aea771eb4cd5",
+  "notes": "伤害与复盘全部改用游戏自身的战斗引擎（Yi Xian Oracle），不再使用 yisim。首次启动会自动下载引擎组件（oracle-engine.zip，约42MB，需与 exe 一同上传到同一 Release），并同步已安装游戏的数据；游戏核心更新时自动重建。卡牌改动后始终准确、无需手动更新。"
 }

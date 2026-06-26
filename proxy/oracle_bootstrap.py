@@ -36,26 +36,102 @@ def _frozen() -> bool:
     return bool(getattr(sys, "frozen", False))
 
 
-def _bundle() -> Path:
-    """Read-only source of our Oracle artifacts (Oracle.exe, facades, Il2CppDumper, auto_patch)."""
+def _appdata() -> Path:
+    return Path(os.environ.get("LOCALAPPDATA", str(Path.home()))) / "YiXianCounter"
+
+
+def _exe_resources() -> Path:
+    """Small resources bundled inside the exe (engine.json). _MEIPASS when frozen."""
     if _frozen():
         return Path(getattr(sys, "_MEIPASS", str(_REPO))) / "oracle"
     return _REPO / "oracle"
 
 
-def _home() -> Path:
-    """Writable Oracle root the engine reads (ORACLE_HOME)."""
+def _engine_dir() -> Path:
+    """The Oracle engine root: a separately-downloaded bundle when frozen (the exe is
+    kept small to fit a 100MB release limit), or the repo's built oracle/ in dev. Holds
+    Oracle.exe + facades + Il2CppDumper + auto_patch, and (writable) the extracted game
+    data + regenerated facades-gen. Serves as BOTH the read-only source and ORACLE_HOME."""
     if _frozen():
-        base = Path(os.environ.get("LOCALAPPDATA", str(Path.home()))) / "YiXianCounter" / "oracle"
-        return base
+        return _appdata() / "engine"
     return _REPO / "oracle"
 
 
+# _bundle and _home are now the same dir (the engine dir) — kept as names for clarity.
+def _bundle() -> Path:
+    return _engine_dir()
+
+
+def _home() -> Path:
+    return _engine_dir()
+
+
 def oracle_exe() -> Path:
-    """The Oracle.exe to run (bundled self-contained when frozen, built one in dev)."""
     if _frozen():
-        return _bundle() / "Oracle" / "Oracle.exe"
+        return _engine_dir() / "Oracle" / "Oracle.exe"
     return _REPO / "oracle" / "Oracle" / "bin" / "Release" / "net8.0" / "Oracle.exe"
+
+
+def ensure_engine() -> str:
+    """Frozen only: download + extract the Oracle engine bundle (self-contained Oracle.exe
+    + facades + Il2CppDumper) on first run / when the bundled engine.json version changes.
+    Reads engine.json (bundled in the exe) for {version, url, sha256}. No-op in dev.
+    Returns a status string; the engine is unusable until this succeeds."""
+    if not _frozen():
+        return "dev"
+    import json
+    try:
+        meta = json.loads((_exe_resources() / "engine.json").read_text(encoding="utf-8"))
+    except Exception as e:
+        _log(f"engine.json missing/unreadable: {e}")
+        return "no engine manifest"
+    edir = _engine_dir()
+    marker = edir / ".engine_version"
+    if (edir / "Oracle" / "Oracle.exe").exists() and marker.exists():
+        try:
+            if marker.read_text(encoding="utf-8").strip() == str(meta.get("version", "")):
+                return "engine present"
+        except Exception:
+            pass
+    url, sha = meta.get("url", ""), meta.get("sha256", "")
+    if not url:
+        return "no engine url"
+    _log(f"downloading Oracle engine v{meta.get('version')} ({url}) …")
+    import urllib.request, hashlib, zipfile, tempfile
+    edir.mkdir(parents=True, exist_ok=True)
+    zpath = Path(tempfile.gettempdir()) / "yx_oracle_engine.zip"
+    try:
+        with urllib.request.urlopen(url, timeout=120) as r, open(zpath, "wb") as f:
+            shutil.copyfileobj(r, f)
+    except Exception as e:
+        _log(f"engine download failed: {e}")
+        return "engine download failed"
+    if sha:
+        h = hashlib.sha256()
+        with open(zpath, "rb") as f:
+            for chunk in iter(lambda: f.read(1 << 16), b""):
+                h.update(chunk)
+        if h.hexdigest() != sha:
+            _log("engine sha256 mismatch — discarding")
+            try: zpath.unlink()
+            except Exception: pass
+            return "engine checksum mismatch"
+    # Fresh extract (clear stale Oracle/facades, keep extracted game data if present).
+    for sub in ("Oracle", "UnityStubs", "tools"):
+        shutil.rmtree(edir / sub, ignore_errors=True)
+    try:
+        with zipfile.ZipFile(zpath) as z:
+            z.extractall(edir)
+    except Exception as e:
+        _log(f"engine extract failed: {e}")
+        return "engine extract failed"
+    try:
+        marker.write_text(str(meta.get("version", "")), encoding="utf-8")
+        zpath.unlink()
+    except Exception:
+        pass
+    _log(f"engine ready ({meta.get('version')})")
+    return "engine downloaded"
 
 
 def _game_dir(explicit: str = None) -> Path | None:
@@ -219,11 +295,17 @@ def ensure_current(game_dir: str = None) -> str:
     """Make the Oracle's data current with the installed game. Returns a status string.
     Sets os.environ ORACLE_HOME + ORACLE_EXE so oracle_sim/the worker use the right paths.
     Safe to call on a background thread; can take ~30-120s on a first run / after a game patch."""
+    # 0. Make sure the engine bundle is present (frozen: download on first run).
+    est = ensure_engine()
+    if _frozen() and est not in ("engine present", "engine downloaded"):
+        _log(f"engine not ready: {est}")
+        return est
+
     home = _home()
     bundle = _bundle()
     os.environ["ORACLE_EXE"] = str(oracle_exe())
     os.environ["ORACLE_HOME"] = str(home)
-    _log(f"ensure_current: frozen={_frozen()} bundle={bundle} home={home} exe_exists={oracle_exe().exists()}")
+    _log(f"ensure_current: frozen={_frozen()} home={home} exe_exists={oracle_exe().exists()}")
 
     gdir = _game_dir(game_dir)
     if gdir is None:
@@ -243,22 +325,9 @@ def ensure_current(game_dir: str = None) -> str:
 
     _log(f"syncing Oracle to installed game ({'first run' if not marker.exists() else 'game updated'})…")
     home.mkdir(parents=True, exist_ok=True)
+    # (facades / auto_patch already live in the engine dir, which IS home — no scaffolding.)
 
-    # 1. Scaffold the read-only artifacts into the writable home (frozen only; dev already has them).
-    if _frozen():
-        for rel in ("UnityStubs/bin/facades", "auto_patch.json"):
-            src = bundle / rel
-            dst = home / rel
-            try:
-                if src.is_dir():
-                    shutil.copytree(src, dst, dirs_exist_ok=True)
-                elif src.is_file():
-                    dst.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(src, dst)
-            except Exception as e:
-                _log(f"scaffold {rel} failed: {e}")
-
-    # 2. Extract game data.
+    # Extract game data.
     out = home / "data" / "extracted"
     try:
         dll, cfgs = _extract(gdir, out)
@@ -272,38 +341,30 @@ def ensure_current(game_dir: str = None) -> str:
         return "extraction incomplete"
 
     # 3. Facades: reuse if their GameAssembly matches; else regen (re-dump + --gen-facades).
+    # Facades-gen ships inside the engine (stamped with the GameAssembly it was built against).
+    # Reuse it if the installed game's GameAssembly matches; otherwise self-heal: re-dump with
+    # Il2CppDumper and regenerate.
     gen = home / "UnityStubs" / "bin" / "facades-gen"
     gakey_file = gen / ".gakey"
     cur_gakey = _ga_key(gdir)
     have_gen = gen.exists() and any(gen.glob("*.dll")) and \
         (gakey_file.exists() and gakey_file.read_text(encoding="utf-8").strip() == cur_gakey)
 
-    if not have_gen:
-        # Try the bundled facades-gen if it was built against THIS GameAssembly.
-        b_gen = bundle / "UnityStubs" / "bin" / "facades-gen"
-        b_key = b_gen / ".gakey"
-        used_bundle = False
-        if _frozen() and b_gen.exists() and b_key.exists() and \
-                b_key.read_text(encoding="utf-8").strip() == cur_gakey:
+    if have_gen:
+        _log("facades: engine set matches installed GameAssembly")
+    else:
+        _log("facades: GameAssembly differs from engine — re-dumping + regenerating (self-heal)…")
+        dummy = home / "tools" / "Il2CppDumper" / "v6.7.46" / "DummyDll"
+        if _il2cppdump(gdir, dummy) and _gen_facades(home):
+            gen.mkdir(parents=True, exist_ok=True)
             try:
-                shutil.copytree(b_gen, gen, dirs_exist_ok=True)
-                used_bundle = True
-                _log("facades: reused bundled set (GameAssembly unchanged)")
+                (gen / ".gakey").write_text(cur_gakey, encoding="utf-8")
             except Exception:
-                used_bundle = False
-        if not used_bundle:
-            _log("facades: GameAssembly changed — re-dumping + regenerating (self-heal)…")
-            dummy = home / "tools" / "Il2CppDumper" / "v6.7.46" / "DummyDll"
-            if _il2cppdump(gdir, dummy) and _gen_facades(home):
-                gen.mkdir(parents=True, exist_ok=True)
-                try:
-                    (gen / ".gakey").write_text(cur_gakey, encoding="utf-8")
-                except Exception:
-                    pass
-                _log("facades regenerated")
-            else:
-                _log("facade regen FAILED — engine may not load")
-                return "facade regen failed"
+                pass
+            _log("facades regenerated")
+        else:
+            _log("facade regen FAILED — engine may not load")
+            return "facade regen failed"
 
     try:
         marker.write_text(ver, encoding="utf-8")

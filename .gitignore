@@ -121,3 +121,8 @@ oracle/ILRuntime/
 dist_share/*.zip
 oracle/.oracle_version
 oracle/UnityStubs/bin/facades-gen/.gakey
+
+# Oracle engine bundle (downloaded on first run; distributed via Gitee, not git).
+dist_share/oracle-engine-*.zip
+# engine.json is build-generated (url+sha for the engine download).
+oracle/engine.json
