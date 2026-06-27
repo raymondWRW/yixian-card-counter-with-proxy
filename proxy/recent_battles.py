@@ -363,8 +363,12 @@ def _decode_file(path: Path, account_id: str) -> dict | None:
         if isinstance(life, int) and life <= 0:
             continue                      # phantom post-death round
         real_rounds += 1
-        nxt = rounds[idx + 1]["me_life"] if idx + 1 < len(rounds) else None
-        if isinstance(nxt, int) and isinstance(life, int) and nxt < life:
+        # A round is LOST when net destiny (dealt - received) is negative. `net` is the
+        # game's own per-round result (verified bit-exact vs the Oracle's lifeDamage).
+        # The old me_life-drop heuristic lagged — me_life is flat-then-stepped, so it
+        # flagged the wrong rounds and missed round-1 losses entirely.
+        net = rd.get("net")
+        if isinstance(net, int) and net < 0:
             lost_rounds.append(rd["round"])
     opponents = sorted({rd["opp_name"] for rd in rounds if rd["opp_name"]})
 

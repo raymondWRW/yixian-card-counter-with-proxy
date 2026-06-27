@@ -719,8 +719,12 @@ def _recent_game_detail(game_id: str) -> dict | None:
         life = rd["me_life"]
         if isinstance(life, int) and life <= 0:
             continue                      # phantom post-death round — don't show
-        nxt = rounds[i + 1]["me_life"] if i + 1 < len(rounds) else None
-        won = not (isinstance(nxt, int) and isinstance(life, int) and nxt < life)
+        # A round is WON when net destiny (dealt - received) is >= 0. `net` (field [6])
+        # is the game's own per-round result — verified bit-exact vs the Oracle's
+        # lifeDamage. The old me_life-drop heuristic lagged (me_life is flat-then-stepped),
+        # so it flagged the wrong rounds and missed round-1 losses entirely.
+        net = rd.get("net")
+        won = not (isinstance(net, int) and net < 0)
         opp_char = _char_name_from_id(rd["opp_char_id"]) or "?"
         opp_sect = sect_map.get(opp_char, "?")
         # Per-round stats decoded from the recent record: hp / xiuwei (修) /
@@ -1218,8 +1222,12 @@ def load_game(game_id: str) -> dict | None:
             life = rd.get("me_life")
             if isinstance(life, int) and life <= 0:
                 continue                  # phantom post-death round
-            nxt = rounds[i + 1].get("me_life") if i + 1 < len(rounds) else None
-            won = not (isinstance(nxt, int) and isinstance(life, int) and nxt < life)
+            # WON when net destiny (dealt - received) >= 0. `net` (field [6]) is the
+            # game's own per-round result — verified bit-exact vs the Oracle's lifeDamage.
+            # (The old me_life-drop heuristic lagged: me_life is flat-then-stepped, so it
+            # flagged the wrong rounds and missed round-1 losses entirely.)
+            net = rd.get("net")
+            won = not (isinstance(net, int) and net < 0)
             out_rounds.append({"round": rd["round"], "won": won})
         return {"id": game_id, "format": "recent", "rounds": out_rounds}
     return None

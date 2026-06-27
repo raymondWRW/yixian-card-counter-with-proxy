@@ -2,6 +2,6 @@
   "_comment_": "Live at https://gitee.com/hiddensquid12321/yixian-card-counter-with-proxy/raw/master/dist_share/version.json. This is the MAIN app manifest (lite uses small_card_counter/dist_share/version.json). Bump `version` + `url` + `sha256` per release (build.py prints a paste-ready snippet).",
   "version": "1.3.0",
   "url": "https://gitee.com/hiddensquid12321/yixian-card-counter-with-proxy/releases/download/main-v1.3.0/YiXianCounter.exe",
-  "sha256": "bdd35f97a73bed9a6f24b7eec2ce28f409360dbdf8eceb083cfeed38f4cbaf32",
-  "notes": "复盘增强：①打开复盘自动加载对局，已分析过的对局结果会缓存，无需重复分析；②摆法搜索新增「空位」方案（如逍遥无影拳等随空格数增伤的卡）；③新增「先手」解法——后手无解时自动检测先手能否取胜，若手牌足够吸收提升修为抢先手则提示先手取胜（解法标⚡）。④易用性：直接运行 YiXianCounter.exe 即可，无需 Setup.bat/Run.bat、无需管理员权限或安装证书；新增启动诊断——缺少 WebView2、找不到游戏、被杀软拦截、引擎下载失败等问题会直接在计数器窗口提示原因。本次需同时上传 oracle-engine-v1.3.0.zip 到同一 Release。"
+  "sha256": "a02b3482a6046805994bb701e779b15f687fb6d992d6ba8703db7e811234a13c",
+  "notes": "复盘增强：①打开复盘自动加载对局，已分析过的对局结果会缓存，无需重复分析；②摆法搜索新增「空位」方案（如逍遥无影拳等随空格数增伤的卡）；③新增「先手」解法——后手无解时自动检测先手能否取胜，若手牌足够吸收提升修为抢先手则提示先手取胜（解法标⚡）。④易用性：直接运行 YiXianCounter.exe 即可，无需 Setup.bat/Run.bat、无需管理员权限或安装证书；新增启动诊断——缺少 WebView2、找不到游戏、被杀软拦截、引擎下载失败等问题会直接在计数器窗口提示原因。⑤修正复盘胜负判定（改用每回合命数增减，之前会漏判/误判首回合等），并提升实时伤害计算准确度（门派/修为/解锁格数等改用真实数据）。本次需同时上传 oracle-engine-v1.3.0.zip 到同一 Release。"
 }

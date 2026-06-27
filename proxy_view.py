@@ -171,12 +171,15 @@ def _signed64(v):
     return v - (1 << 64) if v >= (1 << 63) else v
 
 
-def _oracle_side(ps, board_dicts):
+def _oracle_side(ps, board_dicts, unlocked=8, is_me=False):
     """Build the Yi Xian Oracle fixture-player fields for one side from its live
     PlayerState (+ the view-model board dicts, which carry card ids). These are
     the SAME fields the recorded round-stat carries, read off the wire:
       characterId = publicData[12], realm = realm_tier, extraMaxHp = publicData[4],
       talents = the f200[5]/[13] list (PlayerState.fates), fateStrategies = f200[16].
+    `unlocked` = this round's usable board-slot count (matters for cards that scale
+    with empty slots, e.g. 逍遥无影拳). `is_me` enables the career lookup, which is
+    only tracked for the local player (the opponent's class isn't on the wire).
     Returns None if there's no usable identity (so callers can skip the Oracle)."""
     if ps is None:
         return None
@@ -192,14 +195,29 @@ def _oracle_side(ps, board_dicts):
         except Exception:
             fate_strats = []
     used = [int(c["id"]) if (c and c.get("id")) else 0 for c in (board_dicts or [])]
+    char_id = int(raw.get("12") or 0)
+    # career (副职/class) is the in-game pick — tracked only for the local player;
+    # the opponent's isn't broadcast, so it stays 0 (best-effort). sect is the
+    # school, derivable exactly from the character id (verified: sect == cid//1e6).
+    career = 0
+    if is_me:
+        try:
+            career = int(shadow_state.get_career_pick() or 0)
+        except Exception:
+            career = 0
     return {
-        "characterId": int(raw.get("12") or 0),
+        "characterId": char_id,
         "level": int(getattr(ps, "realm_tier", 1) or 1),
         "extraMaxHp": _signed64(raw.get("4")),
         "talents": [int(t) for t in (getattr(ps, "fates", []) or [])],
         "fateStrategies": fate_strats,
         "usedCards": used,
-        "unlockGrids": 8, "sect": 0, "career": 0, "life": 100,
+        # Previously hardcoded (8/0/0/100); these are all available live and lift
+        # the matchup's winner accuracy. life = the destiny (命) pool.
+        "unlockGrids": int(unlocked or 8),
+        "sect": char_id // 1000000 if char_id else 0,
+        "career": career,
+        "life": int(getattr(ps, "destiny", 100) or 100),
     }
 
 
@@ -452,7 +470,8 @@ def build_view_model(state, counter=None, last_battle=None, opp_tracker=None):
             # damage numbers (yisim has no 灵羽 implementation).
             "lingyuUnresolved": lingyu_unresolved,
             # Yi Xian Oracle fixture-player fields (ids the real engine consumes).
-            "oracle": _oracle_side(state.players[state.me_index] if state.me_index >= 0 else None, board),
+            "oracle": _oracle_side(state.players[state.me_index] if state.me_index >= 0 else None,
+                                   board, unlocked=unlocked, is_me=True),
         }
 
     # ── Opponent (matchup target) ──────────────────────────────────────────────
@@ -502,7 +521,7 @@ def build_view_model(state, counter=None, last_battle=None, opp_tracker=None):
             "board": board,
             "boardFromRound": from_round,
             "fates": opp_fates, "fateNames": opp_fate_names,
-            "oracle": _oracle_side(opp, board),
+            "oracle": _oracle_side(opp, board, unlocked=unlocked, is_me=False),
         }
 
     # R27: one-shot per-frame console probe so the user can read both

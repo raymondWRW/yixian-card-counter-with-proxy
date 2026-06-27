@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent
 
 # Bump when the review search logic changes (empty-slot candidates, go-first, …) so old
 # cached solutions are recomputed. Combined with the game version, this keys the cache.
-REVIEW_ANALYSIS_VERSION = 3
+REVIEW_ANALYSIS_VERSION = 4
 
 
 def _review_cache_file() -> Path:
