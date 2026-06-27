@@ -143,6 +143,11 @@ html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
 .btn-solution:hover { background: #3a2d1f; border-color: #fab387; }
 
 /* Solution modal — shows the winning 8-slot board arrangement. */
+/* Go-first notice: this board only wins if the player takes the first turn. */
+.sol-note {
+  background: #2a2410; border: 1px solid #6b5a1e; color: #f5d76e;
+  border-radius: 5px; padding: 7px 10px; margin-bottom: 8px; font-size: 12px;
+}
 .sol-grid {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
   margin-top: 4px;

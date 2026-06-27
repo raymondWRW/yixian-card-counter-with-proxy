@@ -22,6 +22,45 @@ from pathlib import Path
 import webview
 
 BASE_DIR = Path(__file__).resolve().parent
+
+# Bump when the review search logic changes (empty-slot candidates, go-first, …) so old
+# cached solutions are recomputed. Combined with the game version, this keys the cache.
+REVIEW_ANALYSIS_VERSION = 3
+
+
+def _review_cache_file() -> Path:
+    return Path(os.environ.get("LOCALAPPDATA", str(BASE_DIR))) / "YiXianCounter" / "review_cache.json"
+
+
+def _engine_stamp() -> str:
+    """Game+engine version stamp. Changes when the game patches (the Oracle re-syncs and
+    rewrites ORACLE_HOME/.oracle_version), so cached solutions for the OLD card rules are
+    invalidated and re-analysed under the new ones."""
+    try:
+        home = os.environ.get("ORACLE_HOME")
+        if home:
+            m = Path(home) / ".oracle_version"
+            if m.exists():
+                return m.read_text(encoding="utf-8").strip()
+    except Exception:
+        pass
+    return "nover"
+
+
+def _review_cache_load() -> dict:
+    try:
+        return json.loads(_review_cache_file().read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def _review_cache_save(cache: dict):
+    try:
+        p = _review_cache_file()
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
+    except Exception:
+        pass
 WEB_DIR = BASE_DIR / "web"
 INDEX_HTML = WEB_DIR / "index.html"
 COUNTER_HTML = WEB_DIR / "counter.html"
@@ -47,6 +86,9 @@ _counter_only = (os.environ.get("YX_COUNTER_ONLY") == "1"
                      and os.environ.get("YX_COUNTER_ONLY") != "0"))
 # Selected game_id for the detail window — JS reads this on load.
 _detail_game_id = None
+# Set True on the first view-model push so push_state can clear the
+# "connecting…" diagnostic banner once live game data actually flows.
+_live_connected = False
 
 # Height of the titlebar in px (must match #titlebar height in app.css). When the
 # user minimizes the window, we resize to this height to leave only the titlebar
@@ -168,6 +210,9 @@ class Api:
         if _review_win is not None:
             try:
                 _review_win.show()
+                # Reload the games list every time it's reopened (new games since last time).
+                try: _review_win.evaluate_js("window.reloadGames && window.reloadGames()")
+                except Exception: pass
                 return True
             except Exception:
                 _review_win = None
@@ -297,6 +342,15 @@ class Api:
             if not lost:
                 return {"id": game_id, "lost_rounds": [],
                         "winnable_rounds": [], "details": []}
+            # Cache: a fully-analysed game is stored (keyed by game + engine + analysis version),
+            # so re-opening 复盘 returns instantly instead of re-running the Oracle search. Patches
+            # to the game OR the search logic change the stamp and trigger a fresh analysis.
+            stamp = f"{_engine_stamp()}|{REVIEW_ANALYSIS_VERSION}"
+            cache = _review_cache_load()
+            hit = cache.get(game_id)
+            if hit and hit.get("stamp") == stamp and hit.get("result"):
+                r = dict(hit["result"]); r["cached"] = True
+                return r
             if not oracle_sim.available():
                 return {"id": game_id, "lost_rounds": lost, "winnable_rounds": [],
                         "details": [{"round": rn, "skipped": "engine preparing — try again shortly"}
@@ -326,6 +380,10 @@ class Api:
                         "end_turn": out.get("end_turn"),
                         "winning_slots": out.get("winning_slots"),
                         "used_hand": out.get("used_hand"),
+                        # Go-first line: this board only wins if the player takes the first turn
+                        # (achievable by absorbing cards for cultivation; hand_cards = cards available).
+                        "requires_go_first": out.get("requires_go_first"),
+                        "hand_cards": out.get("hand_cards"),
                     })
                 elif out.get("already_won"):
                     # The real engine says this matchup was actually won/drawn (the displayed
@@ -341,12 +399,17 @@ class Api:
                         "closest_gap": out.get("closest_hpDelta"),
                         "closest_life": out.get("closest_life"),
                     })
-            return {
+            result = {
                 "id": game_id,
                 "lost_rounds": lost,
                 "winnable_rounds": winnable,
                 "details": details,
             }
+            # Only cache a COMPLETE analysis (no per-round "skipped: engine preparing").
+            if not any(d.get("skipped", "").startswith("engine") for d in details):
+                cache[game_id] = {"stamp": stamp, "result": result}
+                _review_cache_save(cache)
+            return result
         except Exception as e:
             import traceback
             print(f"[review] {traceback.format_exc()}", flush=True)
@@ -376,6 +439,13 @@ class Api:
             import traceback
             print(f"[oracle] {traceback.format_exc()}", flush=True)
             return {"error": str(e)}
+
+    def get_pending_status(self):
+        """Return the diagnostic notices active right now. counter.js calls this
+        once on load so a problem raised BEFORE the page finished loading (e.g.
+        'game not found' fired during startup) still appears, instead of being
+        lost to the push/load race."""
+        return list(_status_notices.values())
 
     # ── Counter-window helpers (used by web/counter.js) ─────────────────────
     def move_counter(self, x, y):
@@ -445,6 +515,82 @@ def _save_settings(settings: dict):
         pass
 
 
+# ─── Diagnostics surfaced to the user ─────────────────────────────────────────
+def _message_box(title: str, text: str):
+    """Show a blocking native message box. Used for failures that happen BEFORE
+    any window can render (e.g. the WebView2 runtime is missing) — at that point
+    the in-window status banner isn't an option. No-op / prints off Windows."""
+    if sys.platform.startswith("win"):
+        try:
+            import ctypes
+            # MB_ICONERROR | MB_SETFOREGROUND
+            ctypes.windll.user32.MessageBoxW(0, text, title, 0x10 | 0x10000)
+            return
+        except Exception:
+            pass
+    print(f"{title}: {text}", flush=True)
+
+
+def _webview2_available() -> bool:
+    """True if the Microsoft Edge WebView2 runtime is installed. pywebview's
+    winforms backend renders every window through it; without it the windows
+    silently never appear. Checked before window creation so we can tell the
+    user instead of failing blank. Returns True off Windows / if the check
+    itself fails (avoid false negatives that would block a working install)."""
+    if not sys.platform.startswith("win"):
+        return True
+    try:
+        import winreg
+    except Exception:
+        return True
+    # The runtime registers a versioned client under EdgeUpdate. A non-empty,
+    # non-zero "pv" under any of these locations means it's installed.
+    CLIENT = r"{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+    locations = [
+        (winreg.HKEY_LOCAL_MACHINE, rf"SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{CLIENT}"),
+        (winreg.HKEY_LOCAL_MACHINE, rf"SOFTWARE\Microsoft\EdgeUpdate\Clients\{CLIENT}"),
+        (winreg.HKEY_CURRENT_USER, rf"SOFTWARE\Microsoft\EdgeUpdate\Clients\{CLIENT}"),
+    ]
+    for root, path in locations:
+        try:
+            with winreg.OpenKey(root, path) as k:
+                pv, _ = winreg.QueryValueEx(k, "pv")
+                if pv and pv not in ("", "0.0.0.0"):
+                    return True
+        except Exception:
+            continue
+    return False
+
+
+# Active diagnostic notices, keyed by id. Mirrored here (not just pushed) so a
+# window that loads AFTER a notice was raised can pull the current set on ready
+# (see Api.get_pending_status) — otherwise an early "game not found" would be
+# lost to the push/load race and the user would see a blank counter.
+_status_notices: dict = {}
+
+
+def _push_status(notice_id: str, level: str, text: str, detail: str = "", clear: bool = False):
+    """Surface a diagnostic banner in the always-visible counter window (and the
+    main window when shown). `notice_id` keys the banner so repeated calls update
+    in place instead of stacking; pass clear=True to remove it. `level` is
+    'info' | 'warn' | 'error'. Safe to call from any background thread."""
+    notice = {"id": notice_id, "level": level, "text": text,
+              "detail": detail, "clear": bool(clear)}
+    if clear or (not text and not detail):
+        _status_notices.pop(notice_id, None)
+    else:
+        _status_notices[notice_id] = notice
+    payload = json.dumps(notice, ensure_ascii=False)
+    js = f"window.onStatus && window.onStatus({payload})"
+    for w in (_counter_win, _window):
+        if w is None:
+            continue
+        try:
+            w.evaluate_js(js)
+        except Exception:
+            pass
+
+
 # ─── Pushing state to the UI ──────────────────────────────────────────────────
 def push_state(view_model: dict):
     """Push a view-model dict to BOTH the main window and the counter window.
@@ -453,6 +599,13 @@ def push_state(view_model: dict):
     window uses the full view-model; the counter window only reads
     `vm.counter.remaining` and `vm.round`).
     """
+    global _live_connected
+    if not _live_connected:
+        # First live frame — we're definitely hooked into the game now, so
+        # clear the "connecting…" banner. Done here (not in the frida setup)
+        # because frida attaching ≠ the game actually streaming gameplay.
+        _live_connected = True
+        _push_status("frida", "info", "", clear=True)
     payload = json.dumps(view_model, ensure_ascii=False)
     js = f"window.onState && window.onState({payload})"
     # In counter-only mode the main window is hidden — don't push to it (skips
@@ -599,9 +752,50 @@ def _start_workers():
             default_exe = r"C:\Program Files (x86)\Steam\steamapps\common\YiXianPai\YiXianPai.exe"
             if Path(default_exe).exists():
                 game_exe = default_exe
+
+    # If we have neither a game to attach to nor a known exe to spawn, frida
+    # has nothing to hook — tell the user instead of letting the thread die
+    # silently with an empty counter. (Spawn/attach errors raised later are
+    # surfaced by _frida_capture_guarded below.)
+    if not attach and not game_exe:
+        _push_status(
+            "frida", "error",
+            "找不到游戏 / Game not found",
+            "未找到 YiXianPai。请先启动游戏（推荐），或确认游戏已安装。\n"
+            "默认路径：C:\\Program Files (x86)\\Steam\\steamapps\\common\\YiXianPai\\\n"
+            "若安装在其它位置，请设置环境变量 YX_GAME_EXE 指向 YiXianPai.exe。",
+        )
+    else:
+        _push_status(
+            "frida", "info",
+            "正在连接游戏… / Connecting to game…",
+            "启动 YiXianPai 后计数会自动开始。" if not attach
+            else "已检测到运行中的游戏，正在挂接…",
+        )
+
+    def _frida_capture_guarded():
+        """Run the frida capture and turn any setup failure into a user-visible
+        banner. Without this the thread would die silently and the counter would
+        just sit empty — the single most common 'it doesn't work' report."""
+        try:
+            runtime.start_frida_capture(game_exe=game_exe, attach_mode=attach)
+        except FileNotFoundError as e:
+            _push_status(
+                "frida", "error", "找不到游戏 / Game not found",
+                "未找到 YiXianPai 可执行文件。请先启动游戏，或设置 YX_GAME_EXE。\n"
+                + str(e))
+        except Exception as e:
+            # Most often: frida injection blocked by antivirus/Defender, or the
+            # game arch/version mismatched. Either way the counter can't get data.
+            _push_status(
+                "frida", "error", "无法挂接游戏 / Can't hook game",
+                "frida 注入失败，通常是被杀毒软件 / Windows Defender 拦截。\n"
+                "请把本程序加入杀毒白名单后重试。\n详情: " + str(e))
+            import traceback
+            print("[frida-capture EXCEPTION]\n" + traceback.format_exc(), flush=True)
+
     threading.Thread(
-        target=runtime.start_frida_capture,
-        kwargs={"game_exe": game_exe, "attach_mode": attach},
+        target=_frida_capture_guarded,
         daemon=True, name="frida-capture",
     ).start()
     threading.Thread(
@@ -618,6 +812,27 @@ def _start_workers():
             import oracle_bootstrap
             status = oracle_bootstrap.ensure_current(game_exe)
             print(f"[oracle-sync] {status}", flush=True)
+            # Surface engine/sync failures as a non-blocking warning — the deck
+            # counter keeps working, but damage (伤害) and review (复盘) need the
+            # engine, so the user should know if it didn't come up.
+            _ok = {"synced", "already current"}
+            if status not in _ok:
+                if str(status).startswith("game install not found"):
+                    # The frida 'game not found' error banner already covers the
+                    # root cause; don't double up with a second message.
+                    pass
+                elif "download" in status or "checksum" in status:
+                    _push_status(
+                        "engine", "warn", "引擎下载失败 / Engine download failed",
+                        "伤害与复盘功能需要联网下载引擎组件（约42MB）。\n"
+                        "请检查网络连接（需可访问 gitee.com）后重启程序。\n卡牌计数不受影响。")
+                else:
+                    _push_status(
+                        "engine", "warn", "引擎未就绪 / Engine not ready",
+                        f"伤害与复盘暂不可用（{status}）。卡牌计数不受影响。\n"
+                        "详情见 %LOCALAPPDATA%\\YiXianCounter\\oracle-sync.log")
+            else:
+                _push_status("engine", "info", "", clear=True)
             import oracle_sim
             oracle_sim.warmup()
         except Exception:
@@ -685,6 +900,21 @@ def _setup_frozen_logging():
 def main():
     global _window, _counter_win
     _setup_frozen_logging()
+    # WebView2 is required to render any window. If it's missing, every
+    # webview.create_window call would produce a blank/never-appearing window
+    # with the failure buried in app.log — so the user sees "nothing happens".
+    # Detect it up front and tell them exactly what to install.
+    if not _webview2_available():
+        _message_box(
+            "YiXian Counter — 缺少运行库 / Missing runtime",
+            "未检测到 Microsoft Edge WebView2 运行时，程序窗口无法显示。\n"
+            "请从下方网址免费下载并安装，然后重新运行本程序：\n\n"
+            "https://developer.microsoft.com/microsoft-edge/webview2/\n\n"
+            "Microsoft Edge WebView2 Runtime is not installed, so the app "
+            "windows cannot be displayed.\nInstall it (free) from the link "
+            "above, then relaunch.",
+        )
+        return
     _patch_winforms_on_top()
     api = Api()
     # Counter window — deck counter + 复盘. Created FIRST so it's the master

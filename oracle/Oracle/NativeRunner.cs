@@ -893,6 +893,31 @@ static class NativeRunner
     // test; the string cache above is the fallback. Disable with ORACLE_NO_BRCACHE=1.
     static readonly System.Collections.Generic.Dictionary<string, object> s_BrCache = new();
 
+    // Original firstPlayerId per primed id, so a go-first override on the SHARED cached br can be
+    // restored for the next (non-override) request. Captured at prime time.
+    static readonly System.Collections.Generic.Dictionary<string, string?> s_OrigFirst = new();
+
+    // A side's uid (the value firstPlayerId is compared against): br.{side}.publicData.uid.
+    static string? SideUid(object br, string side)
+    {
+        var p = NGet(br, side); if (p == null) return null;
+        var pub = NGet(p, "publicData"); if (pub == null) return null;
+        return Convert.ToString(NGet(pub, "uid"));
+    }
+
+    // Set who takes the first turn. firstSide set -> firstPlayerId = that side's uid (force go-first);
+    // else restore the recorded value for `id` (the shared cached br may carry a prior override).
+    static void ApplyFirst(object br, string? firstSide, string? id)
+    {
+        if (!string.IsNullOrEmpty(firstSide))
+        {
+            var uid = SideUid(br, firstSide);
+            if (uid != null) NSet(br, "firstPlayerId", uid);
+        }
+        else if (!string.IsNullOrEmpty(id) && s_OrigFirst.TryGetValue(id, out var orig) && orig != null)
+            NSet(br, "firstPlayerId", orig);
+    }
+
     // Override a side's usedCards (the board) on a round-stat, in place.
     static void OverrideDeck(object br, string side, List<int>? cards)
     {
@@ -1001,7 +1026,9 @@ static class NativeRunner
             { Console.WriteLine("{\"engine\":\"oracle\",\"ok\":false,\"error\":\"prime needs stat or statB64\"}"); return; }
             // Cache the stat as a STRING (re-parse fallback) AND the deserialized br (fast path).
             s_StatCache[fx.id] = statNode.ToJsonString();
-            s_BrCache[fx.id] = ProtoJson.FromNode(brType, statNode)!;
+            var brP = ProtoJson.FromNode(brType, statNode)!;
+            s_BrCache[fx.id] = brP;
+            s_OrigFirst[fx.id] = Convert.ToString(NGet(brP, "firstPlayerId"));   // for go-first restore
             Console.WriteLine($"{{\"engine\":\"oracle\",\"primed\":true,\"id\":{System.Text.Json.JsonSerializer.Serialize(fx.id)}}}");
             return;
         }
@@ -1051,6 +1078,10 @@ static class NativeRunner
                 var pub = NGet(p, "publicData");
                 var lrd = pub != null ? NGet(pub, "lastRoundData") : null;
                 return new {
+                    uid = Convert.ToString(NGet(pub!, "uid")) ?? "",
+                    // handCards = cards held this round; the achievability signal for a go-first line
+                    // (absorbing a card grants +1 cultivation, and higher cultivation takes the first turn).
+                    handCards = IntList(lrd != null ? NGet(lrd, "handCards") : null).Count,
                     characterId = Convert.ToInt32(NGet(pub!, "characterId") ?? 0),
                     level = Convert.ToInt32(NGet(pub, "level") ?? 0),
                     sect = Convert.ToInt32(NGet(pub, "sect") ?? 0),
@@ -1072,6 +1103,7 @@ static class NativeRunner
             }
             Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new {
                 engine = "oracle", describe = true,
+                firstPlayerId = Convert.ToString(NGet(br, "firstPlayerId")) ?? "",   // who took the first turn
                 round = Convert.ToInt32(NGet(br, "round") ?? 0),
                 hpDelta = Convert.ToInt32(NGet(br, "hpDelta") ?? 0),
                 lifeDamage = Convert.ToInt32(NGet(br, "lifeDamage") ?? 0),
@@ -1080,6 +1112,10 @@ static class NativeRunner
             }));
             return;
         }
+
+        // Go-first override (or restore recorded order on the shared cached br). Applies to BOTH the
+        // boards-batch and the single run below — set once here before any RunOneRound.
+        ApplyFirst(br, fx.firstSide, fx.id);
 
         OverrideDeck(br, "p1", fx.p1Cards);
         OverrideDeck(br, "p2", fx.p2Cards);
@@ -1419,6 +1455,10 @@ static class NativeRunner
         // round-trip instead of N). `side` = which side's usedCards each board overrides (default p1).
         public List<List<int>>? boards { get; set; }
         public string? side { get; set; }
+        // Go-first override: force this side ("p1"/"p2") to take the first turn by setting the
+        // round-stat's firstPlayerId to that side's uid. null/"" leaves the recorded turn order.
+        // (BattleExecuter decides order by `leftCharacter.battleTempData.uid == battleResult.firstPlayerId`.)
+        public string? firstSide { get; set; }
     }
 
     // ── Native reflection helpers (real CLR objects, no ILRuntime wrappers) ──────────────────────

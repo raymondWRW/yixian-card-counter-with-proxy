@@ -6,4 +6,4 @@ dist_share/version.json with the new version + SHA256.
 Released as Gitee tag `main-v<VERSION>` to keep main and lite releases in
 the same repo without colliding (lite uses `lite-v<VERSION>`).
 """
-VERSION = "1.2.0"
+VERSION = "1.3.0"

@@ -146,56 +146,67 @@ def shutdown():
 # ── candidate board generation (mirrors tools/yisim_review.js search) ──────────────────────────
 def _candidates(board: list[int], pool: list[int], deck_slots: int, max_boards: int):
     """Yield up to max_boards distinct board arrangements (lists of card ids) to evaluate.
-    Phase A: permutations of the played board. Phase B: single swaps with pool cards.
-    Phase C: random deck_slots-sized subsets of the full pool."""
+    Budget is split across phases so each gets coverage (full permutations alone would
+    otherwise starve the rest):
+      A  permutations of the played board
+      A2 FEWER cards / MORE empty slots (逍遥无影拳 et al. scale with empties)
+      B  single swaps with a hand/pool card
+      C  random deck-sized subsets of the full pool
+    """
     seen = set()
+    base = [c for c in board if c]
+    extra = [c for c in pool if c and c not in base]
 
     def emit(b):
         key = tuple(b)
-        if key in seen:
+        if key in seen or not b:
             return None
         seen.add(key)
         return list(b)
 
-    base = [c for c in board if c]
-    # A — permutations of the played board (full perms if small, else random shuffles)
-    if len(base) <= 6:
-        for p in itertools.permutations(base):
-            b = emit(list(p))
+    def run(gen, cap):
+        """Drain `gen` until `cap` NEW boards are emitted or the global budget is hit."""
+        n = 0
+        for cand in gen:
+            b = emit(cand)
             if b is not None:
                 yield b
-            if len(seen) >= max_boards:
+                n += 1
+            if n >= cap or len(seen) >= max_boards:
                 return
-    else:
-        for _ in range(min(max_boards, 200)):
-            s = base[:]
-            random.shuffle(s)
-            b = emit(s)
-            if b is not None:
-                yield b
-            if len(seen) >= max_boards:
-                return
-    # B — replace one played card with one pool card
-    extra = [c for c in pool if c and c not in base]
-    for i in range(len(base)):
-        for hc in extra:
-            s = base[:]
-            s[i] = hc
-            b = emit(s)
-            if b is not None:
-                yield b
-            if len(seen) >= max_boards:
-                return
-    # C — random subsets of the full pool, padded/truncated to deck_slots
+
+    # A2 first — the empty-slot variants are few (~C(n,1..3)) and must not be starved by A.
+    def _drops():
+        for drop in (1, 2, 3):
+            if len(base) - drop < 1:
+                break
+            for combo in itertools.combinations(range(len(base)), len(base) - drop):
+                yield [base[i] for i in combo]
+    yield from run(_drops(), max_boards)
+
+    # A — permutations of the played board (full perms if small, else random shuffles), ~40% of budget.
+    def _perms():
+        if len(base) <= 6:
+            yield from (list(p) for p in itertools.permutations(base))
+        else:
+            while True:
+                s = base[:]; random.shuffle(s); yield s
+    yield from run(_perms(), max(1, int(max_boards * 0.4)))
+
+    # B — replace one played card with one pool card.
+    def _swaps():
+        for i in range(len(base)):
+            for hc in extra:
+                s = base[:]; s[i] = hc; yield s
+    yield from run(_swaps(), max_boards)
+
+    # C — random deck-sized subsets of the full pool, fill whatever budget remains.
     full = base + extra
-    if full:
-        for _ in range(max_boards - len(seen)):
+    def _subsets():
+        while full:
             random.shuffle(full)
-            b = emit(full[:max(1, min(deck_slots, len(full)))])
-            if b is not None:
-                yield b
-            if len(seen) >= max_boards:
-                return
+            yield full[:max(1, min(deck_slots, len(full)))]
+    yield from run(_subsets(), max_boards)
 
 
 def _player(side: dict) -> dict:
@@ -293,9 +304,15 @@ def _whatif_from_stat_impl(stat_b64: str, my_side: str, pool_ids=None,
     rnd = desc.get("round", 0)
     my_side = "p2" if my_side == "p2" else "p1"
     sign = 1 if my_side == "p1" else -1
-    board = desc.get(my_side, {}).get("usedCards", []) or []
+    me = desc.get(my_side, {})
+    board = me.get("usedCards", []) or []
     if not board:
         return {"error": "no board for my side"}
+    # For the go-first fallback: my uid (vs the recorded firstPlayerId tells whether I already went
+    # first) and my hand size (cards I could absorb for +1 cultivation each to take the first turn).
+    my_uid = me.get("uid", "")
+    my_hand = int(me.get("handCards", 0) or 0)
+    recorded_first = bool(my_uid) and desc.get("firstPlayerId") == my_uid
 
     # Outcome metric = destiny (命) damage from MY perspective. A round is WON when I defeat the
     # opponent's board (their hp -> 0) and deal them life damage; a draw (both survive the turn cap)
@@ -337,6 +354,29 @@ def _whatif_from_stat_impl(stat_b64: str, my_side: str, pool_ids=None,
             "my_side": my_side,
             "used_hand": any(c not in board for c in wb),
         }
+
+    # No win going second (recorded turn order). The player may still win by going FIRST: in 弈仙牌 the
+    # higher-cultivation player takes the first turn, and absorbing a card grants +1 cultivation — so a
+    # player still holding cards can choose to go first. Only worth checking if I did NOT already go
+    # first in the record. Re-run the boards (played board + candidates) forcing me first; if one wins
+    # AND my hand has cards to absorb for the cultivation, surface it as a go-first line.
+    if not recorded_first:
+        gf_boards = [board] + cands
+        gf = w.run({"id": slot_id, "round": rnd, "side": my_side,
+                    "firstSide": my_side, "boards": gf_boards}).get("results", [])
+        for i, r in enumerate(gf):
+            if sign * r[2] > 0:                      # a board that wins the round going first
+                if my_hand > 0:                      # enough cards in hand to absorb → go first is achievable
+                    wb = gf_boards[i]
+                    return {
+                        "win": True, "outcome": "win", "requires_go_first": True,
+                        "hand_cards": my_hand, "tried": tried + len(gf_boards),
+                        "original_life": orig_life, "original_hpDelta": orig_hp,
+                        "winning_slots": [_slot(c) for c in wb],
+                        "end_turn": gf[i][1], "my_side": my_side,
+                        "used_hand": any(c not in board for c in wb),
+                    }
+                break                                # winnable first, but no cards to absorb → not achievable
     return {
         "win": False, "tried": tried,
         "original_life": orig_life, "original_hpDelta": orig_hp,

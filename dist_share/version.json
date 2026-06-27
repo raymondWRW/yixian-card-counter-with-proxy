@@ -1,7 +1,7 @@
 {
   "_comment_": "Live at https://gitee.com/hiddensquid12321/yixian-card-counter-with-proxy/raw/master/dist_share/version.json. This is the MAIN app manifest (lite uses small_card_counter/dist_share/version.json). Bump `version` + `url` + `sha256` per release (build.py prints a paste-ready snippet).",
-  "version": "1.2.0",
-  "url": "https://gitee.com/hiddensquid12321/yixian-card-counter-with-proxy/releases/download/main-v1.2.0/YiXianCounter.exe",
-  "sha256": "614700a1d931d8a7f09afe4d8933070eb44c9c35bafca71edef3aea771eb4cd5",
-  "notes": "伤害与复盘全部改用游戏自身的战斗引擎（Yi Xian Oracle），不再使用 yisim。首次启动会自动下载引擎组件（oracle-engine.zip，约42MB，需与 exe 一同上传到同一 Release），并同步已安装游戏的数据；游戏核心更新时自动重建。卡牌改动后始终准确、无需手动更新。"
+  "version": "1.3.0",
+  "url": "https://gitee.com/hiddensquid12321/yixian-card-counter-with-proxy/releases/download/main-v1.3.0/YiXianCounter.exe",
+  "sha256": "cf250742273a9fe4829c040c94f925d571acf445b60a0f15fd26cd836cd2c089",
+  "notes": "复盘增强：①打开复盘自动加载对局，已分析过的对局结果会缓存，无需重复分析；②摆法搜索新增「空位」方案（如逍遥无影拳等随空格数增伤的卡）；③新增「先手」解法——后手无解时自动检测先手能否取胜，若手牌足够吸收提升修为抢先手则提示先手取胜（解法标⚡）。本次需同时上传 oracle-engine-v1.3.0.zip 到同一 Release。"
 }

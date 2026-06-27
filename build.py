@@ -11,6 +11,7 @@ import hashlib
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 # The final SHA banner uses box-drawing chars; force utf-8 stdout so it doesn't
@@ -110,12 +111,22 @@ for src, dst in [("oracle/engine.json", "oracle"),
                  ("oracle/scripts/oracle_pool.py", "oracle/scripts")]:
     oracle_args += ["--add-data", f"{src}{SEP}{dst}"]
 
+# Build OUTSIDE the OneDrive-synced repo: OneDrive locks/moves files in build/ mid-run, which makes
+# PyInstaller's base_library.zip vanish (FileNotFoundError). Point work/dist/spec at a temp dir.
+BUILD_TMP = Path(tempfile.gettempdir()) / "yxbuild"
+shutil.rmtree(BUILD_TMP, ignore_errors=True)
+BUILD_TMP.mkdir(parents=True, exist_ok=True)
+
 cmd = [
     sys.executable, "-m", "PyInstaller",
     "--noconfirm",
     "--onefile",
     "--windowed",
     "--name", "YiXianCounter",
+    "--workpath", str(BUILD_TMP / "build"),
+    "--distpath", str(BUILD_TMP / "dist"),
+    # NOTE: spec stays in HERE — PyInstaller resolves relative --add-data paths against the spec dir,
+    # so moving it to TEMP breaks them. Only work/dist (where base_library.zip lives) need to leave OneDrive.
     *icon_arg,
     *oracle_args,
     # The main app's web/ folder + the shared proxy/ + tools (card maps, derivation data).
@@ -154,7 +165,7 @@ result = subprocess.run(cmd, cwd=str(HERE))
 if result.returncode != 0:
     sys.exit(result.returncode)
 
-built_exe = HERE / "dist" / "YiXianCounter.exe"
+built_exe = BUILD_TMP / "dist" / "YiXianCounter.exe"
 target_exe = HERE / "YiXianCounter.exe"
 if built_exe.exists():
     if target_exe.exists():
@@ -162,6 +173,7 @@ if built_exe.exists():
     shutil.move(str(built_exe), str(target_exe))
 for d in ("build", "dist", "_oracle_pub", "_engine_stage"):
     shutil.rmtree(HERE / d, ignore_errors=True)
+shutil.rmtree(BUILD_TMP, ignore_errors=True)
 if spec.exists():
     spec.unlink()
 

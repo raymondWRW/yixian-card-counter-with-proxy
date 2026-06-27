@@ -136,7 +136,9 @@ async function onReview(gameId, btn) {
       for (const rn of won) {
         const sBtn = document.createElement('button');
         sBtn.className = 'btn-solution';
-        sBtn.textContent = `解法 R${rn}`;
+        // ⚡ flags a go-first line (wins only if the player takes the first turn).
+        const gf = (_reviewCache[gameId][rn] || {}).requires_go_first ? ' ⚡' : '';
+        sBtn.textContent = `解法 R${rn}${gf}`;
         sBtn.dataset.gameId = gameId;
         sBtn.dataset.round = String(rn);
         sBtn.addEventListener('click', () => showSolution(gameId, rn));
@@ -166,7 +168,12 @@ function showSolution(gameId, rn) {
     return `<div class="sol-slot${dreamCls}"><span class="pos">${i + 1}</span><span class="cname">${c.name}</span>${lv}</div>`;
   }).join('');
   $('sol-title').textContent = `R${rn} 解法 ${endTurn}`;
-  $('sol-body').innerHTML = `<div class="sol-grid">${slotHtml}</div>`;
+  // Go-first line: this board only wins if the player takes the first turn. Surface it prominently
+  // with the achievability hint (absorb cards for cultivation; hand_cards = cards held that round).
+  const goFirst = details.requires_go_first
+    ? `<div class="sol-note">⚡ 需先手取胜：吸收手牌提升修为以抢先手（当前手牌 ${details.hand_cards} 张）</div>`
+    : '';
+  $('sol-body').innerHTML = `${goFirst}<div class="sol-grid">${slotHtml}</div>`;
   $('sol-modal').style.display = '';
 }
 
@@ -323,7 +330,9 @@ $('btn-quit').addEventListener('click', async () => {
   try { await window.pywebview.api.close_review(); } catch (_) {}
 });
 
-window.addEventListener('pywebviewready', async () => {
+// Reload the games list — called on first ready AND every time the window is reopened
+// (Api.open_review evaluates window.reloadGames()), so newly-played games show up.
+window.reloadGames = async function () {
   const api = window.pywebview && window.pywebview.api;
   if (!api) return;
   try {
@@ -333,6 +342,12 @@ window.addEventListener('pywebviewready', async () => {
     console.error(e);
   }
   renderGameList();
+};
+
+window.addEventListener('pywebviewready', async () => {
+  const api = window.pywebview && window.pywebview.api;
+  if (!api) return;
+  await window.reloadGames();
   // Apply persisted scale (same setting key as the main window).
   try {
     const s = await api.get_settings();
