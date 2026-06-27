@@ -18,6 +18,9 @@
   </header>
 
   <main id="content">
+    <!-- Diagnostic banner (hidden unless Python pushes a status via onStatus):
+         surfaces "game not found", "frida blocked", "engine download failed", … -->
+    <div id="status-banner" class="status-banner hidden"></div>
     <section class="card" id="counter-card">
       <div id="counter-list" class="counter">
         <span class="empty-note">waiting for game…</span>

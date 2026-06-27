@@ -9,29 +9,55 @@
 拖动窗口右下角可按比例缩放整个界面。
 
 
-首次安装  （仅需操作一次）
---------------------------
-1. 将此文件夹解压到任意位置（放在桌面即可）。
-2. 双击  Setup.bat
-3. 在用户账户控制（UAC）弹窗中点击“是”。
-4. 等待出现 "Setup complete!" 后按任意键关闭窗口。
-
-如果 SmartScreen 拦截了程序（"Windows 已保护你的电脑"）：
-  - 点击 "更多信息" -> "仍要运行"。
-
-
-日常使用
+使用方法
 --------
-1. 双击  Run.bat
-2. 在 UAC 弹窗中点击"是"。
+1. 将此文件夹解压到任意位置（放在桌面即可）。
+2. 双击  YiXianCounter.exe
+   （如果 SmartScreen 拦截 “Windows 已保护你的电脑”：
+    点击 “更多信息” -> “仍要运行”。）
 3. 启动弈仙牌。两个窗口会在几秒内开始显示数据。
 
-程序必须以管理员权限运行，因为代理需要在内核层级
-拦截网络流量（WinDivert 驱动）。
+就这么简单 —— 无需安装步骤、无需管理员权限、无需安装证书。
+
+计数器直接读取游戏数据（挂接游戏本身，不再使用网络代理）。
+首次运行时还会下载一个小的引擎组件（约 42 MB），用于伤害与
+复盘功能；该下载需要联网，但只发生一次。卡牌计数本身无需联网。
 
 
-对局日志（用于反馈问题 + 未来的对局回放功能）
---------------------------------------------
+遇到问题怎么办
+--------------
+程序会在界面上直接提示问题所在：
+
+  - 启动时弹出 “缺少运行库 / Missing runtime”：
+      未安装 Microsoft Edge WebView2 运行时（绘制窗口所必需）。
+      Win11 已自带；Win10 请从下方免费下载安装：
+        https://developer.microsoft.com/microsoft-edge/webview2/
+      安装后（约 30 秒，无需重启）重新运行 YiXianCounter.exe。
+
+  - 红色横幅 “找不到游戏 / Game not found”：
+      弈仙牌未运行，且未在默认 Steam 路径找到
+      （C:\Program Files (x86)\Steam\steamapps\common\YiXianPai\）。
+      直接启动游戏即可，计数器会自动识别。若游戏安装在其它位置，
+      请把环境变量 YX_GAME_EXE 设为 YiXianPai.exe 的完整路径。
+
+  - 红色横幅 “无法挂接游戏 / Can't hook game”：
+      杀毒软件 / Windows Defender 拦截了程序读取游戏。
+      请把本文件夹加入杀毒白名单后重新运行。
+
+  - 橙色横幅 “引擎下载失败 / Engine download failed”：
+      无网络，或无法访问 gitee.com。卡牌计数仍可正常使用；
+      伤害与复盘功能需要这一次性下载，联网后重试即可。
+
+  - 蓝色横幅 “正在连接游戏… / Connecting…”：
+      正常提示 —— 进入对局后会自动消失。
+
+  - 伤害面板显示 “未识别卡片 (灵羽)”：
+      棋盘上的 灵羽 找不到可合的 1 级 灵气/身法 牌，模拟器无法
+      预测合并数值。放一张 1 级 灵气或身法牌上棋盘即可恢复。
+
+
+对局日志（用于反馈问题 + 复盘功能）
+----------------------------------
 每局游戏都会在  battle_log\<年-月-日_时分秒>\  下生成一个文件夹，
 内含：
   msgdump.jsonl       — 解码后的全部 WebSocket 帧
@@ -40,8 +66,11 @@
   battle_log.json     — 游戏自身 BattleLog.json 的拷贝（每回合 HP）
 
 如果发现 bug，把  battle_log\  下最新一局的文件夹打包发回即可。
+日志写在 .exe 同目录下，想清空时直接删除  battle_log\  即可。
 
-日志写在 .exe 同目录下。想清空时直接删除  battle_log\  即可。
+启动错误 / 引擎同步等诊断日志另存于：
+  %LOCALAPPDATA%\YiXianCounter\app.log
+  %LOCALAPPDATA%\YiXianCounter\oracle-sync.log
 
 
 自动更新
@@ -58,47 +87,10 @@
 - Windows 10 或 11，64 位。
 - Microsoft Edge WebView2 运行时（Win11 已自带；免费下载：
   https://developer.microsoft.com/microsoft-edge/webview2/ ）
-
-
-隐私提示  （请阅读）
---------------------
-Setup.bat 会将 mitmproxy 的根证书（CA）安装到 Windows 受信任根
-存储区，这是代理解密游戏 HTTPS WebSocket 流量所必需的。
-
-代理运行期间，持有此 CA 私钥的程序可以拦截你的其他 HTTPS 流量。
-该私钥保存在  %USERPROFILE%\.mitmproxy\  目录中，由本机生成，
-不会被发送给任何人。
-
-只从你信任的人那里安装这类软件。
+- 首次启动需联网（用于一次性下载引擎组件）。
 
 
 卸载
 ----
-1. 移除受信任的 CA：
-   certutil -delstore Root mitmproxy
-2. 移除 Defender 排除项（以管理员身份运行 PowerShell）：
-   Remove-MpPreference -ExclusionPath "<本文件夹路径>"
-3. 删除本文件夹。
-4. 如需彻底清除证书文件，可删除  %USERPROFILE%\.mitmproxy\
-
-
-问题排查
---------
-- 窗口能打开但数据不更新：
-    代理未生效。常见原因：
-      a) 未以管理员身份启动 - 请用 Run.bat。
-      b) 证书未被信任 - 重新运行 Setup.bat。
-      c) 杀软拦截了 WinDivert - 添加排除项或临时关闭实时防护。
-
-- 启动时报错 "Windows 无法访问指定的设备"：
-    Defender 删除了 .exe。从隔离区还原，并重新运行 Setup.bat
-    （排除项步骤可防止再次发生）。
-
-- 安装后游戏一直无法进入对局：
-    证书信任可能配置错误。重新运行 Setup.bat。仍然失败的话，
-    先卸载（见上）再重新安装。
-
-- 伤害面板显示 "未识别卡片 (灵羽)"：
-    棋盘上的 灵羽 (lv2/3) 找不到可合的 1 级 灵气/身法 牌。模拟器
-    无法预测合并后的真实数值，所以拒绝出结果。把一张 1 级
-    灵气或身法牌放上棋盘，模拟器就会重新工作。
+直接删除本文件夹即可。如需同时清除缓存的引擎和日志：
+  删除  %LOCALAPPDATA%\YiXianCounter\

@@ -132,6 +132,49 @@ html, body {
   text-align: center;
 }
 
+/* ── Diagnostic status banner (game not found / frida blocked / engine fail) ── */
+.status-banner {
+  margin-bottom: 6px;
+  border-radius: 4px;
+  overflow: hidden;
+  -webkit-app-region: no-drag;
+}
+.status-banner.hidden { display: none; }
+
+.status-item {
+  padding: 7px 9px;
+  border-left: 3px solid var(--muted);
+  background: var(--panel-2);
+}
+.status-item + .status-item { margin-top: 4px; }
+
+.status-item.error {
+  border-left-color: #ef4444;
+  background: #2a1518;
+}
+.status-item.warn {
+  border-left-color: var(--warn);
+  background: #2a2114;
+}
+.status-item.info {
+  border-left-color: var(--accent);
+  background: #16202e;
+}
+
+.status-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+.status-detail {
+  margin-top: 3px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--muted);
+  white-space: pre-wrap;   /* keep the \n line breaks from Python */
+  word-break: break-word;
+}
+
 
 /* ── Bottom-right resize handle (same pattern as the main window) ───── */
 #resize-handle {

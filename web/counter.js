@@ -70,6 +70,52 @@ function renderCounter() {
   fitWindowToContent();
 }
 
+// ── Diagnostic status banner ──────────────────────────────────────────────
+// Python pushes problems here (game not found, frida blocked by AV, engine
+// download failed, …) so the user sees WHY the counter is empty instead of a
+// silent blank window. Keyed by id so each notice updates in place.
+const _statusNotices = {};
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function renderStatus() {
+  const el = $('status-banner');
+  if (!el) return;  // DOM not ready yet — DOMContentLoaded will call us again
+  const items = Object.values(_statusNotices);
+  if (!items.length) {
+    el.className = 'status-banner hidden';
+    el.innerHTML = '';
+    lastResizeH = -1;
+    fitWindowToContent();
+    return;
+  }
+  // Most severe first so the worst problem is on top.
+  const order = { error: 0, warn: 1, info: 2 };
+  items.sort((a, b) => (order[a.level] ?? 3) - (order[b.level] ?? 3));
+  el.className = 'status-banner ' + (items[0].level || 'info');
+  el.innerHTML = items.map((it) =>
+    `<div class="status-item ${it.level || 'info'}">` +
+      `<div class="status-text">${escapeHtml(it.text)}</div>` +
+      (it.detail ? `<div class="status-detail">${escapeHtml(it.detail)}</div>` : '') +
+    `</div>`
+  ).join('');
+  lastResizeH = -1;  // banner changed height — force a re-fit
+  fitWindowToContent();
+}
+
+window.onStatus = function (s) {
+  if (!s || !s.id) return;
+  if (s.clear || (!s.text && !s.detail)) {
+    delete _statusNotices[s.id];
+  } else {
+    _statusNotices[s.id] = s;
+  }
+  renderStatus();
+};
+
 window.onState = function (vm) {
   if (!liveOnce) {
     liveOnce = true;
@@ -114,6 +160,8 @@ window.addEventListener('DOMContentLoaded', () => {
     const a = window.pywebview && window.pywebview.api;
     if (a && a.open_review) { try { await a.open_review(); } catch (e) { console.error(e); } }
   });
+  // Render any status notice that arrived before the DOM was ready.
+  renderStatus();
   setTimeout(fitWindowToContent, 50);
 });
 
@@ -210,6 +258,14 @@ window.addEventListener('pywebviewready', async () => {
       const s = await a.get_settings();
       window.applyCounterScale(Number(s.counterScale) || 1.0);
       applyHandOnly(s.counterHandOnly === true, false);
+    } catch (_) {}
+  }
+  // Pull any diagnostic notice raised during startup (before this page was
+  // ready) so the user still sees why the counter might be empty.
+  if (a && a.get_pending_status) {
+    try {
+      const pending = await a.get_pending_status();
+      if (Array.isArray(pending)) pending.forEach((n) => window.onStatus(n));
     } catch (_) {}
   }
 });
