@@ -371,17 +371,25 @@ window.onBestLines = function (res) {
     fitWindowToContent();
     return;
   }
-  list.innerHTML = lines.map((ln) => {
+  function rowHtml(ln, isPick, marker) {
     const pct = Math.round((ln.probability || 0) * 100);
-    const isPick = sameBoard(ln.board, res.pick_board);
     return (
       `<div class="bl-row${isPick ? ' pick' : ''}">` +
         `<span class="bl-pct">${pct}%</span>` +
         `<span class="bl-board">${boardLabel(ln.slots)}</span>` +
-        (isPick ? '<span class="bl-star" title="本回合推荐">★</span>' : '') +
+        (isPick && marker ? `<span class="bl-star" title="本回合推荐">${marker}</span>` : '') +
       `</div>`
     );
-  }).join('');
+  }
+  // My lines (★ = the calculator's pick), then the opponent's predicted play.
+  let html = '<div class="bl-sub">我方应对</div>';
+  html += lines.map((ln) => rowHtml(ln, sameBoard(ln.board, res.pick_board), '★')).join('');
+  const oppLines = res.opp_lines || [];
+  if (oppLines.length) {
+    html += '<div class="bl-sub opp">对手预测</div>';
+    html += oppLines.map((ln) => rowHtml(ln, sameBoard(ln.board, res.opp_pick_board), '')).join('');
+  }
+  list.innerHTML = html;
   fitWindowToContent();
 };
 

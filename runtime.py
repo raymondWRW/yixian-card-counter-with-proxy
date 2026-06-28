@@ -106,7 +106,11 @@ def _submit_best_line(engine, vm, state, opp_tracker):
         hist = history_from_tracker(opp_tracker, opp.get("player_id"), state.round_num)
         if not hist:
             return
-        engine.submit(me_fx, opp_fx, hist, state.round_num)
+        # my hand card ids — candidate lines consider playing these, not just
+        # rearranging the board.
+        hand = [int(c["id"]) for c in (me.get("hand") or [])
+                if c and c.get("id")]
+        engine.submit(me_fx, opp_fx, hist, state.round_num, my_hand=hand)
     except Exception as e:
         print(f"[bestline] submit failed: {e}", flush=True)
 

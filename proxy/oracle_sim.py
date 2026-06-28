@@ -242,6 +242,57 @@ def _candidates(board: list[int], pool: list[int], deck_slots: int, max_boards: 
     yield from run(_subsets(), max_boards)
 
 
+def _my_candidates(board, hand, slots, cap):
+    """Candidate MY boards from board + hand. The generic _candidates exhausts its
+    budget on board-only drops/perms before it ever reaches hand swaps, so hand
+    cards never surface — this reserves explicit budget for hand-inclusive lines
+    (swap a hand card in, add one to a free slot, or subsets of board+hand)."""
+    board = [c for c in board if c]
+    hand = [c for c in hand if c and c not in board]
+    seen, out = set(), []
+
+    def emit(b):
+        b = [c for c in b if c]
+        if not b:
+            return
+        t = tuple(b)
+        if t not in seen:
+            seen.add(t)
+            out.append(b)
+
+    emit(board)
+    # ~40% of the budget: board-only arrangements (drops + permutations).
+    for b in _candidates(board, board, slots, max(2, int(cap * 0.4))):
+        if len(out) >= cap:
+            return out
+        emit(b)
+    if hand:
+        # Single swaps: replace one board card with one hand card. Round-robin over
+        # hand (shuffled) so several hand cards get represented, not just the first.
+        swaps = [(i, hc) for hc in hand for i in range(len(board))]
+        random.shuffle(swaps)
+        for i, hc in swaps:
+            if len(out) >= cap:
+                return out
+            b = board[:]
+            b[i] = hc
+            emit(b)
+        # Play a hand card into a free slot (board + 1), if the board isn't full.
+        if len(board) < slots:
+            for hc in hand:
+                if len(out) >= cap:
+                    return out
+                emit(board + [hc])
+        # Random subsets of board+hand filling up to `slots` (bounded attempts).
+        full = board + hand
+        for _ in range(cap * 4):
+            if len(out) >= cap:
+                break
+            random.shuffle(full)
+            emit(full[:min(slots, len(full))])
+    return out[:cap]
+
+
 def _player(side: dict) -> dict:
     """Normalize a live-state side dict to the Oracle's NativeFixturePlayer fields.
     Required: characterId, usedCards(board ids). Optional but damage-relevant: level(realm 1..5),
@@ -309,7 +360,7 @@ def matchup(me: dict, opp: dict, marginal: bool = False, rnd: int = 8):
 
 
 def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
-                    *, rnd: int = 8, fast: bool = True, top_k: int = 3,
+                    *, my_hand=None, rnd: int = 8, fast: bool = True, top_k: int = 3,
                     my_max_boards: int = None, opp_max_boards: int = None,
                     use_heuristics: bool = False, rng=None):
     """Live "best line" as a mixed-strategy (Nash) game — step 4 of the live calc.
@@ -349,10 +400,13 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
 
     my_slots = int(mp.get("unlockGrids", 8) or 8)
     opp_slots = int(op.get("unlockGrids", 8) or 8)
-    # The replay study showed MY rows barely matter (2-6 suffice) while OPPONENT
-    # column coverage is everything — so keep my rows few and spend the budget on
-    # opponent candidates + the best-response guard.
-    my_cap = my_max_boards if my_max_boards is not None else 6
+    # My candidates are arrangements of my CURRENT board PLUS my hand — the best
+    # line often means placing/swapping in a hand card, not just rearranging the
+    # board. With a wider card pool the candidate set needs to be larger than the
+    # board-only case (where ~6 sufficed), so my rows scale up here. Opponent
+    # column coverage still matters most (handled by the best-response guard).
+    my_hand_ids = [int(c) for c in (my_hand or []) if c]
+    my_cap = my_max_boards if my_max_boards is not None else (12 if fast else 24)
     opp_cap = opp_max_boards if opp_max_boards is not None else (18 if fast else 30)
 
     my_char = int(me.get("characterId", 0) or 0)
@@ -371,8 +425,10 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
                 out.append(b)
         return out
 
-    # MY candidate rows: actual board first, then permutations (few).
-    my_boards = _dedup([my_board] + list(_candidates(my_board, my_board, my_slots, my_cap)))[:my_cap]
+    # MY candidate rows: arrangements drawn from board + hand, with reserved budget
+    # for hand-inclusive lines (playing/swapping in a hand card), not just board
+    # permutations.
+    my_boards = _my_candidates(my_board, my_hand_ids, my_slots, my_cap)
 
     # OPPONENT columns: their actual last board + pool arrangements. The
     # best-response guard then searches these for the punishing counter.
@@ -416,19 +472,26 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
             return float(r.get("lifeDamage", 0) or 0) + float(r.get("hpDelta", 0) or 0) / 1000.0
 
         try:
-            res, cols, cache = live_nash.solve_with_opponent_guard(
+            res, opp_res, cols, cache = live_nash.solve_with_opponent_guard(
                 my_boards, opp_seed, opp_candidates, evaluate, iters=1500,
                 top_k=top_k, rng=rng)
         except Exception as e:
             _reset_worker()
             return {"error": f"live_best_lines failed: {e}"}
 
+    def _lines(nash):
+        return [{"slots": [_slot(c) for c in ln.board], "board": ln.board,
+                 "probability": round(ln.probability, 4)} for ln in nash.top]
+
     return {
-        "lines": [{"slots": [_slot(c) for c in ln.board], "board": ln.board,
-                   "probability": round(ln.probability, 4)} for ln in res.top],
+        "lines": _lines(res),
         "pick_index": (res.pick.index if res.pick else -1),
         "pick_board": (res.pick.board if res.pick else None),
         "value": res.value,
+        # The opponent's predicted play — their equilibrium mix over the boards the
+        # guard surfaced (the strongest counters to my line).
+        "opp_lines": _lines(opp_res),
+        "opp_pick_board": (opp_res.pick.board if opp_res.pick else None),
         "opp_pool_size": len(opp_pool),
         "my_rows": len(my_boards),
         "opp_cols_considered": len(opp_candidates),

@@ -47,14 +47,16 @@ class BestLineEngine:
         self._thread = threading.Thread(target=self._run, daemon=True, name="best-line")
         self._thread.start()
 
-    def submit(self, me_fx, opp_fx, history, rnd):
+    def submit(self, me_fx, opp_fx, history, rnd, my_hand=None):
         """Register the latest request, superseding any earlier one. Cheap; called
-        from the consumer on every push."""
+        from the consumer on every push. my_hand = my hand card ids (candidate
+        lines consider playing these, not just rearranging the board)."""
         if not me_fx or not opp_fx or not history:
             return
         with self._cv:
             self._gen += 1
-            self._pending = (self._gen, me_fx, opp_fx, list(history), rnd)
+            self._pending = (self._gen, me_fx, opp_fx, list(history), rnd,
+                             list(my_hand or []))
             self._cv.notify()
 
     def _current(self, gen) -> bool:
@@ -76,20 +78,22 @@ class BestLineEngine:
             with self._cv:
                 if self._pending is None:
                     continue
-                gen, me_fx, opp_fx, history, rnd = self._pending
+                gen, me_fx, opp_fx, history, rnd, my_hand = self._pending
                 self._pending = None
             try:
                 # Adaptive: fast coarse pass first, then a deeper refine. Re-check
                 # currency before each (potentially ~0.5s) call and before pushing.
                 fast = oracle_sim.live_best_lines(
-                    me_fx, opp_fx, history, rnd=rnd, fast=True, opp_max_boards=8)
+                    me_fx, opp_fx, history, my_hand=my_hand, rnd=rnd,
+                    fast=True, opp_max_boards=8)
                 if fast and self._current(gen):
                     fast["stage"] = "fast"; fast["gen"] = gen
                     self._push(fast)
                 if not self._current(gen):
                     continue
                 final = oracle_sim.live_best_lines(
-                    me_fx, opp_fx, history, rnd=rnd, fast=False, opp_max_boards=24)
+                    me_fx, opp_fx, history, my_hand=my_hand, rnd=rnd,
+                    fast=False, opp_max_boards=24)
                 if final and self._current(gen):
                     final["stage"] = "final"; final["gen"] = gen
                     self._push(final)

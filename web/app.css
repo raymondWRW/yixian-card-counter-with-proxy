@@ -303,3 +303,13 @@ body.collapsed { height: 34px; min-height: 0; }
 .bl-board { flex: 1; color: var(--text); line-height: 1.3; word-break: break-word; }
 .bl-row.pick .bl-board { font-weight: 600; }
 .bl-star { color: var(--accent); flex: 0 0 auto; }
+
+.bl-sub {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  color: var(--muted);
+  margin: 6px 0 3px;
+}
+.bl-sub.opp { color: var(--warn); }
+.bl-row.pick .bl-board { font-weight: 600; }

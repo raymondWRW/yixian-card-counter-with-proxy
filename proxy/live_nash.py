@@ -261,8 +261,12 @@ def solve_with_opponent_guard(my_boards, opp_seed_boards, opp_candidate_boards, 
     evaluate(mb, ob)     -> my margin. Cached by (board, board) so repeated scoring
                          is free.
 
-    Returns (NashResult, active_opp_columns, eval_cache). eval_cache lets the caller
-    report how many Oracle calls were actually made."""
+    Returns (my_result, opp_result, active_opp_columns, eval_cache):
+      my_result   NashResult over my_boards (my mixed strategy → top lines + pick).
+      opp_result  NashResult over the active opponent columns (their equilibrium
+                  mix → the boards the calc predicts they'll play, the strongest
+                  counters to my line).
+    eval_cache lets the caller report how many Oracle calls were actually made."""
     cache: dict = {}
 
     def pay(mb, ob):
@@ -284,7 +288,7 @@ def solve_with_opponent_guard(my_boards, opp_seed_boards, opp_candidate_boards, 
         cols.append(opp_candidate_boards[0])
         seen.add(tuple(opp_candidate_boards[0]))
     if not cols:
-        return NashResult(), [], cache
+        return NashResult(), NashResult(), [], cache
 
     row, val = None, 0.0
     for _ in range(max_add):
@@ -302,8 +306,12 @@ def solve_with_opponent_guard(my_boards, opp_seed_boards, opp_candidate_boards, 
         cols.append(best_ob)
 
     P = [[pay(mb, ob) for ob in cols] for mb in my_boards]
-    row, _col, val = solve_zero_sum(P, iters=iters)
-    return best_lines(my_boards, row, val, top_k=top_k, rng=rng), cols, cache
+    row, col, val = solve_zero_sum(P, iters=iters)
+    my_res = best_lines(my_boards, row, val, top_k=top_k, rng=rng)
+    # Opponent's equilibrium mix over the active columns = the boards the calc
+    # predicts they'll field (their value is -val from their perspective).
+    opp_res = best_lines(cols, col, -val, top_k=top_k, rng=rng)
+    return my_res, opp_res, cols, cache
 
 
 def compute(my_boards, opp_boards, evaluate, *, iters: int = 2000,
@@ -378,10 +386,12 @@ if __name__ == "__main__":
     fixed = compute(my2, [["x"], ["y"]], ev2)
     assert fixed.pick.board == ["A"], fixed.pick.board
     # Guarded solve: counter is in the candidate pool but NOT seeded -> must add it and pick B.
-    guarded, cols, cache = solve_with_opponent_guard(
+    guarded, opp_guard, cols, cache = solve_with_opponent_guard(
         my2, [["x"], ["y"]], [["x"], ["y"], ["counter"]], ev2, rng=random.Random(0))
     assert any(c[0] == "counter" for c in cols), cols
     assert guarded.pick.board == ["B"], guarded.pick.board
+    # the opponent's predicted line should be the counter (it's what punishes A)
+    assert opp_guard.pick.board == ["counter"], opp_guard.pick.board
     print(f"guard OK: fixed picks trap {fixed.pick.board}, guarded picks safe "
           f"{guarded.pick.board} after finding counter (cols={[c[0] for c in cols]})")
     print("ALL SELF-TESTS PASSED")
