@@ -208,6 +208,9 @@ def _oracle_side(ps, board_dicts, unlocked=8, is_me=False):
     return {
         "characterId": char_id,
         "level": int(getattr(ps, "realm_tier", 1) or 1),
+        # exp == cultivation (修为): the Oracle reads characterUI.exp as cultivation
+        # for cultivation-scaling cards. Sourced from the wire-parsed xiuwei.
+        "exp": int(getattr(ps, "xiuwei", 0) or 0),
         "extraMaxHp": _signed64(raw.get("4")),
         "talents": [int(t) for t in (getattr(ps, "fates", []) or [])],
         "fateStrategies": fate_strats,

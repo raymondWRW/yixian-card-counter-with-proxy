@@ -57,6 +57,26 @@ def _card_level(cid: int) -> int:
         return 1
 
 
+def _level_of(cid: int) -> int:
+    """Card level via the canonical %100 formula (matches shadow_state._level_from_id /
+    game_state.level_from_card_id). Used for opponent-pool base-copy counting."""
+    try:
+        cid = int(cid or 0)
+        return ((cid // 10000) % 100) + 1 if cid > 0 else 1
+    except Exception:
+        return 1
+
+
+def _line_of(cid: int) -> int:
+    """The card LINE: its level-1 base id (strip the level digits). Two cards share
+    a line iff they're the same card at different levels."""
+    try:
+        cid = int(cid or 0)
+        return cid - ((cid // 10000) % 100) * 10000
+    except Exception:
+        return int(cid or 0)
+
+
 def _slot(cid):
     if not cid:
         return None
@@ -165,13 +185,26 @@ def _candidates(board: list[int], pool: list[int], deck_slots: int, max_boards: 
         return list(b)
 
     def run(gen, cap):
-        """Drain `gen` until `cap` NEW boards are emitted or the global budget is hit."""
+        """Drain `gen` until `cap` NEW boards are emitted or the global budget is hit.
+
+        `_perms`/`_subsets` are INFINITE generators (while True / while full); when
+        the distinct candidate space is smaller than `cap` they stop producing NEW
+        boards but never end. Without the stall guard `run` would spin forever (hit
+        with small live boards — a big pool in the review path masked it). Bail once
+        we've seen many consecutive duplicates: the space is exhausted."""
         n = 0
+        stall = 0
+        STALL_LIMIT = 2000
         for cand in gen:
             b = emit(cand)
             if b is not None:
                 yield b
                 n += 1
+                stall = 0
+            else:
+                stall += 1
+                if stall >= STALL_LIMIT:
+                    return
             if n >= cap or len(seen) >= max_boards:
                 return
 
@@ -216,6 +249,9 @@ def _player(side: dict) -> dict:
     return {
         "characterId": side.get("characterId", 0),
         "level": side.get("level", 0),
+        # exp == cultivation (修为): the engine reads characterUI.exp as cultivation
+        # for cultivation-scaling cards. Previously unset (read 0 → silent under-damage).
+        "exp": side.get("exp", 0),
         "sect": side.get("sect", 0),
         "career": side.get("career", 0),
         "life": side.get("life", 100),
@@ -270,6 +306,135 @@ def matchup(me: dict, opp: dict, marginal: bool = False, rnd: int = 8):
         except Exception as e:
             _reset_worker()
             return {"error": f"matchup failed: {e}"}
+
+
+def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
+                    *, rnd: int = 8, fast: bool = True, top_k: int = 3,
+                    my_max_boards: int = None, opp_max_boards: int = None,
+                    use_heuristics: bool = False, rng=None):
+    """Live "best line" as a mixed-strategy (Nash) game — step 4 of the live calc.
+
+    me                  live ME fixture (usedCards = my CURRENT board).
+    opp                 live OPP fixture (last-seen). Projected +5 exp(cultivation)
+                        / +2 extraMaxHp here to estimate one round of growth.
+    opp_boards_by_round list of the opponent's boards (each a list of card ids) over
+                        the last <=3 rounds — the basis for their card pool.
+
+    Builds my candidate boards from my current cards and the opponent's from their
+    pooled cards, scores every pairing through the Oracle (payoff = my margin:
+    lifeDamage, hp as tie-break), solves the zero-sum equilibrium, and returns the
+    top lines + a probability-weighted highlighted pick.
+
+    Returns {lines:[{slots,board,probability}], pick_index, pick_board, value,
+    opp_pool_size, tried} or {error}/None. Pure add-on: nothing calls this yet —
+    it's wired into the live push behind a flag in a later step.
+    """
+    import live_nash
+    try:
+        import heuristic_lines as HL
+    except Exception:
+        HL = None
+
+    mp = _player(me)
+    op = live_nash.project_opponent(_player(opp))   # +5 exp / +2 hp (opponent only)
+
+    my_board = [c for c in mp["usedCards"] if c]
+    if not my_board:
+        return {"error": "no current board for me"}
+    opp_pool = live_nash.opponent_pool_cards(opp_boards_by_round or [], _line_of, _level_of)
+    opp_last = [c for c in (opp_boards_by_round[-1] if opp_boards_by_round else []) if c] \
+        or list(dict.fromkeys(opp_pool))
+    if not opp_last:
+        return {"error": "no opponent board history"}
+
+    my_slots = int(mp.get("unlockGrids", 8) or 8)
+    opp_slots = int(op.get("unlockGrids", 8) or 8)
+    # The replay study showed MY rows barely matter (2-6 suffice) while OPPONENT
+    # column coverage is everything — so keep my rows few and spend the budget on
+    # opponent candidates + the best-response guard.
+    my_cap = my_max_boards if my_max_boards is not None else 6
+    opp_cap = opp_max_boards if opp_max_boards is not None else (18 if fast else 30)
+
+    my_char = int(me.get("characterId", 0) or 0)
+    my_career = int(me.get("career", 0) or 0) or None
+    opp_char = int(opp.get("characterId", 0) or 0)
+    my_realm = int(mp.get("level", 0) or 0) or None
+    opp_realm = int(op.get("level", 0) or 0) or None
+
+    def _dedup(boards):
+        seen, out = set(), []
+        for b in boards:
+            b = [c for c in b if c]
+            t = tuple(b)
+            if b and t not in seen:
+                seen.add(t)
+                out.append(b)
+        return out
+
+    # MY candidate rows: actual board first, then permutations (few).
+    my_boards = _dedup([my_board] + list(_candidates(my_board, my_board, my_slots, my_cap)))[:my_cap]
+
+    # OPPONENT columns: their actual last board + pool arrangements. The
+    # best-response guard then searches these for the punishing counter.
+    #
+    # Heuristic counter/common boards (the season build data) are added ONLY after
+    # filtering to the opponent's observed pool via pool_legal — so we get the
+    # realistic strong compositions/orderings the archetype plays WITHOUT phantom
+    # counters built from cards the opponent doesn't hold (unconstrained heuristics
+    # recommended losing lines in the replay validation). opp career isn't on the
+    # wire → aggregate across careers.
+    heur = []
+    if use_heuristics and HL is not None and HL.available():
+        pool_counts = live_nash.build_opponent_pool(opp_boards_by_round or [], _line_of, _level_of)
+        raw_heur = (HL.counter_boards(opp_char, None, my_char, top=8)
+                    + HL.common_boards(opp_char, None, opp_realm, top=6))
+        heur = [b for b in raw_heur
+                if live_nash.pool_legal(b, pool_counts, _line_of, _level_of)]
+    pool_arrangements = list(_candidates(opp_last, list(opp_last) + list(opp_pool), opp_slots, opp_cap))
+    opp_candidates = _dedup([opp_last] + heur + pool_arrangements)
+    # Seed columns: last board + the top couple heuristic counters (warm start).
+    opp_seed = _dedup([opp_last] + heur[:3])
+
+    # The whole search must hold the worker lock — a concurrent matchup() would
+    # corrupt the single stdin/stdout pipe (same constraint as whatif_from_stat).
+    with _lock:
+        w = _get_worker()
+        if w is None:
+            return None
+
+        def _run(p1cards, p2cards):
+            fx = {"p1": {**mp, "usedCards": list(p1cards)},
+                  "p2": {**op, "usedCards": list(p2cards)},
+                  "battleParams": [], "mainViewId": "", "round": rnd, "expected": {},
+                  "wantLog": False}
+            return w.run(fx)
+
+        # payoff = my margin from p1's perspective: destiny (命) damage dominates,
+        # board hp advantage breaks ties between boards that deal the same life dmg.
+        def evaluate(mb, ob):
+            r = _run(mb, ob)
+            return float(r.get("lifeDamage", 0) or 0) + float(r.get("hpDelta", 0) or 0) / 1000.0
+
+        try:
+            res, cols, cache = live_nash.solve_with_opponent_guard(
+                my_boards, opp_seed, opp_candidates, evaluate, iters=1500,
+                top_k=top_k, rng=rng)
+        except Exception as e:
+            _reset_worker()
+            return {"error": f"live_best_lines failed: {e}"}
+
+    return {
+        "lines": [{"slots": [_slot(c) for c in ln.board], "board": ln.board,
+                   "probability": round(ln.probability, 4)} for ln in res.top],
+        "pick_index": (res.pick.index if res.pick else -1),
+        "pick_board": (res.pick.board if res.pick else None),
+        "value": res.value,
+        "opp_pool_size": len(opp_pool),
+        "my_rows": len(my_boards),
+        "opp_cols_considered": len(opp_candidates),
+        "opp_cols_active": len(cols),
+        "oracle_evals": len(cache),
+    }
 
 
 def whatif_from_stat(stat_b64: str, my_side: str, pool_ids=None,
