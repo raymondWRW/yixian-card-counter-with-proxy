@@ -757,9 +757,12 @@ def _start_workers():
                                       ).get("game_exe")
             except Exception:
                 pass
-    # Out-of-box fallback (esp. the packaged exe): if the game is already running,
-    # ATTACH to it (no double-launch); otherwise spawn the default Steam install.
-    if not game_exe and not attach:
+    # If the game is ALREADY running, attach to it instead of spawning. This MUST
+    # run even when game_exe is set (from YX_GAME_EXE or YiXianHUD_config.json),
+    # otherwise we'd always spawn — and YiXianPai is single-instance via Steam, so
+    # a spawned duplicate just exits and frida ends up hooking a dead process (the
+    # "can't find the game when it's already open" bug). Attach wins over spawn.
+    if not attach:
         try:
             import subprocess
             out = subprocess.run(["tasklist", "/FI", "IMAGENAME eq YiXianPai.exe"],
@@ -768,10 +771,12 @@ def _start_workers():
                 attach = True
         except Exception:
             pass
-        if not attach:
-            default_exe = r"C:\Program Files (x86)\Steam\steamapps\common\YiXianPai\YiXianPai.exe"
-            if Path(default_exe).exists():
-                game_exe = default_exe
+    # Out-of-box fallback (esp. the packaged exe): not running and no exe known →
+    # spawn the default Steam install.
+    if not attach and not game_exe:
+        default_exe = r"C:\Program Files (x86)\Steam\steamapps\common\YiXianPai\YiXianPai.exe"
+        if Path(default_exe).exists():
+            game_exe = default_exe
 
     # If we have neither a game to attach to nor a known exe to spawn, frida
     # has nothing to hook — tell the user instead of letting the thread die
