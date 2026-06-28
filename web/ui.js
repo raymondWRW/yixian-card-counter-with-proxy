@@ -284,7 +284,12 @@ function fitWindowToContent() {
   requestAnimationFrame(async () => {
     resizePending = false;
     const w = Math.round(FIXED_WIDTH * currentUiScale);
-    const h = Math.max(40, Math.min(1400, Math.round(BASE_HEIGHT * currentUiScale)));
+    // Base layout is aspect-locked; the best-line panel (when shown) adds its own
+    // measured height on top so the window grows to fit the lines.
+    let base = BASE_HEIGHT;
+    const bl = $('bestline-card');
+    if (bl && bl.style.display !== 'none') base += bl.offsetHeight + 8;
+    const h = Math.max(40, Math.min(1400, Math.round(base * currentUiScale)));
     if (h === lastResizeH) return;
     lastResizeH = h;
     const a = window.pywebview && window.pywebview.api;
@@ -310,6 +315,75 @@ function renderOppFates(el, names, talents) {
   }
   renderFates(el, names, talents);
 }
+
+// ── Best-line panel (live mixed-strategy calc) ───────────────────────────────
+// Python (BestLineEngine) pushes {lines:[{slots,probability}], pick_board, value,
+// stage:'fast'|'final', gen, ...} — a fast coarse pass then a deeper refine. We
+// render the top lines with their equilibrium %, highlight the weighted pick, and
+// show a "computing" hint until the final pass lands. `gen` is monotonic; ignore
+// a late push from a superseded board.
+let bestLineGen = -1;
+
+function boardLabel(slots) {
+  const names = (slots || [])
+    .filter((s) => s && s.name)
+    .map((s) => (s.level > 1 ? `${s.name}·${s.level}` : s.name));
+  return names.length ? names.join(' ') : '(空)';
+}
+
+function sameBoard(a, b) {
+  if (!a || !b || a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+  return true;
+}
+
+window.onBestLines = function (res) {
+  if (!res) return;
+  const card = $('bestline-card');
+  if (!card) return;
+  // Drop a stale push from an older board (newer gen already shown).
+  if (typeof res.gen === 'number') {
+    if (res.gen < bestLineGen) return;
+    bestLineGen = res.gen;
+  }
+  card.style.display = '';
+  const note = $('bestline-note');
+  const list = $('bestline-list');
+
+  if (res.error) {
+    if (note) note.textContent = '';
+    list.innerHTML = `<div class="bl-empty">计算失败：${res.error}</div>`;
+    fitWindowToContent();
+    return;
+  }
+  const lines = res.lines || [];
+  // value = my equilibrium margin (命 damage; + = I'm ahead vs best opp play).
+  const v = Math.round(res.value || 0);
+  const vCls = v > 0 ? 'pos' : v < 0 ? 'neg' : '';
+  const computing = res.stage === 'fast';
+  if (note) {
+    note.innerHTML =
+      `<span class="bl-val ${vCls}">命 ${v >= 0 ? '+' : ''}${v}</span>` +
+      (computing ? ' <span class="bl-spin">计算中…</span>' : '');
+  }
+  if (!lines.length) {
+    list.innerHTML = '<div class="bl-empty">无可用应对</div>';
+    fitWindowToContent();
+    return;
+  }
+  list.innerHTML = lines.map((ln) => {
+    const pct = Math.round((ln.probability || 0) * 100);
+    const isPick = sameBoard(ln.board, res.pick_board);
+    return (
+      `<div class="bl-row${isPick ? ' pick' : ''}">` +
+        `<span class="bl-pct">${pct}%</span>` +
+        `<span class="bl-board">${boardLabel(ln.slots)}</span>` +
+        (isPick ? '<span class="bl-star" title="本回合推荐">★</span>' : '') +
+      `</div>`
+    );
+  }).join('');
+  fitWindowToContent();
+};
 
 // ── State entry point (called from Python) ───────────────────────────────────
 window.onState = function (vm) {

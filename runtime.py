@@ -297,16 +297,28 @@ def replay(path=None, limit=0, on_state=None):
     return seen
 
 
-def start_replay_ui(push, path=None, delay=0.25, limit=0):
+def start_replay_ui(push, path=None, delay=0.25, limit=0, push_best_lines=None):
     """Drive the live UI from a captured traffic.jsonl (dev/demo, no admin).
 
     Builds the same view-models the live consumer would and pushes them with
-    a small delay so the session plays back visibly.
+    a small delay so the session plays back visibly. When push_best_lines is set
+    AND YX_BESTLINE=1, also drives the best-line panel — so the feature can be
+    demoed/tested from a capture without a live game.
     """
+    import os
     from proxy_view import build_view_model, Counter, OpponentTracker
     import addon
     counter = Counter()
     opp_tracker = OpponentTracker()
+
+    best_engine = None
+    if push_best_lines is not None and os.environ.get("YX_BESTLINE") == "1":
+        try:
+            from best_line import BestLineEngine
+            best_engine = BestLineEngine(push_best_lines)
+            print("[bestline] engine active (replay)", flush=True)
+        except Exception as e:
+            print(f"[bestline] engine unavailable: {e}", flush=True)
 
     def on_state(state):
         if new_game_event.is_set():
@@ -320,6 +332,8 @@ def start_replay_ui(push, path=None, delay=0.25, limit=0):
         vm = build_view_model(state, counter=counter,
                               last_battle=addon.last_battle, opp_tracker=opp_tracker)
         push(vm)
+        if best_engine is not None:
+            _submit_best_line(best_engine, vm, state, opp_tracker)
         if delay:
             time.sleep(delay)
 

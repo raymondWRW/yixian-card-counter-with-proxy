@@ -270,3 +270,36 @@ body.collapsed { height: 34px; min-height: 0; }
 }
 .update-banner .update-btn:hover { background: #87b8ff; }
 .update-banner .update-btn:disabled { opacity: .6; cursor: wait; }
+
+/* ── Best-line panel (live mixed-strategy calc) ───────────────────────────── */
+#bestline-card { margin-top: 8px; }
+.bl-val { font-weight: 700; }
+.bl-val.pos { color: var(--good); }
+.bl-val.neg { color: var(--bad); }
+.bl-spin { color: var(--muted); font-style: italic; }
+.bl-empty { color: var(--muted); font-style: italic; padding: 4px 2px; font-size: 12px; }
+
+.bl-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background: var(--panel-2);
+  margin-bottom: 3px;
+  font-size: 12px;
+}
+.bl-row.pick {
+  background: rgba(110, 168, 254, .15);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.bl-pct {
+  flex: 0 0 38px;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.bl-board { flex: 1; color: var(--text); line-height: 1.3; word-break: break-word; }
+.bl-row.pick .bl-board { font-weight: 600; }
+.bl-star { color: var(--accent); flex: 0 0 auto; }

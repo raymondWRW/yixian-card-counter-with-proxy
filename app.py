@@ -81,9 +81,13 @@ _detail_win = None
 # card counter + review. Auto-on in the packaged exe (the live calculator needs
 # the Yi Xian Oracle engine, which the distributed build doesn't bundle). Dev
 # runs show both windows; force either way with YX_COUNTER_ONLY=1 / =0.
+# YX_BESTLINE=1 enables the live best-line panel, which lives in the MAIN window —
+# so it un-hides the main window even in a frozen (normally counter-only) build.
+# An explicit YX_COUNTER_ONLY=1 still wins.
 _counter_only = (os.environ.get("YX_COUNTER_ONLY") == "1"
                  or (getattr(sys, "frozen", False)
-                     and os.environ.get("YX_COUNTER_ONLY") != "0"))
+                     and os.environ.get("YX_COUNTER_ONLY") != "0"
+                     and os.environ.get("YX_BESTLINE") != "1"))
 # Selected game_id for the detail window — JS reads this on load.
 _detail_game_id = None
 # Set True on the first view-model push so push_state can clear the
@@ -712,7 +716,8 @@ def _start_workers():
         path = os.environ.get("YX_REPLAY_PATH") or None
         threading.Thread(
             target=runtime.start_replay_ui, args=(push_state,),
-            kwargs={"path": path}, daemon=True, name="replay-ui",
+            kwargs={"path": path, "push_best_lines": push_best_lines},
+            daemon=True, name="replay-ui",
         ).start()
         return
 

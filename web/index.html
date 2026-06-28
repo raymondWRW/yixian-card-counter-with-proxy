@@ -54,6 +54,14 @@
       </div>
       <div id="damage-turns" class="turns"></div>
     </section>
+
+    <!-- Best-line panel (live mixed-strategy calc). Hidden until Python pushes
+         window.onBestLines (gated behind YX_BESTLINE). Shows the top-3 candidate
+         lines with their equilibrium %, and highlights the calculator's pick. -->
+    <section class="card" id="bestline-card" style="display:none">
+      <h2>最佳应对 <small id="bestline-note"></small></h2>
+      <div id="bestline-list"></div>
+    </section>
   </main>
 
   <!-- Bottom-right drag handle. JS in ui.js wires it to a CSS-zoom resize
