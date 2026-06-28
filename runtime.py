@@ -36,11 +36,29 @@ from state_queue import state_queue, new_game_event, round_ended_event  # noqa: 
 
 
 # ─── Consumer: state_queue → view-model → UI ──────────────────────────────────
-def start_consumer(push):
-    """Drain GameState objects and push view-models to the UI via `push`."""
+def start_consumer(push, push_best_lines=None):
+    """Drain GameState objects and push view-models to the UI via `push`.
+
+    push_best_lines(result): optional. When set AND YX_BESTLINE=1, each push also
+    submits a best-line request to the adaptive BestLineEngine, whose fast/final
+    results are sent via this callback. Gated so the feature stays dark until the
+    UI is wired (and so it never spins up the Oracle for users who don't want it).
+    """
+    import os
     from proxy_view import build_view_model, Counter, OpponentTracker
+
     counter = Counter()
     opp_tracker = OpponentTracker()
+
+    best_engine = None
+    if push_best_lines is not None and os.environ.get("YX_BESTLINE") == "1":
+        try:
+            from best_line import BestLineEngine
+            best_engine = BestLineEngine(push_best_lines)
+            print("[bestline] engine active", flush=True)
+        except Exception as e:
+            print(f"[bestline] engine unavailable: {e}", flush=True)
+
     while True:
         try:
             state = state_queue.get(timeout=0.5)
@@ -64,8 +82,33 @@ def start_consumer(push):
                 addon.write_deck_tracker_snapshot(vm)
             except Exception:
                 pass
+            # Submit the latest board to the best-line engine (debounced + cancelled
+            # on the next change inside the engine). Needs both fixtures present.
+            if best_engine is not None:
+                _submit_best_line(best_engine, vm, state, opp_tracker)
         except Exception as e:
             print(f"[consumer] view-model build failed: {e}")
+
+
+def _submit_best_line(engine, vm, state, opp_tracker):
+    """Extract the live fixtures + opponent history from a view-model and hand them
+    to the BestLineEngine. Best-effort: a missing opponent / empty board just skips."""
+    try:
+        me = vm.get("me") or {}
+        opp = vm.get("opponent") or {}
+        me_fx = me.get("oracle")
+        opp_fx = opp.get("oracle")
+        if not me_fx or not opp_fx:
+            return
+        if not [c for c in (me_fx.get("usedCards") or []) if c]:
+            return                                   # nothing placed yet
+        from best_line import history_from_tracker
+        hist = history_from_tracker(opp_tracker, opp.get("player_id"), state.round_num)
+        if not hist:
+            return
+        engine.submit(me_fx, opp_fx, hist, state.round_num)
+    except Exception as e:
+        print(f"[bestline] submit failed: {e}", flush=True)
 
 
 # Live capture via mitmproxy was moved to `proxy[outdated]/proxy_runtime.py`

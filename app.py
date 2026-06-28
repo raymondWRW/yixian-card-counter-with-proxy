@@ -620,6 +620,20 @@ def push_state(view_model: dict):
             pass
 
 
+def push_best_lines(result: dict):
+    """Push a best-line calc result (top lines + highlighted pick) to the main
+    window's calc panel via window.onBestLines. Sent by the BestLineEngine on its
+    own thread (fast then final stage). No-op until the panel's JS handler exists,
+    so it's safe while the feature is still gated behind YX_BESTLINE."""
+    if _window is None:
+        return
+    try:
+        payload = json.dumps(result, ensure_ascii=False)
+        _window.evaluate_js(f"window.onBestLines && window.onBestLines({payload})")
+    except Exception:
+        pass
+
+
 # ─── Background workers (wired up in M2/M3) ───────────────────────────────────
 def _push_demo_state():
     """M1 visual check: push a fake view-model so the window isn't blank."""
@@ -721,6 +735,7 @@ def _start_workers():
                          daemon=True, name="proxy").start()
         threading.Thread(
             target=runtime.start_consumer, args=(push_state,),
+            kwargs={"push_best_lines": push_best_lines},
             daemon=True, name="consumer",
         ).start()
         return
@@ -800,6 +815,7 @@ def _start_workers():
     ).start()
     threading.Thread(
         target=runtime.start_consumer, args=(push_state,),
+        kwargs={"push_best_lines": push_best_lines},
         daemon=True, name="consumer",
     ).start()
     # Yi Xian Oracle: sync its game data to the installed game (extract DLL/configs,
