@@ -243,55 +243,56 @@ def _candidates(board: list[int], pool: list[int], deck_slots: int, max_boards: 
 
 
 def _my_candidates(board, hand, slots, cap):
-    """DETERMINISTIC candidate MY boards from board + hand. No randomness — the
-    same situation always yields the same pool, so the calc's conclusion is
-    seed-independent (a random sample could find a great line one run and miss it
-    the next). Enumerates, in a fixed priority order until `cap`:
-      0) the board as-is,
-      1) single changes  — play a hand card into a free slot; swap one hand card
-         for one board card; drop one board card,
-      2) double changes  — two hand-for-board swaps; drop two,
-    keeping the board's card positions for kept cards (a sensible canonical order).
-    Singles are always fully covered; doubles fill whatever budget remains."""
-    board = [c for c in board if c]
-    hand = [c for c in hand if c and c not in board]
-    if not board and not hand:
-        return [board] if board else []
+    """Candidate MY boards = card SETS chosen from board + hand — the FULL build
+    space, not just changes from the current/last board. Enumerating sets makes the
+    search independent of how my cards are currently arranged and UNBIASED toward my
+    last board (the old ±1-2-card-from-base version generated only near-identical
+    builds — verified missing 0/10 of the genuinely best builds, often radically
+    different ones). Deterministic (no randomness). One canonical ordering per set
+    (order in board+hand); ordering search is a separate concern.
+
+    Enumerates every full-size build (board+hand choose min(slots, n)); if that
+    exceeds `cap`, takes a deterministic STRIDE across the whole combination space
+    (not the first `cap`, which would bias toward early cards). A few drop builds
+    (one fewer card) are appended for empty-slot lines."""
+    from math import comb
+    avail = [c for c in board if c] + [c for c in hand if c and c not in board]
+    if not avail:
+        return []
+    n = len(avail)
+    full = min(slots, n)
     seen, out = set(), []
 
-    def emit(b):
-        b = [c for c in b if c]
-        if not b or len(out) >= cap:
-            return
+    def emit(idxs):
+        b = [avail[i] for i in idxs]
         t = tuple(b)
-        if t not in seen:
+        if b and t not in seen and len(out) < cap:
             seen.add(t)
             out.append(b)
 
-    emit(board)                              # 0) the current board
-    free = max(0, slots - len(board))
-    # 1a) play one hand card into a free slot
-    if free > 0:
-        for hc in hand:
-            emit(board + [hc])
-    # 1b) swap one board card for one hand card
-    for i in range(len(board)):
-        for hc in hand:
-            b = board[:]; b[i] = hc; emit(b)
-    # 1c) drop one board card (empty-slot lines)
-    for i in range(len(board)):
-        emit(board[:i] + board[i + 1:])
-    # 2a) two hand-for-board swaps
-    for i, j in itertools.combinations(range(len(board)), 2):
-        for h1, h2 in itertools.combinations(hand, 2):
+    total = comb(n, full)
+    if total <= cap:
+        for combo in itertools.combinations(range(n), full):
+            emit(combo)
+    else:
+        # Deterministic spread across all combinations (stride), so coverage isn't
+        # biased to early-indexed cards. (combinations() is lexicographic.)
+        all_combos = list(itertools.combinations(range(n), full))
+        step = max(1, total // cap)
+        for i in range(0, total, step):
+            emit(all_combos[i])
             if len(out) >= cap:
-                return out
-            b = board[:]; b[i] = h1; b[j] = h2; emit(b)
-    # 2b) drop two
-    for i, j in itertools.combinations(range(len(board)), 2):
-        if len(out) >= cap:
-            return out
-        emit([board[k] for k in range(len(board)) if k not in (i, j)])
+                break
+    # Drop builds (one fewer card) for empty-slot-scaling cards, with leftover budget.
+    if full >= 2 and len(out) < cap:
+        dn = max(1, cap // 8)
+        for combo in itertools.combinations(range(n), full - 1):
+            before = len(out)
+            emit(combo)
+            if len(out) > before:
+                dn -= 1
+            if dn <= 0 or len(out) >= cap:
+                break
     return out
 
 
@@ -447,10 +448,12 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
     # board-only case (where ~6 sufficed), so my rows scale up here. Opponent
     # column coverage still matters most (handled by the best-response guard).
     my_hand_ids = [int(c) for c in (my_hand or []) if c]
-    # Caps sized so the FINAL pass covers all single-card changes (board±1) of an
-    # 8-card board with a typical hand — the deterministic enumeration is in
-    # priority order, so a higher cap just means more double-changes considered.
-    my_cap = my_max_boards if my_max_boards is not None else (16 if fast else 48)
+    # my_build_cap = how many of MY candidate builds (card-set space) to score. The
+    # FINAL pass enumerates the whole space for a typical board+hand (C(12,8)=495);
+    # the fast pass strides a sample. my_pred_cap = the opponent's model of me (kept
+    # small). opp_cap = the opponent's own candidate boards.
+    my_build_cap = my_max_boards if my_max_boards is not None else (64 if fast else 512)
+    my_pred_cap = 16 if fast else 48
     opp_cap = opp_max_boards if opp_max_boards is not None else (12 if fast else 24)
 
     my_char = int(me.get("characterId", 0) or 0)
@@ -469,18 +472,11 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
                 out.append(b)
         return out
 
-    # ── #3: stage-2 search base = my LAST ROUND's board, not my current in-progress
-    # arrangement — so what I've already placed this round doesn't bias the result.
-    # Available cards = my current board + hand; the base is the last-round board
-    # intersected with what I still hold, and everything else is "extra" to add/swap.
-    avail = my_board + [c for c in my_hand_ids if c not in my_board]
-    avail_set = set(avail)
-    prev_board = []
-    if my_boards_by_round and len(my_boards_by_round) >= 2:
-        prev_board = [c for c in my_boards_by_round[-2] if c in avail_set]
-    base = prev_board or my_board
-    extra = [c for c in avail if c not in base]
-    my_boards = _my_candidates(base, extra, my_slots, my_cap)
+    # MY candidate builds = the FULL card-set space from my board + hand. Set
+    # enumeration is inherently base-independent, so the result no longer depends on
+    # my last board or my current arrangement (#3), and it covers builds very
+    # different from what I last played (#2 — the old ±-from-base search missed them).
+    my_boards = _my_candidates(my_board, my_hand_ids, my_slots, my_build_cap)
 
     # OPPONENT candidates — DETERMINISTIC: their actual recent boards + systematic
     # swaps from the cards they've shown (no random sampling → seed-independent).
@@ -493,7 +489,7 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
     # rounds (the only info they have). The opponent can't see my current cards, so
     # they counter my HISTORY, not my actual board. Coverage here matters: too few
     # of my plausible plays and the opponent mispredicts (drops round-9 quality).
-    my_pred = _opp_candidates(my_boards_by_round or [my_board], my_slots, my_cap)
+    my_pred = _opp_candidates(my_boards_by_round or [my_board], my_slots, my_pred_cap)
 
     import time as _time
     _t0 = _time.time()
