@@ -314,6 +314,77 @@ def solve_with_opponent_guard(my_boards, opp_seed_boards, opp_candidate_boards, 
     return my_res, opp_res, cols, cache
 
 
+def solve_double_oracle(my_seed, my_candidates, opp_seed, opp_candidates, evaluate,
+                        *, max_iters: int = 30, iters: int = 2000, top_k: int = 3,
+                        rng=None, eps: float = 1e-6):
+    """Two-sided best-response (double oracle). Both players start from a small seed
+    and, each round, best-respond to the current equilibrium: MY side adds the board
+    from my_candidates that BEST counters the opponent's mix; the opponent adds the
+    board that best counters mine. Repeat until neither improves.
+
+    Unlike solve_with_opponent_guard (opponent-only column generation, my rows
+    fixed), this also refines MY side — so my strong full board is discovered even
+    if it wasn't in the seed. Seeds let you warm-start from heuristic full boards.
+
+    Returns (my_result, opp_result, my_active_rows, opp_active_cols, eval_cache)."""
+    cache: dict = {}
+
+    def pay(mb, ob):
+        k = (tuple(mb), tuple(ob))
+        v = cache.get(k)
+        if v is None:
+            v = float(evaluate(mb, ob))
+            cache[k] = v
+        return v
+
+    def init(seed, fallback):
+        seen, out = set(), []
+        for b in list(seed) or (fallback[:1] if fallback else []):
+            b = [c for c in b if c]
+            t = tuple(b)
+            if b and t not in seen:
+                seen.add(t)
+                out.append(b)
+        return out, seen
+
+    rows, rseen = init(my_seed, my_candidates)
+    cols, cseen = init(opp_seed, opp_candidates)
+    if not rows or not cols:
+        return NashResult(), NashResult(), rows, cols, cache
+
+    row_strat, col_strat, val = None, None, 0.0
+    for _ in range(max_iters):
+        P = [[pay(mb, ob) for ob in cols] for mb in rows]
+        row_strat, col_strat, val = solve_zero_sum(P, iters=iters)
+        # Both best responses are computed against the SAME current equilibrium,
+        # then added — standard double-oracle.
+        my_br, my_v = None, None
+        for mb in (my_candidates or []):
+            ev = sum(col_strat[j] * pay(mb, cols[j]) for j in range(len(cols)))
+            if my_v is None or ev > my_v:
+                my_v, my_br = ev, mb
+        opp_br, opp_v = None, None
+        for ob in (opp_candidates or []):
+            ev = sum(row_strat[i] * pay(rows[i], ob) for i in range(len(rows)))
+            if opp_v is None or ev < opp_v:
+                opp_v, opp_br = ev, ob
+        improved = False
+        if my_br is not None and tuple([c for c in my_br if c]) not in rseen and my_v > val + eps:
+            b = [c for c in my_br if c]
+            rseen.add(tuple(b)); rows.append(b); improved = True
+        if opp_br is not None and tuple([c for c in opp_br if c]) not in cseen and opp_v < val - eps:
+            b = [c for c in opp_br if c]
+            cseen.add(tuple(b)); cols.append(b); improved = True
+        if not improved:
+            break
+
+    P = [[pay(mb, ob) for ob in cols] for mb in rows]
+    row_strat, col_strat, val = solve_zero_sum(P, iters=iters)
+    my_res = best_lines(rows, row_strat, val, top_k=top_k, rng=rng)
+    opp_res = best_lines(cols, col_strat, -val, top_k=top_k, rng=rng)
+    return my_res, opp_res, rows, cols, cache
+
+
 def compute(my_boards, opp_boards, evaluate, *, iters: int = 2000,
             top_k: int = 3, rng=None) -> NashResult:
     """End-to-end: build the payoff matrix with `evaluate(my_board, opp_board)`
@@ -394,4 +465,17 @@ if __name__ == "__main__":
     assert opp_guard.pick.board == ["counter"], opp_guard.pick.board
     print(f"guard OK: fixed picks trap {fixed.pick.board}, guarded picks safe "
           f"{guarded.pick.board} after finding counter (cols={[c[0] for c in cols]})")
+
+    # Double oracle: the strong board is NOT in my seed, only in my_candidates —
+    # the my-side best-response must discover it. (weak is dominated everywhere.)
+    PAY2 = {("weak", "x"): 1, ("weak", "counter"): 1,
+            ("strong", "x"): 10, ("strong", "counter"): 8}
+    ev3 = lambda mb, ob: PAY2[(mb[0], ob[0])]
+    my_do, opp_do, rws, cls, _c = solve_double_oracle(
+        [["weak"]], [["weak"], ["strong"]], [["x"]], [["x"], ["counter"]],
+        ev3, rng=random.Random(0))
+    assert any(r[0] == "strong" for r in rws), rws
+    assert my_do.pick.board == ["strong"], my_do.pick.board
+    print(f"double-oracle OK: my BR discovered {my_do.pick.board} from a weak seed "
+          f"(rows={[r[0] for r in rws]})")
     print("ALL SELF-TESTS PASSED")

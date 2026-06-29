@@ -243,53 +243,62 @@ def _candidates(board: list[int], pool: list[int], deck_slots: int, max_boards: 
 
 
 def _my_candidates(board, hand, slots, cap):
-    """Candidate MY boards from board + hand. The generic _candidates exhausts its
-    budget on board-only drops/perms before it ever reaches hand swaps, so hand
-    cards never surface — this reserves explicit budget for hand-inclusive lines
-    (swap a hand card in, add one to a free slot, or subsets of board+hand)."""
+    """Candidate MY boards from board + hand, FULL-BOARD-FIRST. Most candidates fill
+    all available slots (= min(unlocked, cards I have)); only a small minority are
+    "drop" boards (fewer cards), kept just so empty-slot-scaling cards (逍遥无影拳
+    etc.) can still be found. Leading with drops over-recommended under-full boards
+    when no empty-slot synergy was present — this fixes that bias."""
     board = [c for c in board if c]
     hand = [c for c in hand if c and c not in board]
+    avail = board + hand
+    if not avail:
+        return [board] if board else []
+    full_size = min(slots, len(avail))
     seen, out = set(), []
 
     def emit(b):
         b = [c for c in b if c]
         if not b:
-            return
+            return False
         t = tuple(b)
-        if t not in seen:
-            seen.add(t)
-            out.append(b)
+        if t in seen:
+            return False
+        seen.add(t)
+        out.append(b)
+        return True
 
-    emit(board)
-    # ~40% of the budget: board-only arrangements (drops + permutations).
-    for b in _candidates(board, board, slots, max(2, int(cap * 0.4))):
-        if len(out) >= cap:
-            return out
+    emit(board)                              # the current board first
+    full_budget = max(2, int(cap * 0.85))    # ~85% of the budget = full-size boards
+
+    # Full-size hand swaps: replace one board card with one hand card.
+    swaps = [(i, hc) for hc in hand for i in range(len(board))]
+    random.shuffle(swaps)
+    for i, hc in swaps:
+        if len(out) >= full_budget:
+            break
+        b = board[:]
+        b[i] = hc
         emit(b)
-    if hand:
-        # Single swaps: replace one board card with one hand card. Round-robin over
-        # hand (shuffled) so several hand cards get represented, not just the first.
-        swaps = [(i, hc) for hc in hand for i in range(len(board))]
-        random.shuffle(swaps)
-        for i, hc in swaps:
-            if len(out) >= cap:
-                return out
-            b = board[:]
-            b[i] = hc
-            emit(b)
-        # Play a hand card into a free slot (board + 1), if the board isn't full.
-        if len(board) < slots:
-            for hc in hand:
+    # Full-size subsets/permutations of board+hand (bounded attempts).
+    attempts = 0
+    while len(out) < full_budget and attempts < cap * 8:
+        attempts += 1
+        random.shuffle(avail)
+        emit(avail[:full_size])
+
+    # Drop boards (minority): fewer cards → more empty slots, for empty-slot cards.
+    if len(board) >= 2:
+        for drop in (1, 2):
+            if full_size - drop < 1:
+                break
+            combos = list(itertools.combinations(range(len(board)), len(board) - drop))
+            random.shuffle(combos)
+            for combo in combos:
                 if len(out) >= cap:
-                    return out
-                emit(board + [hc])
-        # Random subsets of board+hand filling up to `slots` (bounded attempts).
-        full = board + hand
-        for _ in range(cap * 4):
+                    break
+                emit([board[i] for i in combo])
             if len(out) >= cap:
                 break
-            random.shuffle(full)
-            emit(full[:min(slots, len(full))])
     return out[:cap]
 
 
@@ -425,10 +434,19 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
                 out.append(b)
         return out
 
-    # MY candidate rows: arrangements drawn from board + hand, with reserved budget
-    # for hand-inclusive lines (playing/swapping in a hand card), not just board
-    # permutations.
+    # MY candidate pool: full-board-first arrangements of board + hand. My career
+    # IS known (is_me), so heuristic COMMON full boards for my char/career/realm —
+    # filtered to cards I actually hold — seed the search with a known-strong full
+    # board (and join the pool the my-side best-response can pick from).
     my_boards = _my_candidates(my_board, my_hand_ids, my_slots, my_cap)
+    my_seed = [my_board]
+    if HL is not None and HL.available():
+        my_counts = live_nash.build_opponent_pool(
+            [my_board + my_hand_ids], _line_of, _level_of)
+        legal_common = [b for b in HL.common_boards(my_char, my_career, my_realm, top=8)
+                        if live_nash.pool_legal(b, my_counts, _line_of, _level_of)]
+        my_seed = _dedup([my_board] + legal_common[:2])
+        my_boards = _dedup(my_boards + legal_common)
 
     # OPPONENT columns: their actual last board + pool arrangements. The
     # best-response guard then searches these for the punishing counter.
@@ -466,15 +484,24 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
             return w.run(fx)
 
         # payoff = my margin from p1's perspective: destiny (命) damage dominates,
-        # board hp advantage breaks ties between boards that deal the same life dmg.
+        # board hp advantage breaks ties between boards that deal the same life dmg,
+        # and finally MORE CARDS breaks a true tie (same life + same hp) — so an
+        # equally-good line fills the board rather than leaving slots empty for no
+        # benefit. The +card term (1e-4) is below the hp step (1e-3), so it never
+        # overrides a real difference, only a genuine tie.
         def evaluate(mb, ob):
             r = _run(mb, ob)
-            return float(r.get("lifeDamage", 0) or 0) + float(r.get("hpDelta", 0) or 0) / 1000.0
+            return (float(r.get("lifeDamage", 0) or 0)
+                    + float(r.get("hpDelta", 0) or 0) / 1000.0
+                    + len([c for c in mb if c]) * 1e-4)
 
         try:
-            res, opp_res, cols, cache = live_nash.solve_with_opponent_guard(
-                my_boards, opp_seed, opp_candidates, evaluate, iters=1500,
-                top_k=top_k, rng=rng)
+            # Two-sided best-response: my side AND the opponent each best-respond to
+            # the equilibrium each round, so my strong full board is discovered even
+            # if it wasn't seeded (and the opponent's counter is still found).
+            res, opp_res, my_rows, cols, cache = live_nash.solve_double_oracle(
+                my_seed, my_boards, opp_seed, opp_candidates, evaluate,
+                iters=1500, top_k=top_k, rng=rng)
         except Exception as e:
             _reset_worker()
             return {"error": f"live_best_lines failed: {e}"}
@@ -493,7 +520,8 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
         "opp_lines": _lines(opp_res),
         "opp_pick_board": (opp_res.pick.board if opp_res.pick else None),
         "opp_pool_size": len(opp_pool),
-        "my_rows": len(my_boards),
+        "my_rows_active": len(my_rows),
+        "my_cands": len(my_boards),
         "opp_cols_considered": len(opp_candidates),
         "opp_cols_active": len(cols),
         "oracle_evals": len(cache),
