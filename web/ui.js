@@ -350,24 +350,41 @@ window.onBestLines = function (res) {
   const note = $('bestline-note');
   const list = $('bestline-list');
 
+  // Header: round + 命 value + done/computing status (with the back-and-forth
+  // iteration count once final). Shown even on error/empty so you can always see
+  // the calc is alive and which round it's on.
+  const done = res.stage === 'final';
+  if (note) {
+    const status = done
+      ? `<span class="bl-done" title="计算完成 · ${res.iterations || 0} 轮博弈">✓ ${res.iterations || 0}轮</span>`
+      : `<span class="bl-spin">计算中…</span>`;
+    let h = (res.round != null ? `<span class="bl-round">R${res.round}</span> ` : '');
+    if (!res.error) {
+      const v = Math.round(res.value || 0);
+      const vCls = v > 0 ? 'pos' : v < 0 ? 'neg' : '';
+      h += `<span class="bl-val ${vCls}">命 ${v >= 0 ? '+' : ''}${v}</span> `;
+    }
+    note.innerHTML = h + status;
+  }
+
+  // Inputs readout (my vs predicted-opponent HP / cultivation / realm) so you can
+  // verify the calc is using sane numbers.
+  const num = (x) => (x == null ? '—' : x);
+  const statsHtml =
+    `<div class="bl-stats">` +
+      `<span>我 HP${num(res.me_hp)} 修${num(res.me_cult)} 境${num(res.me_realm)}</span>` +
+      `<span class="bl-sep">·</span>` +
+      `<span class="opp">敌(预测) HP${num(res.opp_hp)} 修${num(res.opp_cult)} 境${num(res.opp_realm)}</span>` +
+    `</div>`;
+
   if (res.error) {
-    if (note) note.textContent = '';
-    list.innerHTML = `<div class="bl-empty">计算失败：${res.error}</div>`;
+    list.innerHTML = statsHtml + `<div class="bl-empty">计算失败：${res.error}</div>`;
     fitWindowToContent();
     return;
   }
   const lines = res.lines || [];
-  // value = my equilibrium margin (命 damage; + = I'm ahead vs best opp play).
-  const v = Math.round(res.value || 0);
-  const vCls = v > 0 ? 'pos' : v < 0 ? 'neg' : '';
-  const computing = res.stage === 'fast';
-  if (note) {
-    note.innerHTML =
-      `<span class="bl-val ${vCls}">命 ${v >= 0 ? '+' : ''}${v}</span>` +
-      (computing ? ' <span class="bl-spin">计算中…</span>' : '');
-  }
   if (!lines.length) {
-    list.innerHTML = '<div class="bl-empty">无可用应对</div>';
+    list.innerHTML = statsHtml + '<div class="bl-empty">无可用应对</div>';
     fitWindowToContent();
     return;
   }
@@ -381,8 +398,8 @@ window.onBestLines = function (res) {
       `</div>`
     );
   }
-  // My lines (★ = the calculator's pick), then the opponent's predicted play.
-  let html = '<div class="bl-sub">我方应对</div>';
+  // Inputs readout, then my lines (★ = the pick), then the opponent's predicted play.
+  let html = statsHtml + '<div class="bl-sub">我方应对</div>';
   html += lines.map((ln) => rowHtml(ln, sameBoard(ln.board, res.pick_board), '★')).join('');
   const oppLines = res.opp_lines || [];
   if (oppLines.length) {

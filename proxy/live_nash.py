@@ -326,7 +326,8 @@ def solve_double_oracle(my_seed, my_candidates, opp_seed, opp_candidates, evalua
     fixed), this also refines MY side — so my strong full board is discovered even
     if it wasn't in the seed. Seeds let you warm-start from heuristic full boards.
 
-    Returns (my_result, opp_result, my_active_rows, opp_active_cols, eval_cache)."""
+    Returns (my_result, opp_result, my_active_rows, opp_active_cols, eval_cache,
+    iterations) — iterations = how many best-response rounds ran before converging."""
     cache: dict = {}
 
     def pay(mb, ob):
@@ -353,7 +354,9 @@ def solve_double_oracle(my_seed, my_candidates, opp_seed, opp_candidates, evalua
         return NashResult(), NashResult(), rows, cols, cache
 
     row_strat, col_strat, val = None, None, 0.0
+    iterations = 0
     for _ in range(max_iters):
+        iterations += 1
         P = [[pay(mb, ob) for ob in cols] for mb in rows]
         row_strat, col_strat, val = solve_zero_sum(P, iters=iters)
         # Both best responses are computed against the SAME current equilibrium,
@@ -382,7 +385,7 @@ def solve_double_oracle(my_seed, my_candidates, opp_seed, opp_candidates, evalua
     row_strat, col_strat, val = solve_zero_sum(P, iters=iters)
     my_res = best_lines(rows, row_strat, val, top_k=top_k, rng=rng)
     opp_res = best_lines(cols, col_strat, -val, top_k=top_k, rng=rng)
-    return my_res, opp_res, rows, cols, cache
+    return my_res, opp_res, rows, cols, cache, iterations
 
 
 def compute(my_boards, opp_boards, evaluate, *, iters: int = 2000,
@@ -471,7 +474,7 @@ if __name__ == "__main__":
     PAY2 = {("weak", "x"): 1, ("weak", "counter"): 1,
             ("strong", "x"): 10, ("strong", "counter"): 8}
     ev3 = lambda mb, ob: PAY2[(mb[0], ob[0])]
-    my_do, opp_do, rws, cls, _c = solve_double_oracle(
+    my_do, opp_do, rws, cls, _c, _it = solve_double_oracle(
         [["weak"]], [["weak"], ["strong"]], [["x"]], [["x"], ["counter"]],
         ev3, rng=random.Random(0))
     assert any(r[0] == "strong" for r in rws), rws

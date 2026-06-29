@@ -313,3 +313,19 @@ body.collapsed { height: 34px; min-height: 0; }
 }
 .bl-sub.opp { color: var(--warn); }
 .bl-row.pick .bl-board { font-weight: 600; }
+
+/* Best-line status + inputs readout */
+.bl-round { color: var(--muted); font-weight: 600; }
+.bl-done { color: var(--good); font-weight: 600; }
+.bl-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  font-size: 11px;
+  color: var(--muted);
+  padding: 2px 2px 4px;
+  font-variant-numeric: tabular-nums;
+}
+.bl-stats .opp { color: var(--warn); }
+.bl-stats .bl-sep { opacity: .5; }

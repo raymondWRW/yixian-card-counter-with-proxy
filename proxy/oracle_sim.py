@@ -502,7 +502,7 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
             # Two-sided best-response: my side AND the opponent each best-respond to
             # the equilibrium each round, so my strong full board is discovered even
             # if it wasn't seeded (and the opponent's counter is still found).
-            res, opp_res, my_rows, cols, cache = live_nash.solve_double_oracle(
+            res, opp_res, my_rows, cols, cache, iterations = live_nash.solve_double_oracle(
                 my_seed, my_boards, opp_seed, opp_candidates, evaluate,
                 iters=1500, top_k=top_k, rng=rng)
         except Exception as e:
@@ -530,7 +530,14 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
         "my_cands": len(my_boards),
         "opp_cols_considered": len(opp_candidates),
         "opp_cols_active": len(cols),
+        "iterations": iterations,        # double-oracle best-response rounds
         "oracle_evals": len(cache),
+        # sim-input stats (for the UI's "everything working?" readout): cultivation
+        # (exp) and realm the calc actually fed the engine; opp values are PROJECTED.
+        "me_cult": int(mp.get("exp", 0) or 0),
+        "me_realm": int(mp.get("level", 0) or 0),
+        "opp_cult": int(op.get("exp", 0) or 0),
+        "opp_realm": int(op.get("level", 0) or 0),
     }
 
 

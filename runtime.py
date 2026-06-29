@@ -110,7 +110,16 @@ def _submit_best_line(engine, vm, state, opp_tracker):
         # rearranging the board.
         hand = [int(c["id"]) for c in (me.get("hand") or [])
                 if c and c.get("id")]
-        engine.submit(me_fx, opp_fx, hist, state.round_num, my_hand=hand)
+        # Display-only stats for the panel's "everything working?" readout: game
+        # round + HP. (Cultivation/realm come from the calc itself.) Opponent HP is
+        # the projected estimate (+2, matching the calc's one-round growth).
+        opp_hp = opp.get("hp")
+        meta = {
+            "round": state.round_num,
+            "me_hp": me.get("hp"),
+            "opp_hp": (opp_hp + 2) if isinstance(opp_hp, (int, float)) else opp_hp,
+        }
+        engine.submit(me_fx, opp_fx, hist, state.round_num, my_hand=hand, meta=meta)
     except Exception as e:
         print(f"[bestline] submit failed: {e}", flush=True)
 
