@@ -388,23 +388,32 @@ window.onBestLines = function (res) {
     fitWindowToContent();
     return;
   }
-  function rowHtml(ln, isPick, marker) {
-    const pct = Math.round((ln.probability || 0) * 100);
+  function rowHtml(ln, isPick, marker, metric) {
+    let badge;
+    if (metric === 'g') {
+      // guaranteed 命 (worst case vs the opponent's best reply) — ranks my lines
+      const g = Math.round(ln.guaranteed || 0);
+      const cls = g > 0 ? 'pos' : g < 0 ? 'neg' : '';
+      badge = `<span class="bl-pct ${cls}" title="保底命（对手最优应对下）">命${g >= 0 ? '+' : ''}${g}</span>`;
+    } else {
+      badge = `<span class="bl-pct">${Math.round((ln.probability || 0) * 100)}%</span>`;
+    }
     return (
       `<div class="bl-row${isPick ? ' pick' : ''}">` +
-        `<span class="bl-pct">${pct}%</span>` +
+        badge +
         `<span class="bl-board">${boardLabel(ln.slots)}</span>` +
-        (isPick && marker ? `<span class="bl-star" title="本回合推荐">${marker}</span>` : '') +
+        (isPick && marker ? `<span class="bl-star" title="本回合推荐（保底最高）">${marker}</span>` : '') +
       `</div>`
     );
   }
-  // Inputs readout, then my lines (★ = the pick), then the opponent's predicted play.
-  let html = statsHtml + '<div class="bl-sub">我方应对</div>';
-  html += lines.map((ln) => rowHtml(ln, sameBoard(ln.board, res.pick_board), '★')).join('');
+  // Inputs readout, then my lines (ranked by guaranteed 命; ★ = strongest), then
+  // the opponent's predicted play (ranked by likelihood %).
+  let html = statsHtml + '<div class="bl-sub">我方应对（按保底命）</div>';
+  html += lines.map((ln) => rowHtml(ln, sameBoard(ln.board, res.pick_board), '★', 'g')).join('');
   const oppLines = res.opp_lines || [];
   if (oppLines.length) {
     html += '<div class="bl-sub opp">对手预测</div>';
-    html += oppLines.map((ln) => rowHtml(ln, sameBoard(ln.board, res.opp_pick_board), '')).join('');
+    html += oppLines.map((ln) => rowHtml(ln, sameBoard(ln.board, res.opp_pick_board), '', 'p')).join('');
   }
   list.innerHTML = html;
   fitWindowToContent();

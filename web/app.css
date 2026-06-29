@@ -329,3 +329,6 @@ body.collapsed { height: 34px; min-height: 0; }
 }
 .bl-stats .opp { color: var(--warn); }
 .bl-stats .bl-sep { opacity: .5; }
+
+.bl-pct.pos { color: var(--good); }
+.bl-pct.neg { color: var(--bad); }

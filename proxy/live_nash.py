@@ -207,6 +207,7 @@ class Line:
     board: list           # the candidate board (card ids)
     probability: float    # equilibrium mixing weight
     index: int            # index into the original my_boards list
+    worst: float = 0.0    # guaranteed value: my worst payoff over the opponent's columns
 
 
 @dataclass
@@ -214,6 +215,33 @@ class NashResult:
     top: list = field(default_factory=list)   # up to 3 Line, descending prob
     pick: Line | None = None                   # the weighted-random highlighted line
     value: float = 0.0                         # equilibrium margin (my expected payoff)
+
+
+def maximin_lines(boards, payoff, row_strategy, value, top_k: int = 3) -> NashResult:
+    """Rank MY boards by GUARANTEED value — the worst payoff each gets across the
+    opponent's columns — and pick the single strongest (deterministic). This is the
+    'just tell me the best line' answer: the line the opponent can punish least.
+    Ties broken by equilibrium weight, then by more cards (fill the board)."""
+    M = len(boards)
+    N = len(payoff[0]) if M and payoff else 0
+    lines = []
+    for i in range(M):
+        worst = min(payoff[i]) if N else 0.0
+        p = row_strategy[i] if i < len(row_strategy) else 0.0
+        lines.append(Line(board=boards[i], probability=p, index=i, worst=worst))
+    lines.sort(key=lambda ln: (ln.worst, ln.probability, len(ln.board)), reverse=True)
+    top = lines[:top_k]
+    return NashResult(top=top, pick=(top[0] if top else None), value=value)
+
+
+def likely_lines(boards, strategy, value, top_k: int = 3) -> NashResult:
+    """The opponent's most LIKELY boards — highest equilibrium weight, deterministic
+    (no sampling). Used for the 'predicted opponent' display."""
+    ranked = sorted(
+        (Line(board=boards[i], probability=p, index=i)
+         for i, p in enumerate(strategy) if p > 0),
+        key=lambda ln: (ln.probability, len(ln.board)), reverse=True)
+    return NashResult(top=ranked[:top_k], pick=(ranked[0] if ranked else None), value=value)
 
 
 def best_lines(my_boards, row_strategy, value, top_k: int = 3, rng=None) -> NashResult:
@@ -383,8 +411,13 @@ def solve_double_oracle(my_seed, my_candidates, opp_seed, opp_candidates, evalua
 
     P = [[pay(mb, ob) for ob in cols] for mb in rows]
     row_strat, col_strat, val = solve_zero_sum(P, iters=iters)
-    my_res = best_lines(rows, row_strat, val, top_k=top_k, rng=rng)
-    opp_res = best_lines(cols, col_strat, -val, top_k=top_k, rng=rng)
+    # MY lines ranked by GUARANTEED value (worst case over opp columns), pick the
+    # strongest — deterministic. Ranking by equilibrium probability instead hid
+    # equally-good lines (fictitious play splits weight arbitrarily among tied
+    # lines), which is why a played line could be absent from the top-3.
+    my_res = maximin_lines(rows, P, row_strat, val, top_k=top_k)
+    # Opponent's predicted play = their most-likely boards by equilibrium weight.
+    opp_res = likely_lines(cols, col_strat, -val, top_k=top_k)
     return my_res, opp_res, rows, cols, cache, iterations
 
 

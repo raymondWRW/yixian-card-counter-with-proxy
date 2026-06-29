@@ -434,6 +434,16 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
                 out.append(b)
         return out
 
+    # Deterministic candidate generation: _candidates/_my_candidates shuffle with
+    # the global `random`, so without a fixed seed the SAME situation produced
+    # different candidate sets — and thus different recommendations — on each call.
+    # Seed from the inputs so a given board+hand+opponent+round always yields the
+    # same lines (reproducible; no more "great line one moment, bad the next").
+    import hashlib
+    _sig = repr((sorted(my_board), sorted(my_hand_ids),
+                 [sorted(b) for b in (opp_boards_by_round or [])], int(rnd)))
+    random.seed(int(hashlib.md5(_sig.encode()).hexdigest()[:12], 16))
+
     # MY candidate pool: full-board-first arrangements of board + hand. My career
     # IS known (is_me), so heuristic COMMON full boards for my char/career/realm —
     # filtered to cards I actually hold — seed the search with a known-strong full
@@ -511,7 +521,10 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
 
     def _lines(nash):
         return [{"slots": [_slot(c) for c in ln.board], "board": ln.board,
-                 "probability": round(ln.probability, 4)} for ln in nash.top]
+                 "probability": round(ln.probability, 4),
+                 # guaranteed value: this line's worst outcome over the opponent's
+                 # columns (命 the line is guaranteed to net, vs best opp play).
+                 "guaranteed": round(ln.worst, 1)} for ln in nash.top]
 
     return {
         "lines": _lines(res),
