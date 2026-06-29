@@ -75,12 +75,13 @@ class BestLineEngine:
         self._thread = threading.Thread(target=self._run, daemon=True, name="best-line")
         self._thread.start()
 
-    def submit(self, me_fx, opp_fx, history, rnd, my_hand=None, meta=None):
+    def submit(self, me_fx, opp_fx, history, rnd, my_hand=None, meta=None,
+               my_history=None):
         """Register the latest request IF the available cards/context changed. A
         board rearrange (same cards) is ignored — no recalc. my_hand = my hand card
-        ids (candidate lines consider playing these, not just the board). meta =
-        display-only stats (HP/cult/round) merged into the result; NOT part of the
-        signature, so it never forces a recalc on its own."""
+        ids. my_history = MY board ids over the last <=3 rounds (the opponent's view
+        of me, used to predict their counter). meta = display-only stats merged into
+        the result; NOT part of the signature."""
         if not me_fx or not opp_fx or not history:
             return
         sig = _signature(me_fx, history, rnd, my_hand)
@@ -92,7 +93,8 @@ class BestLineEngine:
             warm = self._warm_cols if _opp_signature(history, rnd) == self._warm_sig else None
             self._gen += 1
             self._pending = (self._gen, me_fx, opp_fx, list(history), rnd,
-                             list(my_hand or []), warm, dict(meta or {}))
+                             list(my_hand or []), warm, dict(meta or {}),
+                             [list(b) for b in (my_history or [])])
             self._cv.notify()
 
     def _current(self, gen) -> bool:
@@ -114,23 +116,25 @@ class BestLineEngine:
             with self._cv:
                 if self._pending is None:
                     continue
-                gen, me_fx, opp_fx, history, rnd, my_hand, warm, meta = self._pending
+                gen, me_fx, opp_fx, history, rnd, my_hand, warm, meta, my_history = self._pending
                 self._pending = None
             try:
                 # Adaptive: fast coarse pass first, then a deeper refine. Re-check
                 # currency before each (potentially ~0.5s) call and before pushing.
                 # warm = opponent columns from the last calc (warm-starts their side).
                 fast = oracle_sim.live_best_lines(
-                    me_fx, opp_fx, history, my_hand=my_hand, rnd=rnd,
-                    fast=True, opp_max_boards=8, opp_seed_extra=warm)
+                    me_fx, opp_fx, history, my_boards_by_round=my_history,
+                    my_hand=my_hand, rnd=rnd, fast=True, opp_max_boards=8,
+                    opp_seed_extra=warm)
                 if fast and self._current(gen):
                     fast["stage"] = "fast"; fast["gen"] = gen; fast.update(meta)
                     self._push(fast)
                 if not self._current(gen):
                     continue
                 final = oracle_sim.live_best_lines(
-                    me_fx, opp_fx, history, my_hand=my_hand, rnd=rnd,
-                    fast=False, opp_max_boards=24, opp_seed_extra=warm)
+                    me_fx, opp_fx, history, my_boards_by_round=my_history,
+                    my_hand=my_hand, rnd=rnd, fast=False, opp_max_boards=24,
+                    opp_seed_extra=warm)
                 if final and self._current(gen):
                     final["stage"] = "final"; final["gen"] = gen; final.update(meta)
                     self._push(final)

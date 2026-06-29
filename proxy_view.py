@@ -476,6 +476,13 @@ def build_view_model(state, counter=None, last_battle=None, opp_tracker=None):
             "oracle": _oracle_side(state.players[state.me_index] if state.me_index >= 0 else None,
                                    board, unlocked=unlocked, is_me=True),
         }
+        # _oracle_side reads cultivation/realm off the wire PlayerState, which is the
+        # ROUND-START value. The shadow (sh) is current — it tracks this round's
+        # absorbs (+1 修为 each) and breakthroughs. Sync the fixture to the CURRENT
+        # values so the calc uses my real cultivation/realm, not last round's.
+        if vm["me"].get("oracle"):
+            vm["me"]["oracle"]["exp"] = int(xiuwei or 0)
+            vm["me"]["oracle"]["level"] = int(realm or 1)
 
     # ── Opponent (matchup target) ──────────────────────────────────────────────
     # Round 14: use opp.board DIRECTLY — it's the current-round board, parsed

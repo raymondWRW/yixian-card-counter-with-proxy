@@ -106,6 +106,14 @@ def _submit_best_line(engine, vm, state, opp_tracker):
         hist = history_from_tracker(opp_tracker, opp.get("player_id"), state.round_num)
         if not hist:
             return
+        # MY board over the last <=3 rounds — what the opponent has seen me play;
+        # the calc uses it to predict their counter (they can't see my CURRENT cards).
+        me_id = None
+        try:
+            me_id = state.players[state.me_index].player_id
+        except Exception:
+            pass
+        my_hist = history_from_tracker(opp_tracker, me_id, state.round_num) if me_id else []
         # my hand card ids — candidate lines consider playing these, not just
         # rearranging the board.
         hand = [int(c["id"]) for c in (me.get("hand") or [])
@@ -119,7 +127,8 @@ def _submit_best_line(engine, vm, state, opp_tracker):
             "me_hp": me.get("hp"),
             "opp_hp": (opp_hp + 2) if isinstance(opp_hp, (int, float)) else opp_hp,
         }
-        engine.submit(me_fx, opp_fx, hist, state.round_num, my_hand=hand, meta=meta)
+        engine.submit(me_fx, opp_fx, hist, state.round_num, my_hand=hand, meta=meta,
+                      my_history=my_hist)
     except Exception as e:
         print(f"[bestline] submit failed: {e}", flush=True)
 

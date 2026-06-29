@@ -400,7 +400,8 @@ def matchup(me: dict, opp: dict, marginal: bool = False, rnd: int = 8):
 
 
 def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
-                    *, my_hand=None, rnd: int = 8, fast: bool = True, top_k: int = 3,
+                    *, my_boards_by_round=None, my_hand=None, rnd: int = 8,
+                    fast: bool = True, top_k: int = 3,
                     my_max_boards: int = None, opp_max_boards: int = None,
                     use_heuristics: bool = False, opp_seed_extra=None, rng=None):
     """Live "best line" as a mixed-strategy (Nash) game — step 4 of the live calc.
@@ -468,112 +469,115 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
                 out.append(b)
         return out
 
-    # MY candidate pool: full-board-first arrangements of board + hand. My career
-    # IS known (is_me), so heuristic COMMON full boards for my char/career/realm —
-    # filtered to cards I actually hold — seed the search with a known-strong full
-    # board (and join the pool the my-side best-response can pick from).
-    my_boards = _my_candidates(my_board, my_hand_ids, my_slots, my_cap)
-    my_seed = [my_board]
-    if HL is not None and HL.available():
-        my_counts = live_nash.build_opponent_pool(
-            [my_board + my_hand_ids], _line_of, _level_of)
-        legal_common = [b for b in HL.common_boards(my_char, my_career, my_realm, top=8)
-                        if live_nash.pool_legal(b, my_counts, _line_of, _level_of)]
-        my_seed = _dedup([my_board] + legal_common[:2])
-        my_boards = _dedup(my_boards + legal_common)
+    # ── #3: stage-2 search base = my LAST ROUND's board, not my current in-progress
+    # arrangement — so what I've already placed this round doesn't bias the result.
+    # Available cards = my current board + hand; the base is the last-round board
+    # intersected with what I still hold, and everything else is "extra" to add/swap.
+    avail = my_board + [c for c in my_hand_ids if c not in my_board]
+    avail_set = set(avail)
+    prev_board = []
+    if my_boards_by_round and len(my_boards_by_round) >= 2:
+        prev_board = [c for c in my_boards_by_round[-2] if c in avail_set]
+    base = prev_board or my_board
+    extra = [c for c in avail if c not in base]
+    my_boards = _my_candidates(base, extra, my_slots, my_cap)
 
-    # OPPONENT columns: their actual last board + pool arrangements. The
-    # best-response guard then searches these for the punishing counter.
-    #
-    # Heuristic counter/common boards (the season build data) are added ONLY after
-    # filtering to the opponent's observed pool via pool_legal — so we get the
-    # realistic strong compositions/orderings the archetype plays WITHOUT phantom
-    # counters built from cards the opponent doesn't hold (unconstrained heuristics
-    # recommended losing lines in the replay validation). opp career isn't on the
-    # wire → aggregate across careers.
-    heur = []
-    if use_heuristics and HL is not None and HL.available():
-        pool_counts = live_nash.build_opponent_pool(opp_boards_by_round or [], _line_of, _level_of)
-        raw_heur = (HL.counter_boards(opp_char, None, my_char, top=8)
-                    + HL.common_boards(opp_char, None, opp_realm, top=6))
-        heur = [b for b in raw_heur
-                if live_nash.pool_legal(b, pool_counts, _line_of, _level_of)]
-    # Opponent candidates — DETERMINISTIC: their actual recent boards + systematic
+    # OPPONENT candidates — DETERMINISTIC: their actual recent boards + systematic
     # swaps from the cards they've shown (no random sampling → seed-independent).
+    warm = [b for b in (opp_seed_extra or []) if b]
     pool_arrangements = _opp_candidates(opp_boards_by_round or [[c for c in opp_last]],
                                         opp_slots, opp_cap)
-    # opp_seed_extra = the opponent's good boards from a prior calc (warm start when
-    # only MY cards changed — their playable set is unchanged within a round).
-    warm = [b for b in (opp_seed_extra or []) if b]
-    opp_candidates = _dedup([opp_last] + warm + heur + pool_arrangements)
-    # Seed columns: last board + warm columns + top heuristic counters.
-    opp_seed = _dedup([opp_last] + warm + heur[:3])
+    opp_candidates = _dedup([opp_last] + warm + pool_arrangements)
 
+    # ── #2: MY PREDICTED boards as the OPPONENT sees me — built from MY last <=3
+    # rounds (the only info they have). The opponent can't see my current cards, so
+    # they counter my HISTORY, not my actual board. Coverage here matters: too few
+    # of my plausible plays and the opponent mispredicts (drops round-9 quality).
+    my_pred = _opp_candidates(my_boards_by_round or [my_board], my_slots, my_cap)
+
+    import time as _time
+    _t0 = _time.time()
     # The whole search must hold the worker lock — a concurrent matchup() would
     # corrupt the single stdin/stdout pipe (same constraint as whatif_from_stat).
     with _lock:
         w = _get_worker()
         if w is None:
             return None
+        cache = {}
 
-        def _run(p1cards, p2cards):
-            fx = {"p1": {**mp, "usedCards": list(p1cards)},
-                  "p2": {**op, "usedCards": list(p2cards)},
-                  "battleParams": [], "mainViewId": "", "round": rnd, "expected": {},
-                  "wantLog": False}
-            return w.run(fx)
-
-        # payoff = my margin from p1's perspective: destiny (命) damage dominates,
-        # board hp advantage breaks ties between boards that deal the same life dmg,
-        # and finally MORE CARDS breaks a true tie (same life + same hp) — so an
-        # equally-good line fills the board rather than leaving slots empty for no
-        # benefit. The +card term (1e-4) is below the hp step (1e-3), so it never
-        # overrides a real difference, only a genuine tie.
+        # payoff = MY margin (p1) vs an opponent board (p2): 命 damage dominates,
+        # board hp breaks ties, +cards breaks a true tie (fill the board).
         def evaluate(mb, ob):
-            r = _run(mb, ob)
-            return (float(r.get("lifeDamage", 0) or 0)
-                    + float(r.get("hpDelta", 0) or 0) / 1000.0
-                    + len([c for c in mb if c]) * 1e-4)
+            k = (tuple(mb), tuple(ob))
+            v = cache.get(k)
+            if v is None:
+                fx = {"p1": {**mp, "usedCards": list(mb)},
+                      "p2": {**op, "usedCards": list(ob)},
+                      "battleParams": [], "mainViewId": "", "round": rnd,
+                      "expected": {}, "wantLog": False}
+                r = w.run(fx)
+                v = (float(r.get("lifeDamage", 0) or 0)
+                     + float(r.get("hpDelta", 0) or 0) / 1000.0
+                     + len([c for c in mb if c]) * 1e-4)
+                cache[k] = v
+            return v
 
         try:
-            # Two-sided best-response: my side AND the opponent each best-respond to
-            # the equilibrium each round, so my strong full board is discovered even
-            # if it wasn't seeded (and the opponent's counter is still found).
-            res, opp_res, my_rows, cols, cache, iterations = live_nash.solve_double_oracle(
-                my_seed, my_boards, opp_seed, opp_candidates, evaluate,
-                iters=1500, top_k=top_k, rng=rng)
+            # STAGE 1 — the opponent solves MY history. Zero-sum game: my predicted
+            # boards (rows) vs the opponent's candidate boards (cols); the opponent
+            # minimizes my margin. Their equilibrium strategy = how they'll likely
+            # play vs someone who plays like my last rounds.
+            P1 = [[evaluate(mr, oc) for oc in opp_candidates] for mr in my_pred]
+            _r1, opp_strat, val1 = live_nash.solve_zero_sum(P1, iters=2000)
+            opp_res = live_nash.likely_lines(opp_candidates, opp_strat, -val1, top_k=top_k)
+
+            # STAGE 2 — I best-respond to the opponent's predicted MIX (hedge). Each
+            # of my candidate boards is scored by its EXPECTED margin over the
+            # opponent's predicted strategy; rank by that and pick the best. The
+            # opponent never sees my cards, so this is a pure best-response — not the
+            # over-conservative minimax-over-all-arrangements. Only the opponent's
+            # SUPPORT (boards they'd actually play, weight > 0) needs scoring.
+            support = [j for j in range(len(opp_candidates)) if opp_strat[j] > 1e-6]
+
+            def my_value(mb):
+                return sum(opp_strat[j] * evaluate(mb, opp_candidates[j]) for j in support)
+            scored = sorted(((mb, my_value(mb)) for mb in my_boards),
+                            key=lambda x: x[1], reverse=True)
         except Exception as e:
             _reset_worker()
             return {"error": f"live_best_lines failed: {e}"}
+    elapsed = _time.time() - _t0
 
-    def _lines(nash):
+    def _my_lines(scored_list):
+        out = []
+        for mb, v in scored_list[:top_k]:
+            out.append({"slots": [_slot(c) for c in mb], "board": mb,
+                        # expected 命 margin of this line vs the opponent's predicted play
+                        "guaranteed": round(v, 1), "probability": 0.0})
+        return out
+
+    def _opp_lines(nash):
         return [{"slots": [_slot(c) for c in ln.board], "board": ln.board,
-                 "probability": round(ln.probability, 4),
-                 # guaranteed value: this line's worst outcome over the opponent's
-                 # columns (命 the line is guaranteed to net, vs best opp play).
-                 "guaranteed": round(ln.worst, 1)} for ln in nash.top]
+                 "probability": round(ln.probability, 4), "guaranteed": 0.0}
+                for ln in nash.top]
 
+    pick = scored[0][0] if scored else None
     return {
-        "lines": _lines(res),
-        "pick_index": (res.pick.index if res.pick else -1),
-        "pick_board": (res.pick.board if res.pick else None),
-        "value": res.value,
-        # The opponent's predicted play — their equilibrium mix over the boards the
-        # guard surfaced (the strongest counters to my line).
-        "opp_lines": _lines(opp_res),
+        "lines": _my_lines(scored),
+        "pick_index": 0 if scored else -1,
+        "pick_board": pick,
+        "value": round(scored[0][1], 1) if scored else 0.0,
+        # The opponent's predicted play — their equilibrium vs MY history.
+        "opp_lines": _opp_lines(opp_res),
         "opp_pick_board": (opp_res.pick.board if opp_res.pick else None),
-        # the active opponent columns — fed back as opp_seed_extra to warm-start
-        # the next calc when only my cards change.
-        "opp_active_boards": cols,
+        "opp_active_boards": opp_candidates,
         "opp_pool_size": len(opp_pool),
-        "my_rows_active": len(my_rows),
         "my_cands": len(my_boards),
         "opp_cols_considered": len(opp_candidates),
-        "opp_cols_active": len(cols),
-        "iterations": iterations,        # double-oracle best-response rounds
+        "opp_cols_active": len(opp_candidates),
+        "iterations": 2,                 # 2-stage (opp predicts → I best-respond)
         "oracle_evals": len(cache),
-        # sim-input stats (for the UI's "everything working?" readout): cultivation
-        # (exp) and realm the calc actually fed the engine; opp values are PROJECTED.
+        "elapsed_s": round(elapsed, 2),
         "me_cult": int(mp.get("exp", 0) or 0),
         "me_realm": int(mp.get("level", 0) or 0),
         "opp_cult": int(op.get("exp", 0) or 0),

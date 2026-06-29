@@ -391,10 +391,10 @@ window.onBestLines = function (res) {
   function rowHtml(ln, isPick, marker, metric) {
     let badge;
     if (metric === 'g') {
-      // guaranteed 命 (worst case vs the opponent's best reply) — ranks my lines
+      // expected 命 of my line vs the opponent's PREDICTED play (from my history)
       const g = Math.round(ln.guaranteed || 0);
       const cls = g > 0 ? 'pos' : g < 0 ? 'neg' : '';
-      badge = `<span class="bl-pct ${cls}" title="保底命（对手最优应对下）">命${g >= 0 ? '+' : ''}${g}</span>`;
+      badge = `<span class="bl-pct ${cls}" title="对阵对手预测打法的命收益">命${g >= 0 ? '+' : ''}${g}</span>`;
     } else {
       badge = `<span class="bl-pct">${Math.round((ln.probability || 0) * 100)}%</span>`;
     }
@@ -402,13 +402,13 @@ window.onBestLines = function (res) {
       `<div class="bl-row${isPick ? ' pick' : ''}">` +
         badge +
         `<span class="bl-board">${boardLabel(ln.slots)}</span>` +
-        (isPick && marker ? `<span class="bl-star" title="本回合推荐（保底最高）">${marker}</span>` : '') +
+        (isPick && marker ? `<span class="bl-star" title="本回合推荐（最克制对手预测）">${marker}</span>` : '') +
       `</div>`
     );
   }
-  // Inputs readout, then my lines (ranked by guaranteed 命; ★ = strongest), then
-  // the opponent's predicted play (ranked by likelihood %).
-  let html = statsHtml + '<div class="bl-sub">我方应对（按保底命）</div>';
+  // Inputs readout, then my lines (best counter to the opponent's predicted play;
+  // ★ = strongest), then the opponent's predicted play (ranked by likelihood %).
+  let html = statsHtml + '<div class="bl-sub">我方应对（克制对手预测）</div>';
   html += lines.map((ln) => rowHtml(ln, sameBoard(ln.board, res.pick_board), '★', 'g')).join('');
   const oppLines = res.opp_lines || [];
   if (oppLines.length) {
