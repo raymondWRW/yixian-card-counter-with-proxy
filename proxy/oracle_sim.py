@@ -296,6 +296,31 @@ def _my_candidates(board, hand, slots, cap):
     return out
 
 
+def _best_ordering(board, value_fn, max_passes=4):
+    """Hill-climb the left-to-right ORDER of a card set to maximize value_fn(order).
+    Board sequencing affects combat (attack order / adjacency), so the best card SET
+    still needs its best ARRANGEMENT. Pairwise-swap, first-improvement, bounded
+    passes (full permutation search is 8! — far too many). Returns (ordered, value).
+    Tracks the count of value_fn calls is the caller's concern (value_fn caches)."""
+    cur = list(board)
+    cur_v = value_fn(cur)
+    n = len(cur)
+    for _ in range(max_passes):
+        improved = False
+        for i in range(n):
+            for j in range(i + 1, n):
+                cur[i], cur[j] = cur[j], cur[i]
+                v = value_fn(cur)
+                if v > cur_v + 1e-9:
+                    cur_v = v
+                    improved = True          # first-improvement: keep the swap
+                else:
+                    cur[i], cur[j] = cur[j], cur[i]   # revert
+        if not improved:
+            break
+    return cur, cur_v
+
+
 def _opp_candidates(history_boards, slots, cap):
     """DETERMINISTIC opponent candidate boards (no randomness). The most realistic
     predictions are the boards the opponent ACTUALLY played over the last <=3
@@ -534,11 +559,30 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
             # over-conservative minimax-over-all-arrangements. Only the opponent's
             # SUPPORT (boards they'd actually play, weight > 0) needs scoring.
             support = [j for j in range(len(opp_candidates)) if opp_strat[j] > 1e-6]
+            top_j = max(support, key=lambda j: opp_strat[j]) if support else 0
+            top_opp = opp_candidates[top_j]    # opponent's single most-likely board
 
-            def my_value(mb):
+            def my_value(mb):                  # full mix (the real objective)
                 return sum(opp_strat[j] * evaluate(mb, opp_candidates[j]) for j in support)
-            scored = sorted(((mb, my_value(mb)) for mb in my_boards),
+
+            # TIER 1 — cheaply pre-rank EVERY build against the opponent's most-likely
+            # board (1 eval each). The mix is dominated by this board, so it's a good
+            # proxy; this keeps full build coverage without scoring every set against
+            # the whole mix.
+            prelim = sorted(((mb, evaluate(mb, top_opp)) for mb in my_boards),
                             key=lambda x: x[1], reverse=True)
+            # TIER 2 — refine the top builds against the FULL predicted mix, and run
+            # the ORDERING search (sequencing matters — hill-climb left-to-right order)
+            # on the very best few. Then rank by the mix value.
+            n_refine = 12 if fast else 32
+            order_k = 1 if fast else 3
+            passes = 2 if fast else 3
+            refined = []
+            for idx, (mb, _) in enumerate(prelim[:n_refine]):
+                if idx < order_k:
+                    mb, _ = _best_ordering(mb, lambda b: evaluate(b, top_opp), max_passes=passes)
+                refined.append((mb, my_value(mb)))
+            scored = sorted(refined, key=lambda x: x[1], reverse=True)
         except Exception as e:
             _reset_worker()
             return {"error": f"live_best_lines failed: {e}"}
