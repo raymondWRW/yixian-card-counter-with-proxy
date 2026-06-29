@@ -243,63 +243,94 @@ def _candidates(board: list[int], pool: list[int], deck_slots: int, max_boards: 
 
 
 def _my_candidates(board, hand, slots, cap):
-    """Candidate MY boards from board + hand, FULL-BOARD-FIRST. Most candidates fill
-    all available slots (= min(unlocked, cards I have)); only a small minority are
-    "drop" boards (fewer cards), kept just so empty-slot-scaling cards (逍遥无影拳
-    etc.) can still be found. Leading with drops over-recommended under-full boards
-    when no empty-slot synergy was present — this fixes that bias."""
+    """DETERMINISTIC candidate MY boards from board + hand. No randomness — the
+    same situation always yields the same pool, so the calc's conclusion is
+    seed-independent (a random sample could find a great line one run and miss it
+    the next). Enumerates, in a fixed priority order until `cap`:
+      0) the board as-is,
+      1) single changes  — play a hand card into a free slot; swap one hand card
+         for one board card; drop one board card,
+      2) double changes  — two hand-for-board swaps; drop two,
+    keeping the board's card positions for kept cards (a sensible canonical order).
+    Singles are always fully covered; doubles fill whatever budget remains."""
     board = [c for c in board if c]
     hand = [c for c in hand if c and c not in board]
-    avail = board + hand
-    if not avail:
+    if not board and not hand:
         return [board] if board else []
-    full_size = min(slots, len(avail))
     seen, out = set(), []
 
     def emit(b):
         b = [c for c in b if c]
-        if not b:
-            return False
+        if not b or len(out) >= cap:
+            return
         t = tuple(b)
-        if t in seen:
-            return False
-        seen.add(t)
-        out.append(b)
-        return True
+        if t not in seen:
+            seen.add(t)
+            out.append(b)
 
-    emit(board)                              # the current board first
-    full_budget = max(2, int(cap * 0.85))    # ~85% of the budget = full-size boards
-
-    # Full-size hand swaps: replace one board card with one hand card.
-    swaps = [(i, hc) for hc in hand for i in range(len(board))]
-    random.shuffle(swaps)
-    for i, hc in swaps:
-        if len(out) >= full_budget:
-            break
-        b = board[:]
-        b[i] = hc
-        emit(b)
-    # Full-size subsets/permutations of board+hand (bounded attempts).
-    attempts = 0
-    while len(out) < full_budget and attempts < cap * 8:
-        attempts += 1
-        random.shuffle(avail)
-        emit(avail[:full_size])
-
-    # Drop boards (minority): fewer cards → more empty slots, for empty-slot cards.
-    if len(board) >= 2:
-        for drop in (1, 2):
-            if full_size - drop < 1:
-                break
-            combos = list(itertools.combinations(range(len(board)), len(board) - drop))
-            random.shuffle(combos)
-            for combo in combos:
-                if len(out) >= cap:
-                    break
-                emit([board[i] for i in combo])
+    emit(board)                              # 0) the current board
+    free = max(0, slots - len(board))
+    # 1a) play one hand card into a free slot
+    if free > 0:
+        for hc in hand:
+            emit(board + [hc])
+    # 1b) swap one board card for one hand card
+    for i in range(len(board)):
+        for hc in hand:
+            b = board[:]; b[i] = hc; emit(b)
+    # 1c) drop one board card (empty-slot lines)
+    for i in range(len(board)):
+        emit(board[:i] + board[i + 1:])
+    # 2a) two hand-for-board swaps
+    for i, j in itertools.combinations(range(len(board)), 2):
+        for h1, h2 in itertools.combinations(hand, 2):
             if len(out) >= cap:
-                break
-    return out[:cap]
+                return out
+            b = board[:]; b[i] = h1; b[j] = h2; emit(b)
+    # 2b) drop two
+    for i, j in itertools.combinations(range(len(board)), 2):
+        if len(out) >= cap:
+            return out
+        emit([board[k] for k in range(len(board)) if k not in (i, j)])
+    return out
+
+
+def _opp_candidates(history_boards, slots, cap):
+    """DETERMINISTIC opponent candidate boards (no randomness). The most realistic
+    predictions are the boards the opponent ACTUALLY played over the last <=3
+    rounds, so we use those real arrangements first, then systematic single swaps
+    among the union of cards they've shown, then single drops — fixed order."""
+    boards = [[c for c in b if c] for b in (history_boards or []) if any(b)]
+    seen, out = set(), []
+
+    def emit(b):
+        b = [c for c in b if c]
+        if not b or len(out) >= cap:
+            return
+        t = tuple(b)
+        if t not in seen:
+            seen.add(t)
+            out.append(b)
+
+    for b in reversed(boards):               # actual recent boards, newest first
+        emit(b)
+    base = boards[-1] if boards else []
+    pool = []
+    for b in boards:
+        for c in b:
+            if c not in pool:
+                pool.append(c)
+    extra = [c for c in pool if c not in base]
+    for i in range(len(base)):               # single swaps from their wider pool
+        for ec in extra:
+            if len(out) >= cap:
+                return out
+            b = base[:]; b[i] = ec; emit(b)
+    for i in range(len(base)):               # single drops
+        if len(out) >= cap:
+            return out
+        emit(base[:i] + base[i + 1:])
+    return out or ([base] if base else [])
 
 
 def _player(side: dict) -> dict:
@@ -415,8 +446,11 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
     # board-only case (where ~6 sufficed), so my rows scale up here. Opponent
     # column coverage still matters most (handled by the best-response guard).
     my_hand_ids = [int(c) for c in (my_hand or []) if c]
-    my_cap = my_max_boards if my_max_boards is not None else (12 if fast else 24)
-    opp_cap = opp_max_boards if opp_max_boards is not None else (18 if fast else 30)
+    # Caps sized so the FINAL pass covers all single-card changes (board±1) of an
+    # 8-card board with a typical hand — the deterministic enumeration is in
+    # priority order, so a higher cap just means more double-changes considered.
+    my_cap = my_max_boards if my_max_boards is not None else (16 if fast else 48)
+    opp_cap = opp_max_boards if opp_max_boards is not None else (12 if fast else 24)
 
     my_char = int(me.get("characterId", 0) or 0)
     my_career = int(me.get("career", 0) or 0) or None
@@ -433,16 +467,6 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
                 seen.add(t)
                 out.append(b)
         return out
-
-    # Deterministic candidate generation: _candidates/_my_candidates shuffle with
-    # the global `random`, so without a fixed seed the SAME situation produced
-    # different candidate sets — and thus different recommendations — on each call.
-    # Seed from the inputs so a given board+hand+opponent+round always yields the
-    # same lines (reproducible; no more "great line one moment, bad the next").
-    import hashlib
-    _sig = repr((sorted(my_board), sorted(my_hand_ids),
-                 [sorted(b) for b in (opp_boards_by_round or [])], int(rnd)))
-    random.seed(int(hashlib.md5(_sig.encode()).hexdigest()[:12], 16))
 
     # MY candidate pool: full-board-first arrangements of board + hand. My career
     # IS known (is_me), so heuristic COMMON full boards for my char/career/realm —
@@ -474,7 +498,10 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
                     + HL.common_boards(opp_char, None, opp_realm, top=6))
         heur = [b for b in raw_heur
                 if live_nash.pool_legal(b, pool_counts, _line_of, _level_of)]
-    pool_arrangements = list(_candidates(opp_last, list(opp_last) + list(opp_pool), opp_slots, opp_cap))
+    # Opponent candidates — DETERMINISTIC: their actual recent boards + systematic
+    # swaps from the cards they've shown (no random sampling → seed-independent).
+    pool_arrangements = _opp_candidates(opp_boards_by_round or [[c for c in opp_last]],
+                                        opp_slots, opp_cap)
     # opp_seed_extra = the opponent's good boards from a prior calc (warm start when
     # only MY cards changed — their playable set is unchanged within a round).
     warm = [b for b in (opp_seed_extra or []) if b]
