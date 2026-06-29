@@ -371,7 +371,7 @@ def matchup(me: dict, opp: dict, marginal: bool = False, rnd: int = 8):
 def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
                     *, my_hand=None, rnd: int = 8, fast: bool = True, top_k: int = 3,
                     my_max_boards: int = None, opp_max_boards: int = None,
-                    use_heuristics: bool = False, rng=None):
+                    use_heuristics: bool = False, opp_seed_extra=None, rng=None):
     """Live "best line" as a mixed-strategy (Nash) game — step 4 of the live calc.
 
     me                  live ME fixture (usedCards = my CURRENT board).
@@ -465,9 +465,12 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
         heur = [b for b in raw_heur
                 if live_nash.pool_legal(b, pool_counts, _line_of, _level_of)]
     pool_arrangements = list(_candidates(opp_last, list(opp_last) + list(opp_pool), opp_slots, opp_cap))
-    opp_candidates = _dedup([opp_last] + heur + pool_arrangements)
-    # Seed columns: last board + the top couple heuristic counters (warm start).
-    opp_seed = _dedup([opp_last] + heur[:3])
+    # opp_seed_extra = the opponent's good boards from a prior calc (warm start when
+    # only MY cards changed — their playable set is unchanged within a round).
+    warm = [b for b in (opp_seed_extra or []) if b]
+    opp_candidates = _dedup([opp_last] + warm + heur + pool_arrangements)
+    # Seed columns: last board + warm columns + top heuristic counters.
+    opp_seed = _dedup([opp_last] + warm + heur[:3])
 
     # The whole search must hold the worker lock — a concurrent matchup() would
     # corrupt the single stdin/stdout pipe (same constraint as whatif_from_stat).
@@ -519,6 +522,9 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
         # guard surfaced (the strongest counters to my line).
         "opp_lines": _lines(opp_res),
         "opp_pick_board": (opp_res.pick.board if opp_res.pick else None),
+        # the active opponent columns — fed back as opp_seed_extra to warm-start
+        # the next calc when only my cards change.
+        "opp_active_boards": cols,
         "opp_pool_size": len(opp_pool),
         "my_rows_active": len(my_rows),
         "my_cands": len(my_boards),
