@@ -570,8 +570,12 @@ def _subtract_multiset(pool: list, *zones) -> list:
 
 
 def reset_from_player(player, name_fn=_name_lookup_default, source: str = "?",
-                      team_container: dict | None = None):
+                      team_container: dict | None = None, round_num: int | None = None):
     """Authoritative refresh from a parsed PlayerState (game_state.PlayerState).
+
+    round_num: the round this refresh belongs to (GameStatus). None = mid-round
+    refresh (PlayerData) — stats are floored at the live-tracked values then,
+    because mid-shop server frames carry the ROUND-START stat block.
 
     Hand+board sourcing priority:
       1. PRIMARY: top-level `pb["6"]` (team_container). `.6.1` is the
@@ -646,6 +650,22 @@ def reset_from_player(player, name_fn=_name_lookup_default, source: str = "?",
             # authoritative refresh (which otherwise rebuilds an empty seasonal).
             new_state.seasonal = dict(shadow.seasonal)
             new_state.round_num = shadow.round_num   # carry; addon updates on GameStatus
+            # Mid-shop refreshes (PlayerData, and GameStatus re-pushes of the SAME
+            # round) carry the ROUND-START stat block, clobbering the live-tracked
+            # absorbs (+1 修为 each) and breakthroughs (realm) — the best-line calc
+            # then reran with LAST round's cultivation/realm (observed: xiuwei
+            # 53→45 + realm 5→4 right after a breakthrough). Within a round these
+            # only grow, so floor them at the live values. A NEW round's GameStatus
+            # (round_num advanced) is authoritative — the server may legitimately
+            # recalibrate DOWN across rounds (observed 53→51).
+            same_round = round_num is None or round_num == shadow.round_num
+            if same_round:
+                if new_state.xiuwei < shadow.xiuwei:
+                    _log_state(f"reset kept live 修为 {shadow.xiuwei} (wire={new_state.xiuwei})")
+                    new_state.xiuwei = shadow.xiuwei
+                if new_state.realm_tier < shadow.realm_tier:
+                    _log_state(f"reset kept live 境界 {shadow.realm_tier} (wire={new_state.realm_tier})")
+                    new_state.realm_tier = shadow.realm_tier
         shadow = new_state
     shadow_dirty_event.set()
     _log_state(f"RESET from {source}")

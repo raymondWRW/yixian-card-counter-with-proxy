@@ -318,17 +318,22 @@ function renderOppFates(el, names, talents) {
 
 // ── Best-line panel (live mixed-strategy calc) ───────────────────────────────
 // Python (BestLineEngine) pushes {lines:[{slots,probability}], pick_board, value,
-// stage:'fast'|'final', gen, ...} — a fast coarse pass then a deeper refine. We
-// render the top lines with their equilibrium %, highlight the weighted pick, and
-// show a "computing" hint until the final pass lands. `gen` is monotonic; ignore
+// stage:'computing'|'final', gen, ...} — a placeholder while the deep search runs,
+// then the single deep result (the old fast pass was removed: its line differed
+// from the final one 59% of the time — misleading). `gen` is monotonic; ignore
 // a late push from a superseded board.
 let bestLineGen = -1;
 
 function boardLabel(slots) {
-  const names = (slots || [])
-    .filter((s) => s && s.name)
-    .map((s) => (s.level > 1 ? `${s.name}·${s.level}` : s.name));
-  return names.length ? names.join(' ') : '(空)';
+  // Render each slot in ORDER; an empty unlocked slot shows as 普攻 (Normal Attack) so
+  // it's clear which position(s) the calc leaves to a normal attack.
+  const parts = (slots || []).map((s) => {
+    if (!s) return '';
+    if (s.normalAttack) return '<span class="bl-na">普攻</span>';
+    if (s.name) return (s.level > 1 ? `${s.name}·${s.level}` : s.name);
+    return '';
+  }).filter((x) => x);
+  return parts.length ? parts.join(' ') : '(空)';
 }
 
 function sameBoard(a, b) {
@@ -354,12 +359,13 @@ window.onBestLines = function (res) {
   // iteration count once final). Shown even on error/empty so you can always see
   // the calc is alive and which round it's on.
   const done = res.stage === 'final';
+  const computing = res.stage === 'computing';
   if (note) {
     const status = done
       ? `<span class="bl-done" title="计算完成 · ${res.iterations || 0} 轮博弈">✓ ${res.iterations || 0}轮</span>`
       : `<span class="bl-spin">计算中…</span>`;
     let h = (res.round != null ? `<span class="bl-round">R${res.round}</span> ` : '');
-    if (!res.error) {
+    if (!res.error && !computing) {
       const v = Math.round(res.value || 0);
       const vCls = v > 0 ? 'pos' : v < 0 ? 'neg' : '';
       h += `<span class="bl-val ${vCls}">命 ${v >= 0 ? '+' : ''}${v}</span> `;
@@ -379,6 +385,13 @@ window.onBestLines = function (res) {
 
   if (res.error) {
     list.innerHTML = statsHtml + `<div class="bl-empty">计算失败：${res.error}</div>`;
+    fitWindowToContent();
+    return;
+  }
+  if (computing) {
+    // No line is shown until the deep search finishes — a preliminary line
+    // differed from the final one 59% of the time (misleading to act on).
+    list.innerHTML = `<div class="bl-empty">正在深度计算最优应对…</div>`;
     fitWindowToContent();
     return;
   }
@@ -412,7 +425,12 @@ window.onBestLines = function (res) {
   html += lines.map((ln) => rowHtml(ln, sameBoard(ln.board, res.pick_board), '★', 'g')).join('');
   const oppLines = res.opp_lines || [];
   if (oppLines.length) {
-    html += '<div class="bl-sub opp">对手预测</div>';
+    // source tag: 模型 = learned next-board predictor; 推演 = Oracle game-solve fallback
+    const src = res.opp_source === 'model'
+      ? '<span class="bl-src model" title="AI模型预测对手打法（赛季对局训练）">模型</span>'
+      : (res.opp_source === 'oracle'
+        ? '<span class="bl-src oracle" title="演算对手最优应对（无模型时回退）">推演</span>' : '');
+    html += '<div class="bl-sub opp">对手预测 ' + src + '</div>';
     html += oppLines.map((ln) => rowHtml(ln, sameBoard(ln.board, res.opp_pick_board), '', 'p')).join('');
   }
   list.innerHTML = html;

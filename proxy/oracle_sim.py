@@ -21,6 +21,7 @@ import sys
 import base64
 import itertools
 import random
+import time
 from pathlib import Path
 
 _BASE = Path(__file__).resolve().parent           # proxy/
@@ -84,6 +85,63 @@ def _slot(cid):
     return {"name": nm, "level": _card_level(cid)} if nm else None
 
 
+# ── board-type legality: ≤2 [消耗] and ≤2 [持续] cards per board ─────────────────────────────
+# Separate per-type caps, verified on 463k replay boards (99.7% comply; the rare
+# exceptions correlate with career perks — >2 消耗 only 炼丹师/符箓师, >2 持续 mostly
+# 阵法师/琴师). Without this filter the candidate generator happily builds 3-pill
+# boards the game won't allow — and the engine scores them optimistically, so they
+# WIN the ranking and surface as illegal suggestions.
+_card_types_cache = None
+
+
+def _card_types():
+    """(consumption_lines, continuous_lines) from proxy/card_types.json (generated
+    by tools/gen_card_types.py from the game db's [消耗]/[持续] desc markers).
+    Missing/broken file -> empty sets = filtering disabled, prior behavior."""
+    global _card_types_cache
+    if _card_types_cache is None:
+        try:
+            import json
+            d = json.loads((_BASE / "card_types.json").read_text(encoding="utf-8"))
+            _card_types_cache = (frozenset(d.get("consumption") or []),
+                                 frozenset(d.get("continuous") or []))
+        except Exception:
+            _card_types_cache = (frozenset(), frozenset())
+    return _card_types_cache
+
+
+def _concon(board):
+    """(#消耗, #持续) copies on a board — per COPY, line-level flags."""
+    cons, cont = _card_types()
+    nc = nt = 0
+    for c in board or []:
+        if not c:
+            continue
+        ln = _line_of(c)
+        nc += ln in cons
+        nt += ln in cont
+    return nc, nt
+
+
+def _concon_caps(*observed_boards):
+    """Legal (消耗_cap, 持续_cap), self-calibrating: strict 2/2 unless one of the
+    OBSERVED live boards already legally exceeds a cap (career perks can raise it;
+    we trust what the game itself allowed rather than modeling each perk)."""
+    cons_cap = cont_cap = 2
+    for b in observed_boards:
+        if not b:
+            continue
+        nc, nt = _concon(b)
+        cons_cap = max(cons_cap, nc)
+        cont_cap = max(cont_cap, nt)
+    return cons_cap, cont_cap
+
+
+def _concon_ok(board, caps):
+    nc, nt = _concon(board)
+    return nc <= caps[0] and nt <= caps[1]
+
+
 # ── warm worker (lazy singleton) ──────────────────────────────────────────────────────────────
 # The worker is ONE subprocess with a single stdin/stdout pipe — NOT thread-safe. The live UI fires
 # matchups on every board change, and pywebview dispatches those api calls on multiple threads, so
@@ -132,6 +190,7 @@ def warmup():
             t0 = __import__("time").time()
             if _get_worker() is not None:
                 print(f"[oracle] worker warmed in {__import__('time').time()-t0:.1f}s", flush=True)
+            _get_pool()                     # pre-spawn the parallel eval pool too
         except Exception:
             pass
     threading.Thread(target=_go, daemon=True, name="oracle-warmup").start()
@@ -148,19 +207,151 @@ def _reset_worker():
             pass
 
 
+# ── parallel evaluation pool ──────────────────────────────────────────────────
+# Extra Oracle workers for BATCH matchup evaluation. The live search fires
+# ~1.6-2K combats per pass; through the single main pipe that's the whole
+# latency. Tier-1 pruning and mix-ranking know all their (my_board, opp_board)
+# pairs upfront — embarrassingly parallel. Each worker is its own process +
+# pipe (below-normal priority, ~130MB); size via ORACLE_POOL env, default
+# min(6, cpu//3). Workers are spawned in parallel and pre-warmed at app start.
+_pool: list = []
+_pool_failed = False
+
+
+def _get_pool():
+    global _pool, _pool_failed
+    if _pool or _pool_failed:
+        return _pool
+    with _lock:
+        if _pool or _pool_failed:
+            return _pool
+        if not _oracle_exe().exists():
+            _pool_failed = True
+            return _pool
+        try:
+            if str(_ORACLE_SCRIPTS) not in sys.path:
+                sys.path.insert(0, str(_ORACLE_SCRIPTS))
+            from oracle_pool import OracleWorker
+            n = int(os.environ.get("ORACLE_POOL", 0) or 0)
+            if n <= 0:
+                n = min(6, max(2, (os.cpu_count() or 8) // 3))
+            slots = [None] * n
+            _warm_fx = {"p1": {"characterId": 2000001, "level": 1, "exp": 0,
+                               "usedCards": [4000003], "talents": [],
+                               "fateStrategies": [], "career": 0,
+                               "extraMaxHp": 0, "unlockGrids": 3},
+                        "battleParams": [], "mainViewId": "", "round": 1,
+                        "expected": {}, "wantLog": False}
+            _warm_fx["p2"] = dict(_warm_fx["p1"])
+
+            def mk(i):
+                try:
+                    wk = OracleWorker()
+                    wk.run(dict(_warm_fx))   # pre-JIT: first combat is ~10x slower
+                    slots[i] = wk
+                except Exception:
+                    slots[i] = None
+            ts = [threading.Thread(target=mk, args=(i,), daemon=True)
+                  for i in range(n)]
+            for t in ts:
+                t.start()
+            for t in ts:
+                t.join()
+            _pool = [w for w in slots if w is not None]
+            if _pool:
+                print(f"[oracle] eval pool ready: {len(_pool)} workers", flush=True)
+            else:
+                _pool_failed = True
+        except Exception as e:
+            print(f"[oracle] eval pool unavailable ({e}); sequential evals", flush=True)
+            _pool_failed = True
+        return _pool
+
+
+def _eval_batch(pairs, mp, op, rnd, cache):
+    """Evaluate (my_board, opp_board) fixtures in PARALLEL across the pool,
+    filling `cache` with (life, score) — the same values _eval computes. Cached
+    pairs are skipped; with no pool it quietly falls back to the main worker
+    (caller must hold _lock, which it always does inside live_best_lines)."""
+    def key(mb, ob):
+        return (tuple(mb), tuple(ob))
+
+    def fixture(mb, ob):
+        return {"p1": {**mp, "usedCards": list(mb)},
+                "p2": {**op, "usedCards": list(ob)},
+                "battleParams": [], "mainViewId": "", "round": rnd,
+                "expected": {}, "wantLog": False}
+
+    def value(mb, r):
+        life = float(r.get("lifeDamage", 0) or 0)
+        return (life, life + float(r.get("hpDelta", 0) or 0) / 1000.0
+                + len([c for c in mb if c]) * 1e-4,
+                float(r.get("turns", 64) or 64))
+
+    todo, seen = [], set()
+    for mb, ob in pairs:
+        k = key(mb, ob)
+        if k in cache or k in seen:
+            continue
+        seen.add(k)
+        todo.append((k, mb, ob))
+    if not todo:
+        return
+    pool = _get_pool()
+    if pool and len(todo) > 1:
+        import queue
+        q = queue.Queue()
+        for item in todo:
+            q.put(item)
+        results = {}
+
+        def loop(wk):
+            while True:
+                try:
+                    k, mb, ob = q.get_nowait()
+                except queue.Empty:
+                    return
+                try:
+                    results[k] = value(mb, wk.run(fixture(mb, ob)))
+                except Exception:
+                    q.put((k, mb, ob))   # dead worker: hand back, let others drain
+                    return
+        ts = [threading.Thread(target=loop, args=(wk,), daemon=True)
+              for wk in pool[:len(todo)]]      # no idle threads on tiny batches
+        for t in ts:
+            t.start()
+        for t in ts:
+            t.join()
+        cache.update(results)
+    # anything uncovered (no pool / dead workers) → main worker, sequential
+    w = _get_worker()
+    for k, mb, ob in todo:
+        if k not in cache and w is not None:
+            try:
+                cache[k] = value(mb, w.run(fixture(mb, ob)))
+            except Exception:
+                pass
+
+
 def available() -> bool:
     """True if the Oracle engine is built and a worker can be reached."""
     return _get_worker() is not None
 
 
 def shutdown():
-    global _worker
+    global _worker, _pool
     if _worker is not None:
         try:
             _worker.close()
         except Exception:
             pass
         _worker = None
+    for wk in _pool:
+        try:
+            wk.close()
+        except Exception:
+            pass
+    _pool = []
 
 
 # ── candidate board generation (mirrors tools/yisim_review.js search) ──────────────────────────
@@ -176,12 +367,17 @@ def _candidates(board: list[int], pool: list[int], deck_slots: int, max_boards: 
     seen = set()
     base = [c for c in board if c]
     extra = [c for c in pool if c and c not in base]
+    # Board-type legality (≤2 消耗 / ≤2 持续; cap raised to what the played board
+    # already legally showed) — swap/subset phases can otherwise assemble illegal builds.
+    caps = _concon_caps(base)
 
     def emit(b):
         key = tuple(b)
         if key in seen or not b:
             return None
         seen.add(key)
+        if not _concon_ok(b, caps):
+            return None
         return list(b)
 
     def run(gen, cap):
@@ -242,7 +438,7 @@ def _candidates(board: list[int], pool: list[int], deck_slots: int, max_boards: 
     yield from run(_subsets(), max_boards)
 
 
-def _my_candidates(board, hand, slots, cap):
+def _my_candidates(board, hand, slots, cap, caps=None):
     """Candidate MY boards = card SETS chosen from board + hand — the FULL build
     space, not just changes from the current/last board. Enumerating sets makes the
     search independent of how my cards are currently arranged and UNBIASED toward my
@@ -254,9 +450,17 @@ def _my_candidates(board, hand, slots, cap):
     Enumerates every full-size build (board+hand choose min(slots, n)); if that
     exceeds `cap`, takes a deterministic STRIDE across the whole combination space
     (not the first `cap`, which would bias toward early cards). A few drop builds
-    (one fewer card) are appended for empty-slot lines."""
+    (one fewer card) are appended for empty-slot lines.
+
+    caps = (消耗_cap, 持续_cap) board-type legality (see _concon_caps); builds over
+    a cap are skipped. If the filter would leave NOTHING (pathological pill-heavy
+    pool), falls back to unfiltered so the calc never goes dark."""
     from math import comb
-    avail = [c for c in board if c] + [c for c in hand if c and c not in board]
+    # Available pool = board cards + ALL hand cards. A hand card is a SEPARATE physical
+    # card from one on the board, so DUPLICATES must be kept (id already on board is not a
+    # reason to drop the hand copy) — else a held duplicate (very common early, drafting
+    # pairs to merge) is invisible and the board can't be filled (recommends N-1 cards).
+    avail = [c for c in board if c] + [c for c in hand if c]
     if not avail:
         return []
     n = len(avail)
@@ -267,6 +471,8 @@ def _my_candidates(board, hand, slots, cap):
         b = [avail[i] for i in idxs]
         t = tuple(b)
         if b and t not in seen and len(out) < cap:
+            if caps is not None and not _concon_ok(b, caps):
+                return
             seen.add(t)
             out.append(b)
 
@@ -293,21 +499,61 @@ def _my_candidates(board, hand, slots, cap):
                 dn -= 1
             if dn <= 0 or len(out) >= cap:
                 break
+    if not out and caps is not None:      # pathological pool (e.g. all pills): keep working
+        return _my_candidates(board, hand, slots, cap, caps=None)
     return out
 
 
-def _best_ordering(board, value_fn, max_passes=4):
-    """Hill-climb the left-to-right ORDER of a card set to maximize value_fn(order).
-    Board sequencing affects combat (attack order / adjacency), so the best card SET
-    still needs its best ARRANGEMENT. Pairwise-swap, first-improvement, bounded
-    passes (full permutation search is 8! — far too many). Returns (ordered, value).
-    Tracks the count of value_fn calls is the caller's concern (value_fn caches)."""
+def _best_ordering(board, value_fn, max_passes=4, deep=False, deadline=None,
+                   prefetch=None):
+    """Hill-climb the cyclic ORDER of a card set to maximize value_fn(order).
+    The board LOOPS (slot 8 -> slot 1), so sequencing = a cycle + a starting slot.
+    Moves: ROTATION scan (same cycle, different opening), pairwise SWAPs
+    (first-improvement), and with deep=True single-card INSERTIONs — the move class
+    that recovers combo lines. Swap+insertion run to convergence reached the true
+    8!-enumerated optimum on the exact-checked validation boards (test_hk_order.py);
+    here passes are bounded for latency. `deadline` (time.monotonic) hard-bounds the
+    search — per-battle sim cost varies ~2-30ms with comp weight, so an un-budgeted
+    deep search can pin a core for 30s+ on stack-heavy matchups and lag the game.
+    `prefetch(orders)`: optional hook that bulk-evaluates candidate orders across
+    the worker pool BEFORE the sequential walk — the whole neighborhood is known
+    upfront, so value_fn then hits cache instead of paying one round-trip per move
+    (accepted moves invalidate later prefetches; those fall back to per-call).
+    Returns (ordered, value); value_fn caches."""
     cur = list(board)
     cur_v = value_fn(cur)
     n = len(cur)
+
+    def timeup():
+        return deadline is not None and time.monotonic() > deadline
+
+    def pf(orders):
+        if prefetch is not None and orders:
+            try:
+                prefetch(orders)
+            except Exception:
+                pass
+
+    pf([cur[k:] + cur[:k] for k in range(1, n)])
+    for k in range(1, n):                    # rotation scan: pick the opening
+        if timeup():
+            return cur, cur_v
+        rot = cur[k:] + cur[:k]
+        v = value_fn(rot)
+        if v > cur_v + 1e-9:
+            cur, cur_v = rot, v
     for _ in range(max_passes):
         improved = False
+        swaps = []
         for i in range(n):
+            for j in range(i + 1, n):
+                cand = cur[:]
+                cand[i], cand[j] = cand[j], cand[i]
+                swaps.append(cand)
+        pf(swaps)                            # whole swap neighborhood in parallel
+        for i in range(n):
+            if timeup():
+                return cur, cur_v
             for j in range(i + 1, n):
                 cur[i], cur[j] = cur[j], cur[i]
                 v = value_fn(cur)
@@ -316,6 +562,27 @@ def _best_ordering(board, value_fn, max_passes=4):
                     improved = True          # first-improvement: keep the swap
                 else:
                     cur[i], cur[j] = cur[j], cur[i]   # revert
+        if deep:
+            inss = []
+            for i in range(n):
+                for j in range(n):
+                    if i == j:
+                        continue
+                    cand = cur[:]
+                    cand.insert(j, cand.pop(i))
+                    inss.append(cand)
+            pf(inss)                         # insertion neighborhood in parallel
+            for i in range(n):               # insertions: shift one card elsewhere
+                if timeup():
+                    return cur, cur_v
+                for j in range(n):
+                    if i == j:
+                        continue
+                    cand = cur[:]
+                    cand.insert(j, cand.pop(i))
+                    v = value_fn(cand)
+                    if v > cur_v + 1e-9:
+                        cur, cur_v, improved = cand, v, True
         if not improved:
             break
     return cur, cur_v
@@ -325,13 +592,18 @@ def _opp_candidates(history_boards, slots, cap):
     """DETERMINISTIC opponent candidate boards (no randomness). The most realistic
     predictions are the boards the opponent ACTUALLY played over the last <=3
     rounds, so we use those real arrangements first, then systematic single swaps
-    among the union of cards they've shown, then single drops — fixed order."""
+    among the union of cards they've shown, then single drops — fixed order.
+    Generated variants respect board-type legality (≤2 消耗 / ≤2 持续, cap raised
+    to whatever their REAL boards already showed — those are ground truth)."""
     boards = [[c for c in b if c] for b in (history_boards or []) if any(b)]
+    caps = _concon_caps(*boards)
     seen, out = set(), []
 
     def emit(b):
         b = [c for c in b if c]
         if not b or len(out) >= cap:
+            return
+        if not _concon_ok(b, caps):
             return
         t = tuple(b)
         if t not in seen:
@@ -425,11 +697,58 @@ def matchup(me: dict, opp: dict, marginal: bool = False, rnd: int = 8):
             return {"error": f"matchup failed: {e}"}
 
 
+def _model_opp_prediction(opp, opp_char, opp_realm, opp_last,
+                          my_boards_by_round, opp_boards_by_round, rnd, top_k, me=None):
+    """Stage-1 via the trained board-decoder: the opponent's most LIKELY next boards
+    (behavioral prediction from season-9 replays), as (candidates, probabilities).
+
+    The model predicts a self-record SUBJECT — here that subject is the LIVE OPPONENT.
+    Their own board history = the opponent's boards; the boards they 'faced' = MY boards
+    (people position cards in response to what the opponent — me — last played). Returns
+    None on any gap (no model, torch missing, empty history) so the caller falls back to
+    the Oracle game-theoretic stage 1.
+
+    Opponent 天命 (fates) and 天衍 (derivations) ARE on the wire — the opp fixture's
+    `talents`/`fateStrategies` (GameStatus f200[5]/[16]) — so we feed them (same id space
+    as the model's replay-trained vocab). Only 副职 (career) isn't broadcast for the
+    opponent, so it stays 0 (the model was trained with a real career; 0 = unknown)."""
+    try:
+        import board_model
+    except Exception:
+        return None
+    if not board_model.available():
+        return None
+    obr = [[int(c) for c in b if c] for b in (opp_boards_by_round or []) if b]
+    mbr = [[int(c) for c in b if c] for b in (my_boards_by_round or []) if b]
+    try:
+        preds = board_model.get_predictor().predict(
+            char=int(opp_char or 0), career=int(opp.get("career", 0) or 0),
+            realm=int(opp_realm or 0), rnd=int(rnd),
+            cur_board=opp_last,                       # opponent's CURRENT board
+            opp_board=(mbr[-1] if mbr else []),       # MY last board (they react to me)
+            fates=[int(t) for t in (opp.get("talents") or [])],          # 天命 (on wire)
+            derivs=[int(d) for d in (opp.get("fateStrategies") or [])],  # 天衍 (on wire)
+            # v3: MY plan — the opponent reacts to the player they face (us).
+            faced_fates=[int(t) for t in ((me or {}).get("talents") or [])],
+            faced_derivs=[int(d) for d in ((me or {}).get("fateStrategies") or [])],
+            own_hist=(obr[-2] if len(obr) >= 2 else [], obr[-3] if len(obr) >= 3 else []),
+            opp_hist=(mbr[-2] if len(mbr) >= 2 else [], mbr[-3] if len(mbr) >= 3 else []),
+            top_k=20)      # many lines, weighted by model confidence (nucleus-adaptive)
+    except Exception:
+        return None
+    if not preds:
+        return None
+    cands = [b for b, _ in preds if b]
+    strat = [p for b, p in preds if b]
+    return (cands, strat) if cands else None
+
+
 def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
                     *, my_boards_by_round=None, my_hand=None, rnd: int = 8,
                     fast: bool = True, top_k: int = 3,
                     my_max_boards: int = None, opp_max_boards: int = None,
-                    use_heuristics: bool = False, opp_seed_extra=None, rng=None):
+                    use_heuristics: bool = False, opp_seed_extra=None, rng=None,
+                    use_board_model=None):
     """Live "best line" as a mixed-strategy (Nash) game — step 4 of the live calc.
 
     me                  live ME fixture (usedCards = my CURRENT board).
@@ -454,7 +773,9 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
         HL = None
 
     mp = _player(me)
-    op = live_nash.project_opponent(_player(opp))   # +5 exp / +2 hp (opponent only)
+    # Round-aware growth: +4 exp rounds 1-6 (one draw fills the new board slot),
+    # +5 rounds 7-11, +6 rounds 12+ (extra draw); +2 hp/round. Opponent only.
+    op = live_nash.project_opponent(_player(opp), rnd=rnd)
 
     my_board = [c for c in mp["usedCards"] if c]
     if not my_board:
@@ -501,7 +822,25 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
     # enumeration is inherently base-independent, so the result no longer depends on
     # my last board or my current arrangement (#3), and it covers builds very
     # different from what I last played (#2 — the old ±-from-base search missed them).
-    my_boards = _my_candidates(my_board, my_hand_ids, my_slots, my_build_cap)
+    # Board-type legality caps for MY builds: strict ≤2 消耗 / ≤2 持续 unless my own
+    # live boards this game already legally exceed a cap (career perk — trust the game).
+    my_caps = _concon_caps(my_board, *(my_boards_by_round or []))
+    my_boards = _my_candidates(my_board, my_hand_ids, my_slots, my_build_cap,
+                               caps=my_caps)
+
+    # Put every candidate SET into its HELD-KARP cycle order (exact max-weight
+    # Hamiltonian cycle under adjacency weights learned from winning replay boards;
+    # the board loops 8->1, so ordering IS a cycle). Microseconds per set, no combat.
+    # Two effects (validated in test_hk_order.py — HK order beats the strong player's
+    # own order on 80% of held-out rounds): (a) Tier-1 ranks each set near its best
+    # order instead of pool order, so a strong build no longer loses its slot to a
+    # lucky-ordered weak one; (b) the Tier-2 ordering search starts from a good seed.
+    try:
+        import hk_order
+        if my_boards and hk_order.available():
+            my_boards = [b for b, _v in hk_order.best_cycles(my_boards)]
+    except Exception:
+        pass
 
     # OPPONENT candidates — DETERMINISTIC: their actual recent boards + systematic
     # swaps from the cards they've shown (no random sampling → seed-independent).
@@ -516,6 +855,17 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
     # of my plausible plays and the opponent mispredicts (drops round-9 quality).
     my_pred = _opp_candidates(my_boards_by_round or [my_board], my_slots, my_pred_cap)
 
+    # ── STAGE 1 SOURCE — prefer the trained board-decoder (behavioral prediction of
+    # what the opponent actually plays) over the Oracle game-solve. Computed outside the
+    # worker lock (independent of the Oracle pipe). Falls back to the game-solve on any
+    # gap. `use_board_model`: None=auto (use if the model is loadable), True/False=force.
+    model_pred = None
+    if use_board_model is not False:
+        model_pred = _model_opp_prediction(opp, opp_char, opp_realm, opp_last,
+                                           my_boards_by_round, opp_boards_by_round,
+                                           rnd, top_k, me=me)
+    opp_source = "model" if model_pred else "oracle"
+
     import time as _time
     _t0 = _time.time()
     # The whole search must hold the worker lock — a concurrent matchup() would
@@ -526,9 +876,11 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
             return None
         cache = {}
 
-        # payoff = MY margin (p1) vs an opponent board (p2): 命 damage dominates,
-        # board hp breaks ties, +cards breaks a true tie (fill the board).
-        def evaluate(mb, ob):
+        # One Oracle matchup -> (life, score, turns). `life` = MY 命 (destiny)
+        # margin: >0 means I win the combat. `score` = 命 margin + board-hp
+        # tiebreak + a tiny fill bonus. `turns` = combat length — used as the
+        # tie-break among GUARANTEED-win candidates (kill faster > squeeze 命).
+        def _eval(mb, ob):
             k = (tuple(mb), tuple(ob))
             v = cache.get(k)
             if v is None:
@@ -537,20 +889,54 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
                       "battleParams": [], "mainViewId": "", "round": rnd,
                       "expected": {}, "wantLog": False}
                 r = w.run(fx)
-                v = (float(r.get("lifeDamage", 0) or 0)
-                     + float(r.get("hpDelta", 0) or 0) / 1000.0
-                     + len([c for c in mb if c]) * 1e-4)
+                life = float(r.get("lifeDamage", 0) or 0)
+                score = life + float(r.get("hpDelta", 0) or 0) / 1000.0 \
+                    + len([c for c in mb if c]) * 1e-4
+                v = (life, score, float(r.get("turns", 64) or 64))
                 cache[k] = v
             return v
 
+        def evaluate(mb, ob):        # scalar 命 margin (used by the Oracle stage-1 solve)
+            return _eval(mb, ob)[1]
+
         try:
-            # STAGE 1 — the opponent solves MY history. Zero-sum game: my predicted
-            # boards (rows) vs the opponent's candidate boards (cols); the opponent
-            # minimizes my margin. Their equilibrium strategy = how they'll likely
-            # play vs someone who plays like my last rounds.
-            P1 = [[evaluate(mr, oc) for oc in opp_candidates] for mr in my_pred]
-            _r1, opp_strat, val1 = live_nash.solve_zero_sum(P1, iters=2000)
-            opp_res = live_nash.likely_lines(opp_candidates, opp_strat, -val1, top_k=top_k)
+            # STAGE 1 — predict how the opponent will play.
+            if model_pred is not None:
+                # Behavioral prediction from the trained decoder: MANY boards weighted by
+                # the model's own confidence (adaptive count — few when it's sure, many
+                # when it's open). I best-respond to the whole weighted set, so the pick
+                # isn't hyper-focused on one guess. Cap the SUPPORT actually scored to the
+                # top boards by weight (the low-probability tail barely moves the expected
+                # value) to keep it fast; the display can still list more.
+                opp_candidates, opp_strat = model_pred
+                # Drop predicted boards that break board-type legality (≤2 消耗 /
+                # ≤2 持续; cap raised to what their REAL boards showed). The decoder
+                # occasionally assembles one — it can't be played, so hedging
+                # against it wastes weight. Carry board is always legal → never empty.
+                ocaps = _concon_caps(*[b for b in (opp_boards_by_round or []) if b])
+                keep = [j for j in range(len(opp_candidates))
+                        if _concon_ok(opp_candidates[j], ocaps)]
+                if keep and len(keep) < len(opp_candidates):
+                    opp_candidates = [opp_candidates[j] for j in keep]
+                    opp_strat = [opp_strat[j] for j in keep]
+                cap = 12 if fast else 20
+                if len(opp_candidates) > cap:
+                    keep = sorted(range(len(opp_candidates)),
+                                  key=lambda j: -opp_strat[j])[:cap]
+                    opp_candidates = [opp_candidates[j] for j in keep]
+                    opp_strat = [opp_strat[j] for j in keep]
+                z = sum(opp_strat) or 1.0
+                opp_strat = [w / z for w in opp_strat]
+                val1 = 0.0
+            else:
+                # Fallback: the opponent solves MY history. Zero-sum game: my predicted
+                # boards (rows) vs the opponent's candidate boards (cols); they minimize
+                # my margin. Their equilibrium = how they'd play vs my last rounds.
+                _eval_batch([(mr, oc) for mr in my_pred for oc in opp_candidates],
+                            mp, op, rnd, cache)
+                P1 = [[evaluate(mr, oc) for oc in opp_candidates] for mr in my_pred]
+                _r1, opp_strat, val1 = live_nash.solve_zero_sum(P1, iters=2000)
+            opp_res = live_nash.likely_lines(opp_candidates, opp_strat, -val1, top_k=max(top_k, 8))
 
             # STAGE 2 — I best-respond to the opponent's predicted MIX (hedge). Each
             # of my candidate boards is scored by its EXPECTED margin over the
@@ -562,38 +948,153 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
             top_j = max(support, key=lambda j: opp_strat[j]) if support else 0
             top_opp = opp_candidates[top_j]    # opponent's single most-likely board
 
-            def my_value(mb):                  # full mix (the real objective)
-                return sum(opp_strat[j] * evaluate(mb, opp_candidates[j]) for j in support)
+            # Objective = WIN RATE first; among GUARANTEED wins (beats every predicted
+            # board) the tie-break is SPEED — fewer combat turns. A fast, clean kill is
+            # robust; squeezing extra 命 out of an already-won matchup tends to pick
+            # fragile greed-lines that lose when the prediction is off (user-observed).
+            # Below guaranteed, 命 margin stays the tie-break. Scalar layering:
+            # WIN (1e6) ≫ turn bonus (≤ ~3200) ≫ 命 margin (±60).
+            WIN = 1e6
+            TURN_W = 50.0
+            MAX_TURNS = 64.0
 
-            # TIER 1 — cheaply pre-rank EVERY build against the opponent's most-likely
-            # board (1 eval each). The mix is dominated by this board, so it's a good
-            # proxy; this keeps full build coverage without scoring every set against
-            # the whole mix.
-            prelim = sorted(((mb, evaluate(mb, top_opp)) for mb in my_boards),
+            def _speed_bonus(full_win, avg_turns):
+                return (MAX_TURNS - avg_turns) * TURN_W if full_win else 0.0
+
+            # ROBUST prune proxy: blend the model's most-likely board with the opponent's
+            # ACTUAL last board (~76% of a board persists round-to-round — a safe prior).
+            def robust_score(mb):
+                l1, c1, t1 = _eval(mb, top_opp)
+                l2, c2, t2 = _eval(mb, opp_last)
+                wins = (1.0 if l1 > 0 else 0.0) + (1.0 if l2 > 0 else 0.0)
+                return (wins * WIN
+                        + _speed_bonus(wins >= 2.0, (t1 + t2) / 2.0)
+                        + 0.5 * c1 + 0.5 * c2)
+
+            # TIER 1 — pre-rank EVERY build against the robust blend. All pairs are
+            # known upfront → evaluate them in parallel across the worker pool
+            # (this phase is the bulk of the search's combats).
+            _eval_batch([(mb, top_opp) for mb in my_boards]
+                        + [(mb, opp_last) for mb in my_boards],
+                        mp, op, rnd, cache)
+            prelim = sorted(((mb, robust_score(mb)) for mb in my_boards),
                             key=lambda x: x[1], reverse=True)
-            # TIER 2 — refine the top builds against the FULL predicted mix, and run
-            # the ORDERING search (sequencing matters — hill-climb left-to-right order)
-            # on the very best few. Then rank by the mix value.
-            n_refine = 12 if fast else 32
-            order_k = 1 if fast else 3
+            n_refine = 16 if fast else 32
+            order_k = 2 if fast else 3
             passes = 2 if fast else 3
+            refine = [mb for mb, _ in prelim[:n_refine]]
+
+            # Which predicted boards can ANY of my top builds actually beat? A board no
+            # build can win is treated as "the opponent probably doesn't have it / won't
+            # play it" — dropped from the WIN objective so we maximize wins over the boards
+            # we CAN beat instead of chasing a lost cause. (命 margin still counts it as a
+            # tie-break, so among equal win-rates we still prefer losing to it by less.)
+            _eval_batch([(mb, opp_candidates[j]) for mb in refine for j in support],
+                        mp, op, rnd, cache)      # refine × support, in parallel
+            winnable = {j for j in support
+                        if any(_eval(mb, opp_candidates[j])[0] > 0 for mb in refine)}
+            wsum = sum(opp_strat[j] for j in winnable) or 1.0
+
+            def my_value(mb):
+                # win-rate over ALL winnable boards; GUARANTEED win → kill-speed
+                # tie-break (expected turns over the mix); 命 margin last
+                wins = marg = tsum = 0.0
+                for j in support:
+                    lf, cb, tn = _eval(mb, opp_candidates[j])
+                    marg += opp_strat[j] * cb
+                    tsum += opp_strat[j] * tn
+                    if j in winnable and lf > 0:
+                        wins += opp_strat[j]
+                full = wins >= wsum - 1e-9
+                return (wins / wsum) * WIN + _speed_bonus(full, tsum) + marg
+
+            # ORDERING proxy: hill-climb the arrangement against only the top few likely
+            # boards (each ordering step costs |set| Oracle calls; the full 12-20-board mix
+            # is far too expensive to reorder against). Final RANKING still uses the full
+            # mix (my_value); this just guides the cheap inner search.
+            osupp = sorted(support, key=lambda j: -opp_strat[j])[:3]
+            osz = sum(opp_strat[j] for j in osupp) or 1.0
+
+            def order_value(mb):
+                # prefetch this order's ≤3 combats across the pool (fallback path;
+                # the bulk comes prefetched per-neighborhood via order_prefetch)
+                _eval_batch([(mb, opp_candidates[j]) for j in osupp],
+                            mp, op, rnd, cache)
+                wins = marg = tsum = 0.0
+                for j in osupp:
+                    lf, cb, tn = _eval(mb, opp_candidates[j])
+                    marg += opp_strat[j] * cb
+                    tsum += opp_strat[j] * tn
+                    if j in winnable and lf > 0:
+                        wins += opp_strat[j]
+                full = wins >= osz - 1e-9
+                return (wins / osz) * WIN + _speed_bonus(full, tsum / osz) + marg
+
+            def order_prefetch(orders):
+                # bulk-load a whole move neighborhood (dozens of orders × top-3
+                # opponents) across the pool in one go — the ordering phase's
+                # sequential round-trips were the last big latency chunk
+                _eval_batch([(o, opp_candidates[j]) for o in orders for j in osupp],
+                            mp, op, rnd, cache)
+
+            # TIER 2 — order the top builds (cheap proxy), then rank all by the FULL mix.
+            # Candidates arrive in HK-cycle order (near-good seed); the search adds
+            # rotations always, and INSERTION moves on the final pass — the move class
+            # that recovers combo lines (certified to reach the 8! optimum on the
+            # exact-checked validation boards). The ordering phase shares one TIME
+            # BUDGET: per-battle sim cost varies ~2-30ms with comp weight, and without
+            # a budget the deep search pins a core for 30s+ on heavy matchups.
+            order_deadline = time.monotonic() + (2.5 if fast else 8.0)
             refined = []
-            for idx, (mb, _) in enumerate(prelim[:n_refine]):
+            for idx, mb in enumerate(refine):
                 if idx < order_k:
-                    mb, _ = _best_ordering(mb, lambda b: evaluate(b, top_opp), max_passes=passes)
+                    mb, _ = _best_ordering(mb, order_value, max_passes=passes,
+                                           deep=not fast, deadline=order_deadline,
+                                           prefetch=order_prefetch)
+                    # the reordered board is new to the cache — parallel-fill its
+                    # full-mix pairs before the sequential my_value pass
+                    _eval_batch([(mb, opp_candidates[j]) for j in support],
+                                mp, op, rnd, cache)
                 refined.append((mb, my_value(mb)))
             scored = sorted(refined, key=lambda x: x[1], reverse=True)
+            # FINAL polish (final pass): order the top-2 winners against the proxy (cheap)
+            # then re-rank all by the full mix — the winner may have risen only after mix
+            # scoring and not gotten the ordering pass.
+            if not fast and scored:
+                polish_deadline = time.monotonic() + 4.0
+                for k in range(min(2, len(scored))):
+                    b, _ = _best_ordering(scored[k][0], order_value, max_passes=2,
+                                          deep=True, deadline=polish_deadline,
+                                          prefetch=order_prefetch)
+                    _eval_batch([(b, opp_candidates[j]) for j in support],
+                                mp, op, rnd, cache)
+                    scored[k] = (b, my_value(b))
+                scored.sort(key=lambda x: x[1], reverse=True)
+            # Human-readable display for the top lines (under the lock; the ranking scalar
+            # win·1e6+命 isn't readable): expected 命 margin AND win-rate vs the predicted
+            # mix. win-rate here is over ALL predicted boards (honest P(win)), not just the
+            # winnable subset used for ranking.
+            def _margin(mb):
+                return sum(opp_strat[j] * _eval(mb, opp_candidates[j])[1] for j in support)
+            def _winrate(mb):
+                return sum(opp_strat[j] for j in support if _eval(mb, opp_candidates[j])[0] > 0)
+            disp = [(mb, _margin(mb), _winrate(mb)) for mb, _ in scored[:top_k]]
         except Exception as e:
             _reset_worker()
             return {"error": f"live_best_lines failed: {e}"}
     elapsed = _time.time() - _t0
 
-    def _my_lines(scored_list):
+    def _my_lines(disp_list):
         out = []
-        for mb, v in scored_list[:top_k]:
-            out.append({"slots": [_slot(c) for c in mb], "board": mb,
-                        # expected 命 margin of this line vs the opponent's predicted play
-                        "guaranteed": round(v, 1), "probability": 0.0})
+        for mb, marg, wr in disp_list:
+            slots = [_slot(c) for c in mb]
+            # Pad to the unlocked slot count with Normal-Attack markers: an empty unlocked
+            # slot fights as a 普通攻击, so the UI shows WHICH slots are 普攻 (and how many).
+            slots += [{"normalAttack": True} for _ in range(max(0, my_slots - len(mb)))]
+            out.append({"slots": slots, "board": mb, "unlocked": my_slots,
+                        # expected 命 margin AND win-probability vs the opponent's predicted play
+                        "guaranteed": round(marg, 1), "winrate": round(wr, 3),
+                        "probability": 0.0})
         return out
 
     def _opp_lines(nash):
@@ -601,13 +1102,16 @@ def live_best_lines(me: dict, opp: dict, opp_boards_by_round,
                  "probability": round(ln.probability, 4), "guaranteed": 0.0}
                 for ln in nash.top]
 
-    pick = scored[0][0] if scored else None
+    pick = disp[0][0] if disp else None
     return {
-        "lines": _my_lines(scored),
-        "pick_index": 0 if scored else -1,
+        "lines": _my_lines(disp),
+        "pick_index": 0 if disp else -1,
         "pick_board": pick,
-        "value": round(scored[0][1], 1) if scored else 0.0,
-        # The opponent's predicted play — their equilibrium vs MY history.
+        "value": round(disp[0][1], 1) if disp else 0.0,   # top line's expected 命 margin
+        "pick_winrate": round(disp[0][2], 3) if disp else 0.0,
+        # The opponent's predicted play — board-decoder behavioral prediction when
+        # available ("model"), else their Oracle equilibrium vs MY history ("oracle").
+        "opp_source": opp_source,
         "opp_lines": _opp_lines(opp_res),
         "opp_pick_board": (opp_res.pick.board if opp_res.pick else None),
         "opp_active_boards": opp_candidates,
@@ -686,6 +1190,16 @@ def _whatif_from_stat_impl(stat_b64: str, my_side: str, pool_ids=None,
     if not cands:
         return {"win": False, "tried": 1, "original_life": orig_life,
                 "original_hpDelta": orig_hp, "my_side": my_side}
+    # PAD short variants to the recorded deck length with 0 (普攻). The primed
+    # `boards` path takes the list LITERALLY as the whole deck — a 7-card list is a
+    # 7-slot cycle that skips the empty slot, which is NOT how the game plays it
+    # (an empty unlocked slot fires a normal attack in the rotation). Unpadded drop
+    # variants scored phantom wins that lose when actually played (user-verified:
+    # same 7 cards −54 unpadded vs +63 padded). The from-scratch live path pads
+    # internally; only this primed path needs it explicit.
+    n_slots = len(board)
+    cands = [list(b) + [0] * (n_slots - len(b)) if len(b) < n_slots else list(b)
+             for b in cands]
     results = w.run({"id": slot_id, "round": rnd, "side": my_side, "boards": cands}).get("results", [])
 
     win_i, best_i, best_life, best_hp = -1, -1, orig_life, orig_hp
@@ -705,7 +1219,7 @@ def _whatif_from_stat_impl(stat_b64: str, my_side: str, pool_ids=None,
             "winning_slots": [_slot(c) for c in wb],
             "end_turn": results[win_i][1],
             "my_side": my_side,
-            "used_hand": any(c not in board for c in wb),
+            "used_hand": any(c and c not in board for c in wb),
         }
 
     # No win going second (recorded turn order). The player may still win by going FIRST: in 弈仙牌 the
@@ -727,7 +1241,7 @@ def _whatif_from_stat_impl(stat_b64: str, my_side: str, pool_ids=None,
                         "original_life": orig_life, "original_hpDelta": orig_hp,
                         "winning_slots": [_slot(c) for c in wb],
                         "end_turn": gf[i][1], "my_side": my_side,
-                        "used_hand": any(c not in board for c in wb),
+                        "used_hand": any(c and c not in board for c in wb),
                     }
                 break                                # winnable first, but no cards to absorb → not achievable
     return {

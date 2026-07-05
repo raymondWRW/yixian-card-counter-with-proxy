@@ -51,16 +51,13 @@
   - 蓝色横幅 “正在连接游戏… / Connecting…”：
       正常提示 —— 进入对局后会自动消失。
 
-  - 伤害面板显示 “未识别卡片 (灵羽)”：
-      棋盘上的 灵羽 找不到可合的 1 级 灵气/身法 牌，模拟器无法
-      预测合并数值。放一张 1 级 灵气或身法牌上棋盘即可恢复。
 
 
 对局日志（用于反馈问题 + 复盘功能）
 ----------------------------------
 每局游戏都会在  battle_log\<年-月-日_时分秒>\  下生成一个文件夹，
 内含：
-  msgdump.jsonl       — 解码后的全部 WebSocket 帧
+  msgdump.jsonl       — 解码后的全部 WebSocket   帧
   shadow_log.txt      — 可读的游戏状态日志
   deck_tracker.jsonl  — UI 看到的每一帧状态
   battle_log.json     — 游戏自身 BattleLog.json 的拷贝（每回合 HP）
@@ -83,7 +80,7 @@
 
 
 系统要求
---------
+--------    
 - Windows 10 或 11，64 位。
 - Microsoft Edge WebView2 运行时（Win11 已自带；免费下载：
   https://developer.microsoft.com/microsoft-edge/webview2/ ）

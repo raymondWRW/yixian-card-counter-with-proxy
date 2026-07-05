@@ -119,18 +119,15 @@ class BestLineEngine:
                 gen, me_fx, opp_fx, history, rnd, my_hand, warm, meta, my_history = self._pending
                 self._pending = None
             try:
-                # Adaptive: fast coarse pass first, then a deeper refine. Re-check
-                # currency before each (potentially ~0.5s) call and before pushing.
-                # warm = opponent columns from the last calc (warm-starts their side).
-                fast = oracle_sim.live_best_lines(
-                    me_fx, opp_fx, history, my_boards_by_round=my_history,
-                    my_hand=my_hand, rnd=rnd, fast=True, opp_max_boards=8,
-                    opp_seed_extra=warm)
-                if fast and self._current(gen):
-                    fast["stage"] = "fast"; fast["gen"] = gen; fast.update(meta)
-                    self._push(fast)
-                if not self._current(gen):
-                    continue
+                # DEEP pass only — the fast pass was removed: measured on true
+                # fought boards it picked a different line 59% of the time and was
+                # no better than the player's own play (46.5% vs 46%), so showing
+                # it was actively misleading. A 'computing' placeholder clears the
+                # stale panel immediately; the pool-parallel deep pass follows.
+                ph = {"stage": "computing", "gen": gen}
+                ph.update(meta)
+                if self._current(gen):
+                    self._push(ph)
                 final = oracle_sim.live_best_lines(
                     me_fx, opp_fx, history, my_boards_by_round=my_history,
                     my_hand=my_hand, rnd=rnd, fast=False, opp_max_boards=24,

@@ -42,9 +42,16 @@ class OracleWorker:
             cmd += ["--store", store]
         env = dict(os.environ)
         env.setdefault("ORACLE_MAXDEPTH", "1000")
+        # BELOW_NORMAL priority (Windows): the calc must never outcompete the GAME
+        # for CPU. Combat sims happily pin a core for the whole search window on
+        # stack-heavy comps; at normal priority that lags the game the tool is
+        # assisting. Below-normal keeps the game smooth and the Oracle still gets
+        # every idle cycle (the calc just finishes a bit later under load).
+        flags = getattr(subprocess, "BELOW_NORMAL_PRIORITY_CLASS", 0) if os.name == "nt" else 0
         self.proc = subprocess.Popen(
             cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
             text=True, bufsize=1, cwd=os.path.dirname(ORACLE_EXE), env=env,
+            creationflags=flags,
         )
         # Drain the one-time startup banner until the readiness marker.
         t0 = time.time()

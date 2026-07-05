@@ -138,6 +138,33 @@ def _submit_best_line(engine, vm, state, opp_tracker):
 
 
 # ─── Live capture via frida (no cert / no admin) ──────────────────────────────
+# Live session/script refs so the app can UNHOOK the game on exit. Without this,
+# closing the counter leaves the injected agent + ProtobufParser hooks inside a
+# game we ourselves spawned — every subsequent message trampolines into a dead
+# control channel, which shows up as game-side CPU/lag AFTER the counter exits.
+_frida_refs: dict = {}
+
+
+def stop_frida_capture():
+    """Cleanly unhook the game (unload the agent script, detach the session).
+    The game keeps running, now instrumentation-free. atexit-registered by
+    start_frida_capture; also called explicitly from the app's quit paths
+    (os._exit skips atexit). Safe to call twice / without an active capture."""
+    script = _frida_refs.pop("script", None)
+    if script is not None:
+        try:
+            script.unload()               # Interceptor reverts all hooks
+        except Exception:
+            pass
+    session = _frida_refs.pop("session", None)
+    if session is not None:
+        try:
+            session.detach()
+        except Exception:
+            pass
+        print("[frida] capture detached (game unhooked)", flush=True)
+
+
 def start_frida_capture(game_exe: str = None, attach_mode: bool = False):
     """Spawn YiXianPai through frida and hook ProtobufParser to feed messages
     into `addon.process_msgpack` — the same pipeline `start_proxy` populates,
@@ -196,6 +223,9 @@ def start_frida_capture(game_exe: str = None, attach_mode: bool = False):
     script = session.create_script(agent_src, runtime="qjs")
     script.on("message", on_message)
     script.load()
+    _frida_refs["session"], _frida_refs["script"] = session, script
+    import atexit
+    atexit.register(stop_frida_capture)   # unhook the game on any graceful exit
     if pid is not None:
         frida.resume(pid)
     print("[frida] capture active (ProtobufParser hooked, "

@@ -715,9 +715,15 @@ def _recent_game_detail(game_id: str) -> dict | None:
         return [{"name": c["name"], "level": c.get("level")} for c in cards]
 
     rounds_out = []
+    prev_life = None
     for i, rd in enumerate(rounds):
         life = rd["me_life"]
-        if isinstance(life, int) and life <= 0:
+        # me_life is POST-round life: the ELIMINATION round has life <= 0 on its
+        # own record and must be shown; only rounds entered already dead are
+        # phantoms. (The old own-life filter hid every death round.)
+        started_dead = isinstance(prev_life, int) and prev_life <= 0
+        prev_life = life if isinstance(life, int) else prev_life
+        if started_dead:
             continue                      # phantom post-death round — don't show
         # A round is WON when net destiny (dealt - received) is >= 0. `net` (field [6])
         # is the game's own per-round result — verified bit-exact vs the Oracle's
@@ -1218,9 +1224,14 @@ def load_game(game_id: str) -> dict | None:
         rounds = []
     if rounds:
         out_rounds = []
+        prev_life = None
         for i, rd in enumerate(rounds):
             life = rd.get("me_life")
-            if isinstance(life, int) and life <= 0:
+            # POST-round life: keep the elimination round (life <= 0 on its own
+            # record); skip only rounds entered already dead.
+            started_dead = isinstance(prev_life, int) and prev_life <= 0
+            prev_life = life if isinstance(life, int) else prev_life
+            if started_dead:
                 continue                  # phantom post-death round
             # WON when net destiny (dealt - received) >= 0. `net` (field [6]) is the
             # game's own per-round result — verified bit-exact vs the Oracle's lifeDamage.

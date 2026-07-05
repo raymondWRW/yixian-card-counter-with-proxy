@@ -312,6 +312,28 @@ body.collapsed { height: 34px; min-height: 0; }
   margin: 6px 0 3px;
 }
 .bl-sub.opp { color: var(--warn); }
+/* 普攻 (Normal Attack) — an empty unlocked board slot; dimmed + dashed so it reads as
+   "this position is a normal attack, not a card". */
+.bl-na {
+  color: var(--muted);
+  opacity: .7;
+  border: 1px dashed var(--muted);
+  border-radius: 3px;
+  padding: 0 3px;
+  font-size: 10px;
+}
+/* opponent-prediction source tag: 模型 (learned predictor) vs 推演 (Oracle fallback) */
+.bl-src {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 0 4px;
+  border-radius: 3px;
+  vertical-align: 1px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.bl-src.model { color: #18c46a; background: rgba(24,196,106,.16); }
+.bl-src.oracle { color: var(--muted); background: rgba(140,140,140,.16); }
 .bl-row.pick .bl-board { font-weight: 600; }
 
 /* Best-line status + inputs readout */

@@ -411,22 +411,25 @@ def build_view_model(state, counter=None, last_battle=None, opp_tracker=None):
             xiuwei, tipo, realm = me.xiuwei, me.tipo, me.realm_tier
             rerolls = getattr(me, "rerolls", 0)
             seasonal = []
-        # HP / tipo / maxTipo prefer battle_log.json (authoritative). When BL
-        # doesn't have a record for this round we fall back to the formula
-        # `realm_base[realm] + (R-1)*2` and flag the value as `hpIsPredicted`
-        # so the UI can render it visually distinct from authoritative values.
-        # The wire does NOT carry HP directly.
+        # HP priority: WIRE-EXACT first (realm base + field 200.2 extra max-HP,
+        # verified exact vs the game's own records; PlayerData frames keep it
+        # fresh mid-round), then battle_log.json, then the formula (flagged
+        # `hpIsPredicted` so the UI renders it distinct).
         log_stats = _battle_log_stats(state.round_num, getattr(me, "display_name", ""))
         log_hp     = int(log_stats["max_hp"])     if log_stats else 0
         log_tipo   = int(log_stats["tipo"])       if log_stats else None
         log_maxtp  = int(log_stats["max_tipo"])   if log_stats else 0
         log_round  = int(log_stats["from_round"]) if log_stats else None
 
-        hp_is_predicted = (log_hp <= 0)
-        if hp_is_predicted:
-            hp_val = _predict_hp(state.round_num, realm)
-        else:
+        wire_hp = int(getattr(me, "hp", 0) or 0)
+        hp_is_predicted = False
+        if wire_hp > 0:
+            hp_val = wire_hp
+        elif log_hp > 0:
             hp_val = log_hp
+        else:
+            hp_is_predicted = True
+            hp_val = _predict_hp(state.round_num, realm)
         tipo_val = log_tipo if log_tipo is not None else tipo
         max_tipo = log_maxtp  # 0 if log missing — UI treats 0 as "unknown"
 
@@ -507,14 +510,17 @@ def build_view_model(state, counter=None, last_battle=None, opp_tracker=None):
         opp_log_hp    = int(opp_log["max_hp"])     if opp_log else 0
         opp_log_tipo  = int(opp_log["tipo"])       if opp_log else None
         opp_log_maxtp = int(opp_log["max_tipo"])   if opp_log else 0
-        # Opponent HP: prefer BattleLog, fall back to formula prediction.
-        # The wire doesn't carry HP for any player. When the formula is used,
-        # `hpIsPredicted` is True so the UI can render the chip differently.
-        opp_hp_predicted = (opp_log_hp <= 0)
-        if opp_hp_predicted:
-            opp_hp_val = _predict_hp(state.round_num, opp.realm_tier)
-        else:
+        # Opponent HP: WIRE-EXACT first (realm base + 200.2, broadcast for every
+        # player), then BattleLog, then formula (flagged predicted).
+        opp_wire_hp = int(getattr(opp, "hp", 0) or 0)
+        opp_hp_predicted = False
+        if opp_wire_hp > 0:
+            opp_hp_val = opp_wire_hp
+        elif opp_log_hp > 0:
             opp_hp_val = opp_log_hp
+        else:
+            opp_hp_predicted = True
+            opp_hp_val = _predict_hp(state.round_num, opp.realm_tier)
         opp_tipo_val = opp_log_tipo if opp_log_tipo is not None else opp.tipo
         vm["opponent"] = {
             "player_id": opp.player_id,

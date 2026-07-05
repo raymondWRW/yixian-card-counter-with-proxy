@@ -67,14 +67,18 @@ class PlayerState:
     raw: dict = field(default_factory=dict)     # original protobuf dict for this player struct
     display_name: str = ""  # top-level field 2 — Chinese display name (utf-8).
                             # Used to match local BattleLog.json entries (R28).
-    xiuwei: int = 0       # 修为 (cultivation) — field 200.3
+    xiuwei: int = 0       # 修为 (cultivation) — top-level field 5 = the game's
+                          # DISPLAYED cult (incl. the current round's passive);
+                          # falls back to 200.3 (prep-start value, lags by the
+                          # passive). Verified vs recentBattleDatas: 200.3 at
+                          # round N == recorded battle cult at round N-1 exactly.
     tipo: int = 0         # 体魄 (physique)    — field 200.8.2 (R24-Phase-B)
     realm_tier: int = 1   # 境界 (realm tier)  — field 200.4 (1..5)
-    hp: int = 40          # max HP — 40 + field 200.3 (xiuwei) (R24-Phase-B)
-    hp_field: int = 0     # R27 HP candidate: top-level field 5. Monotonic up,
-                          # breakthrough jumps, per-player varying. May be the
-                          # real source for displayed HP (diagnostic only —
-                          # not consumed by `hp` until user-verified).
+    hp: int = 0           # max HP — _REALM_BASE_HP[realm] + field 200.2 (extra
+                          # max-HP). WIRE-EXACT: 200.2 == recorded max_hp −
+                          # realm base, 17/18 rounds verified. 0 = not on wire.
+    hp_field: int = 0     # top-level field 5 raw (= displayed cultivation; kept
+                          # for the hp-probe diagnostics).
     max_tipo: int = 0     # max 体魄 — from BattleLog.json (R28 fallback).
                           # 0 if log unavailable.
     max_hp: int = 0       # max battle HP — from BattleLog.json (R28 fallback).
@@ -140,13 +144,23 @@ def _parse_cards(raw) -> list:
     return result
 
 
+# Cumulative breakthrough HP bases (verified vs recentBattleDatas records).
+_REALM_BASE_HP = {1: 40, 2: 45, 3: 52, 4: 62, 5: 75}
+
+
 def parse_player_stats(f200) -> tuple:
-    """Extract (xiuwei, tipo, realm_tier) from a player struct's field 200.
+    """Extract (xiuwei, tipo, realm_tier, extra_max_hp) from a player struct's
+    field 200.
 
     Used by both parse_game_state (GameStatus) and addon._handle_player_data
     (PlayerData) so a PlayerData reset preserves these stats instead of
     defaulting them to 0/1.
-      200.3   → 修为 (cultivation)
+      200.2   → extra max-HP over the realm base. max HP = _REALM_BASE_HP[realm]
+                + this. Verified exact vs recentBattleDatas (17/18 rounds; the
+                old chart mislabeled it a "round counter" — early-game +2/round
+                HP fates made it LOOK like one).
+      200.3   → 修为 (cultivation) as of the LAST battle (prep-start value; the
+                displayed cult incl. this round's passive is top-level field 5)
       200.4   → 境界 (realm tier, 1..5)
       200.8.2 → 体魄 (physique). R24-Phase-B: was scanning 200.9 for stat-id
                 10023, but that id doesn't appear in current game versions.
@@ -154,9 +168,13 @@ def parse_player_stats(f200) -> tuple:
                 player-specific stat tag).
     """
     if not isinstance(f200, dict):
-        return 0, 0, 1
+        return 0, 0, 1, 0
     xiuwei = int(f200.get("3", 0) or 0)
     realm_tier = int(f200.get("4", 1) or 1)
+    try:
+        extra_hp = int(f200.get("2", 0) or 0)
+    except (TypeError, ValueError):
+        extra_hp = 0
     tipo = 0
     f8 = f200.get("8")
     if isinstance(f8, dict):
@@ -164,7 +182,7 @@ def parse_player_stats(f200) -> tuple:
             tipo = int(f8.get("2", 0) or 0)
         except (TypeError, ValueError):
             tipo = 0
-    return xiuwei, tipo, realm_tier
+    return xiuwei, tipo, realm_tier, extra_hp
 
 
 # R24-Phase-A: one-shot first-frame GameStatus dump for field discovery.
@@ -285,18 +303,24 @@ def parse_game_state(pb: dict, phase: str = "prep", me_uid: str = "") -> GameSta
         f200 = p.get("200") or p.get("200-1") or {}
         if not isinstance(f200, dict):
             f200 = {}
-        xiuwei, tipo, realm_tier = parse_player_stats(f200)
+        xiuwei, tipo, realm_tier, extra_hp = parse_player_stats(f200)
         # Destiny (命) is the top-level field 3 — decreases when battles are
         # lost. The legacy parser read it from f200.1, but f200.1 is a static
         # "max destiny" sentinel (always 100); only top-level p[3] tracks the
         # live value.
         destiny = int(p.get("3", 0) or 0)
-        # HP is NOT on the wire. The legacy `40 + xiuwei` was a wrong
-        # approximation (wrong shape AND wrong base). Real HP comes from
-        # battle_log.json (read by proxy_view via _battle_log_stats). Leave
-        # the parsed value at 0; proxy_view falls back to 0 if the log is
-        # unavailable (UI then treats it as "unknown").
-        hp = 0
+        # Max HP IS on the wire: _REALM_BASE_HP[realm] + f200.2 (extra max-HP).
+        # Verified exact against the game's own recentBattleDatas records
+        # (2026-07-04 field alignment, 17/18 rounds; the 18th had extra=0).
+        # 0 only if 200.2 is absent — proxy_view then falls back to
+        # battle_log.json / the formula.
+        hp = (_REALM_BASE_HP.get(realm_tier, 40) + extra_hp) if extra_hp > 0 else 0
+        # Displayed cultivation = top-level field 5 (200.3 + the current round's
+        # passive gain — what the in-game UI shows; the panel was consistently
+        # 2-3 low reading 200.3). Fall back to 200.3 when [5] is absent (R1).
+        disp_cult = p.get("5")
+        if isinstance(disp_cult, int) and disp_cult > 0:
+            xiuwei = disp_cult
         # Reroll-remaining lives in the team container (pb["6"] for me; not
         # exposed per-opponent). Default to 0 here; filled in below for
         # me_index once we resolve the team container.

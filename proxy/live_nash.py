@@ -130,16 +130,36 @@ CULT_GROWTH_PER_ROUND = 5
 HP_GROWTH_PER_ROUND = 2
 
 
-def project_opponent(opp_fixture: dict, rounds: int = 1) -> dict:
+def cult_growth_for_round(rnd) -> int:
+    """Expected per-round cultivation gain (absorbing drawn cards, +1 each).
+
+    ~5 cards drawn per round, but:
+      rounds 1-6:  a new board slot unlocks each round (slots = round+2, capped
+                   at 8 on round 6), so one drawn card is PLACED on the new slot
+                   instead of absorbed → +4
+      rounds 7-11: all slots unlocked, the full draw absorbs → +5
+      rounds 12+:  one EXTRA card is drawn per round → +6
+    Unknown round → the flat legacy +5."""
+    if not isinstance(rnd, int) or rnd <= 0:
+        return CULT_GROWTH_PER_ROUND
+    if rnd <= 6:
+        return 4
+    if rnd >= 12:
+        return 6
+    return 5
+
+
+def project_opponent(opp_fixture: dict, rounds: int = 1, rnd=None) -> dict:
     """Return a copy of the opponent fixture advanced `rounds` of natural growth:
-    +5 cultivation and +2 max-HP per round. Applied to the OPPONENT only (their
-    snapshot is stale by ~one round while our board is current).
+    round-aware cultivation (see cult_growth_for_round) and +2 max-HP per round.
+    Applied to the OPPONENT only (their snapshot is stale by ~one round while our
+    board is current). `rnd` = the round being fought; omitted → flat legacy +5.
 
     NB: cultivation is carried by the Oracle fixture's `exp` field (the engine
     reads characterUI.exp as cultivation — see NativeRunner cultivation-scaling
     note), so we bump `exp`, not a separate 'cultivation' key."""
     out = dict(opp_fixture)
-    out["exp"] = int(out.get("exp", 0) or 0) + CULT_GROWTH_PER_ROUND * rounds
+    out["exp"] = int(out.get("exp", 0) or 0) + cult_growth_for_round(rnd) * rounds
     out["extraMaxHp"] = int(out.get("extraMaxHp", 0) or 0) + HP_GROWTH_PER_ROUND * rounds
     return out
 

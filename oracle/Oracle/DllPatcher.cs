@@ -255,6 +255,12 @@ public static class DllPatcher
                 new[] { "CardItem", "KeYinCardItem", "CardItemBase", "BattleCharacterUI", "BattleCharacter", "KeYinItem", "DefItem", "AnimaItem" }))
                 Console.WriteLine($"  [detect-nop] overbroad nop (gameplay dropped): {hit}");
 
+        // Game updates can introduce const fields/params typed by enums the facades don't
+        // know yet (e.g. the 2026-07 patch's LanguageType) — Cecil's MetadataBuilder must
+        // resolve the enum to emit the constant row and THROWS otherwise, killing the whole
+        // serve at startup. Constants are compile-time-inlined (runtime IL never reads the
+        // metadata row), so stripping unresolvable ones is behavior-neutral.
+        StripUnresolvableConstants(module);
         var output = new MemoryStream();
         module.Write(output, new WriterParameters { WriteSymbols = false });
         Console.WriteLine($"  [native patch] applied {_patchCount} IL patches");
@@ -281,6 +287,34 @@ public static class DllPatcher
                    : ins.Operand?.ToString();
             Console.WriteLine($"  IL_{ins.Offset:X4}: {ins.OpCode,-12} {op}");
         }
+    }
+
+    // Drop constant metadata whose TYPE can't be resolved against the current facades
+    // (enum-typed const fields / default-valued params / const properties from a newer game
+    // build). Cecil must resolve the enum to emit the constant row (GetConstantType ->
+    // CheckedResolve) and otherwise throws at Module.Write — one unknown enum killed the
+    // whole engine. Constants are inlined at compile time, so runtime never reads the row:
+    // stripping is behavior-neutral. Shared by PatchForNative and FacadeGen.Generate.
+    public static void StripUnresolvableConstants(ModuleDefinition module)
+    {
+        int stripped = 0;
+        bool Unresolvable(TypeReference? tr)
+        {
+            if (tr == null || tr.IsPrimitive || tr.FullName == "System.String") return false;
+            try { return tr.Resolve() == null; } catch { return true; }
+        }
+        foreach (var type in AllModuleTypes(module))
+        {
+            foreach (var f in type.Fields)
+                if (f.HasConstant && Unresolvable(f.FieldType)) { f.HasConstant = false; stripped++; }
+            foreach (var p in type.Properties)
+                if (p.HasConstant && Unresolvable(p.PropertyType)) { p.HasConstant = false; stripped++; }
+            foreach (var m in type.Methods)
+                foreach (var prm in m.Parameters)
+                    if (prm.HasConstant && Unresolvable(prm.ParameterType)) { prm.HasConstant = false; stripped++; }
+        }
+        if (stripped > 0)
+            Console.WriteLine($"  [native patch] stripped {stripped} unresolvable constant(s) (new-game-build types)");
     }
 
     static IEnumerable<TypeDefinition> AllModuleTypes(ModuleDefinition m)

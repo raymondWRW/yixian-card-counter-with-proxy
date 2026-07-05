@@ -534,14 +534,16 @@ def _handle_player_data(mp):
     if uid != me_uid:
         return
 
-    from game_state import PlayerState, _parse_cards, _to_str, parse_player_stats
-    xiuwei, tipo, realm_tier = parse_player_stats(pdict.get("200", {}))
+    from game_state import (PlayerState, _parse_cards, _to_str,
+                            parse_player_stats, _REALM_BASE_HP)
+    xiuwei, tipo, realm_tier, extra_hp = parse_player_stats(pdict.get("200", {}))
     next_opp = pdict.get("9")
     prev_opp = pdict.get("10")
-    # R27: keep `hp_field` (top-level [5] HP candidate) in sync on the
-    # PlayerData refresh too, otherwise it'd reset to 0 between GameStatus
-    # frames and the diagnostic side-by-side would flicker.
+    # top-level [5] = DISPLAYED cultivation (200.3 + this round's passive) —
+    # prefer it so the panel matches the in-game number (was 2-3 low off 200.3).
     hp_field = int(pdict.get("5", 0) or 0)
+    if hp_field > 0:
+        xiuwei = hp_field
     # R28: also keep display_name in sync so BattleLog.json lookups work
     # when PlayerData fires between GameStatus frames.
     display_name = _to_str(pdict.get("2", "")) if pdict.get("2") else ""
@@ -551,9 +553,9 @@ def _handle_player_data(mp):
         cards=_parse_cards(pdict.get("103", [])),
         display_name=display_name,
         xiuwei=xiuwei, tipo=tipo, realm_tier=realm_tier,
-        # HP is NOT on the wire — the legacy `40 + xiuwei` was wrong. Real
-        # HP comes from battle_log.json via proxy_view._battle_log_stats.
-        hp=0,
+        # Max HP = realm base + wire extra (200.2) — verified exact vs the
+        # game's own records; 0 when absent (proxy_view falls back to BL).
+        hp=(_REALM_BASE_HP.get(realm_tier, 40) + extra_hp) if extra_hp > 0 else 0,
         hp_field=hp_field,
         next_opponent_id=_to_str(next_opp) if next_opp else "",
         prev_opponent_id=_to_str(prev_opp) if prev_opp else "",
@@ -718,7 +720,8 @@ def _try_push_game_state(mp):
     if is_my_game:
         shadow_state.reset_from_player(
             state.players[state.me_index], name_fn=card_name,
-            source="GameStatus", team_container=state.team_container or None)
+            source="GameStatus", team_container=state.team_container or None,
+            round_num=state.round_num)
         if shadow_state.shadow is not None:
             shadow_state.shadow.round_num = state.round_num
         # Snapshot team_container[1] (incoming-cards list) at round boundary

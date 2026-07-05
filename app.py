@@ -25,7 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent
 
 # Bump when the review search logic changes (empty-slot candidates, go-first, …) so old
 # cached solutions are recomputed. Combined with the game version, this keys the cache.
-REVIEW_ANALYSIS_VERSION = 4
+# v5: drop variants are 普攻-padded to the recorded slot count (unpadded 7-card lists
+#     ran as 7-slot cycles and reported phantom wins); death round now included.
+REVIEW_ANALYSIS_VERSION = 5
 
 
 def _review_cache_file() -> Path:
@@ -142,6 +144,11 @@ class Api:
         def _quit():
             time.sleep(0.4)
             try:
+                import runtime
+                runtime.stop_frida_capture()   # os._exit skips atexit — unhook first
+            except Exception:
+                pass
+            try:
                 if _counter_win is not None:
                     _counter_win.destroy()
             except Exception:
@@ -200,7 +207,13 @@ class Api:
     def quit(self):
         # Quit all windows so the process exits when any window's ✕ is
         # clicked. pywebview keeps the event loop alive as long as ANY
-        # window is open, so we must destroy them all.
+        # window is open, so we must destroy them all. Unhook the game FIRST —
+        # leaving frida hooks in a game that outlives us causes game-side lag.
+        try:
+            import runtime
+            runtime.stop_frida_capture()
+        except Exception:
+            pass
         for win in (_counter_win, _review_win, _window):
             if win is not None:
                 try: win.destroy()
@@ -926,6 +939,14 @@ def _setup_frozen_logging():
 def main():
     global _window, _counter_win
     _setup_frozen_logging()
+    # WebView2 renders the UI on the GPU. A freshly (re)installed or updated GPU
+    # driver can destabilize its renderer process, which silently closes the window
+    # — and since the counter is the MASTER window, that closes the whole app (a
+    # clean exit, no traceback, mid-match). Disabling GPU compositing for the
+    # WebView2 UI sidesteps this; the UI is trivial HTML so there's no visible cost,
+    # and it does NOT touch the game's own (Unity) rendering. Override by setting
+    # WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS yourself before launch.
+    os.environ.setdefault("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--disable-gpu")
     # WebView2 is required to render any window. If it's missing, every
     # webview.create_window call would produce a blank/never-appearing window
     # with the failure buried in app.log — so the user sees "nothing happens".

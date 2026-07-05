@@ -49,10 +49,23 @@ static class FacadeGen
                     RepairExplicitOverrides(type, module);
                     EnsureConcreteImplementations(type, module);
                 }
-                module.Write(Path.Combine(outDir, name + ".dll"));
+                // Constants typed by enums from OTHER (possibly skipped/failed) assemblies
+                // make Module.Write throw; they're compile-time-inlined so drop them.
+                DllPatcher.StripUnresolvableConstants(module);
+                // Write via memory, then atomically to disk — Module.Write(path) truncates
+                // the file BEFORE serializing, so a mid-write throw used to leave a 0-byte
+                // facade that poisoned the resolver for every later startup.
+                var buf = new MemoryStream();
+                module.Write(buf);
+                File.WriteAllBytes(Path.Combine(outDir, name + ".dll"), buf.ToArray());
                 asm++;
             }
-            catch (Exception e) { Console.WriteLine($"  skip {name}: {e.Message}"); }
+            catch (Exception e)
+            {
+                Console.WriteLine($"  skip {name}: {e.Message}");
+                var stale = Path.Combine(outDir, name + ".dll");   // never leave a 0-byte stump
+                try { if (File.Exists(stale) && new FileInfo(stale).Length == 0) File.Delete(stale); } catch { }
+            }
         }
         Console.WriteLine($"  generated {asm} facade assemblies ({methods} method bodies -> default) in {outDir}");
     }

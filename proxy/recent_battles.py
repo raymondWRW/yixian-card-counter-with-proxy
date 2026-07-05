@@ -350,17 +350,20 @@ def _decode_file(path: Path, account_id: str) -> dict | None:
     if not me_name:
         return None
 
-    # me_life is my destiny pool at the START of each round. I LOST a round if
-    # the pool dropped going into the next round (the elimination round shows up
-    # as a drop into a NEGATIVE next value). The record appends a phantom round
-    # AFTER death (start life <= 0); those aren't rounds I played, so they're
-    # excluded from the count and win/loss. (top[15] looked like final life but
-    # isn't reliable, so we read the trajectory directly.)
+    # me_life is my destiny pool AFTER the round's battle (verified on real records:
+    # 19,19,19 then −15 on a −34 loss — post-round, not start-of-round). A round is
+    # REAL if the player was alive going INTO it (previous round's life > 0); the
+    # ELIMINATION round itself has life <= 0 on its own record and must be KEPT.
+    # The old own-life filter silently hid every non-winner's death round (21 of 21
+    # hidden rounds across 40 checked games were real death rounds, 0 phantoms).
     lost_rounds: list[int] = []
     real_rounds = 0
+    prev_life = None
     for idx, rd in enumerate(rounds):
         life = rd["me_life"]
-        if isinstance(life, int) and life <= 0:
+        started_dead = isinstance(prev_life, int) and prev_life <= 0
+        prev_life = life if isinstance(life, int) else prev_life
+        if started_dead:
             continue                      # phantom post-death round
         real_rounds += 1
         # A round is LOST when net destiny (dealt - received) is negative. `net` is the
@@ -374,12 +377,15 @@ def _decode_file(path: Path, account_id: str) -> dict | None:
 
     # Radar buckets: net destiny (dealt - received) summed per category, with a
     # round count, so the caller can take a recency-weighted average. Phantom
-    # post-death rounds (me_life <= 0) are excluded.
+    # post-death rounds (started dead) are excluded; the death round counts.
     radar = {k: {"s": 0.0, "n": 0}
              for k in ("early", "mid", "late", "first", "second")}
+    prev_life = None
     for rd in rounds:
         life = rd["me_life"]
-        if isinstance(life, int) and life <= 0:
+        started_dead = isinstance(prev_life, int) and prev_life <= 0
+        prev_life = life if isinstance(life, int) else prev_life
+        if started_dead:
             continue
         net = rd.get("net")
         if not isinstance(net, (int, float)):
